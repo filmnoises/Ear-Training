@@ -8,14 +8,30 @@ Format: date, a line or two, move on. Don't polish.
 
 ---
 
+* **2026-04-23 — shipped v0.6.1**
+
+UX polish release: Triad Focus panel repositioned and renamed,
+all fonts bumped 1 point, fixed low-contrast keyboard badges on
+brass buttons, consistent "Chord Quality / Chord Inversion" naming
+throughout.
+
+Also: worked out the new file-handoff workflow — Claude only
+regenerates the app + CHANGELOG now; I own TODO, NOTES, TESTING.
+Cleaner.
+
+Sitting with v0.6.1 for a day or two before next changes.
+
+Next session options: add diminished/augmented triads, tackle
+sing-first mode, or set up GitHub for cloud backup.
+
 ## 2026-04-23
 
-# In the bottom "pool" choice area, put a header and call it "triad focus" so if someone wants to work on a specific area, they can focus on it. 
-# rename "quality pool" to "chord quality" 
-# rename "inversion pool" to "chord inversion" 
-# move the triad focus box above the question but below the level one / level two box to see if that feels better. 
-# make all of the fonts everywhere 1 point larger
-# in the Question Play box, change the font color of "space" to something with a lot more contrast. It does not read easily with the yellowish background. 
+* In the bottom "pool" choice area, put a header and call it "triad focus" so if someone wants to work on a specific area, they can focus on it. 
+* rename "quality pool" to "chord quality" 
+* rename "inversion pool" to "chord inversion" 
+* move the triad focus box above the question but below the level one / level two box to see if that feels better. 
+* make all of the fonts everywhere 1 point larger
+* in the Question Play box, change the font color of "space" to something with a lot more contrast. It does not read easily with the yellowish background. 
 
 
 **Session sentence:** Build Level 2 (triads) and rename the app to
