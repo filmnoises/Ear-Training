@@ -8,6 +8,20 @@ Format: date, a line or two, move on. Don't polish.
 
 ---
 
+**2026-04-22 — git set up and first commits made**
+
+Installed/configured git. Created first commit with v0.5.0 baseline
+plus all docs. Set up .gitignore to ignore .DS_Store. Tested the
+cycle by renaming the versioned release file and committing the change.
+
+Learned: the add/commit/log loop, how to read git status output,
+why --global matters, silence-means-success pattern, the cd-into-
+project-first requirement, and "fatal" doesn't mean anything is broken.
+
+Next session: start building the triad module. v0.6.0. Two-axis
+answer UI (quality × inversion), arpeggiated vs blocked playback,
+starting with just major/minor qualities before adding dim/aug.
+
 ## 2026-04-20 (afternoon)
 
 **Session sentence:** Added root-note selector and adjustable tempo slider
