@@ -6,93 +6,96 @@ If something breaks that's not listed here, add it.
 ## Smoke test — run after every change
 
 ### Loading
-- [ ] Open the HTML file in a browser. "Loading piano samples…" banner appears.
-- [ ] Banner disappears within a few seconds. Play button becomes enabled.
-- [ ] Feedback line reads "Ready. Press Play."
+- [x] Open the HTML file in a browser. "Loading piano samples…" banner appears.
+- [x] Banner disappears within a few seconds. Level 1 Play button enables.
+- [x] Switch to Level 2 tab — Play button there also enabled.
+- [x] Both feedback lines read "Ready. Press Play."
 
-### Melodic mode — basic
+### Level 1 · Melodic mode
 - [ ] Press Play. Two piano notes play in sequence, about 0.6s apart.
 - [ ] Answer buttons appear for each enabled interval.
 - [ ] Click correct answer → green feedback, ✓ on correct button.
 - [ ] Auto-advance to next question after ~1.2s.
 - [ ] Click wrong answer → red feedback, ✕ on wrong + ✓ on correct.
-- [ ] No auto-advance on wrong — waits for user.
-- [ ] "Repeat Last" replays the just-answered question.
-- [ ] "Skip →" generates a new question without answering.
+- [ ] No auto-advance on wrong.
+- [ ] Repeat Last replays the just-answered question.
+- [ ] Skip generates a new question without answering.
 
-### Harmonic mode
-- [ ] Click Harmonic tab. Header subtitle changes to "harmonic".
-- [ ] Hint text changes to "two notes · at the same time".
-- [ ] Direction chips appear dimmed / disabled.
-- [ ] Reference tempo slider appears dimmed / disabled.
-- [ ] Press Play → two notes play simultaneously.
+### Level 1 · Harmonic mode
+- [ ] Click Harmonic tab within Level 1. Header shows "Level 1 · harmonic".
+- [ ] Direction chips dimmed/disabled.
+- [ ] Reference tempo slider dimmed/disabled.
+- [ ] Play → two notes simultaneously.
 
-### Settings changes mid-question (v0.3.0 regression)
-- [ ] Start a question (press Play).
-- [ ] Before answering, turn off all intervals except Tritone.
-- [ ] Press Play again. The new question MUST be a tritone.
-- [ ] Direction change mid-question → next Play respects it.
-- [ ] Mode switch mid-question → next Play uses new mode.
+### Level 1 · Reference panel
+- [ ] Each of the 12 reference buttons plays its interval.
+- [ ] Random root / Fixed root toggle works.
+- [ ] Tempo slider affects melodic playback spacing.
 
-### Reference panel — basic (v0.3.0)
-- [ ] Each of the 12 reference buttons plays its interval when clicked.
-- [ ] Brass-colored flash on the clicked button.
-- [ ] Playing a reference interval does NOT affect the current quiz question.
+### Level 2 · Blocked mode
+- [ ] Click Level 2 tab. Header shows "Level 2 · blocked".
+- [ ] Feedback reads "Ready. Press Play."
+- [ ] Press Play → three notes play simultaneously.
+- [ ] Direction bar is dimmed/disabled (blocked mode).
+- [ ] Quality row shows Major and Minor buttons.
+- [ ] Inversion row shows Root / 1st / 2nd buttons.
+- [ ] Submit button is disabled until both axes picked.
+- [ ] Click a quality → it highlights (brass-colored "selected" state).
+- [ ] Click an inversion → it highlights too.
+- [ ] Submit button enables once both are picked.
+- [ ] Clear Picks button enables when any pick is made.
+- [ ] Clear Picks clears both selections and disables Submit.
+- [ ] Submit a correct answer → green feedback, auto-advance.
+- [ ] Submit a wrong answer (both wrong) → "Not quite" message.
+- [ ] Submit with only one wrong → partial-credit message
+      ("Quality right, inversion wrong" or vice versa).
+- [ ] Enter key submits (when Submit is enabled).
 
-### Reference panel — root selector (v0.5.0)
-- [ ] On load, "Random" is selected, root chooser is hidden.
-- [ ] Click "Fixed" → chromatic chooser (C through B) appears.
-- [ ] Click any root note → that note becomes selected (visually pressed).
-- [ ] Click any reference interval → root is the chosen note.
-- [ ] Switch back to "Random" → chooser hides; reference uses random root.
-- [ ] Edge case: with Fixed root = B (high), play Octave → it should play
-      cleanly (octave-shift logic should keep it in keyboard range).
-- [ ] Edge case: with Fixed root = C (low) and direction = Descending,
-      play Octave → also plays cleanly.
+### Level 2 · Arpeggiated mode
+- [ ] Click Arpeggiated. Header shows "Level 2 · arpeggiated · [direction]".
+- [ ] Direction bar re-enables.
+- [ ] Reference tempo slider re-enables.
+- [ ] Press Play → three notes play in sequence.
+- [ ] Switch direction to Descending → next question plays notes
+      from high to low.
+- [ ] Switch to Mixed → questions randomize direction.
 
-### Reference panel — tempo slider (v0.5.0)
-- [ ] Default value reads "1.5 s".
-- [ ] Drag slider — number updates as you drag.
-- [ ] Min value 0.4 s; max value 4.0 s.
-- [ ] Click reference interval at 0.4 s → notes are quick (~snappy quiz pace).
-- [ ] Click reference interval at 4.0 s → long pause between notes.
-- [ ] Switch to harmonic mode → slider is disabled (visually + functionally).
-- [ ] Switch back to melodic → slider re-enables, value preserved.
+### Level 2 · Reference panel
+- [ ] Every quality × inversion combination has a button.
+- [ ] Each button plays that specific triad.
+- [ ] Random/Fixed root toggle works.
+- [ ] Tempo slider affects arpeggiated playback (blocked mode ignores it).
+
+### Level 2 · Settings changes mid-question
+- [ ] Start a triad question.
+- [ ] Before answering, disable all qualities except Minor.
+- [ ] Press Play again. New question MUST be a minor triad.
+- [ ] Same for disabling inversions — next question respects the pool.
+- [ ] Switching mode (blocked ↔ arpeggiated) invalidates current question.
 
 ### Score tracking
-- [ ] Correct answers increment Correct and Total, grow Streak.
-- [ ] Wrong answers increment Total, reset Streak to 0.
-- [ ] Score persists across mode switches.
+- [ ] Level 1 correct/wrong updates Level 1 score only.
+- [ ] Level 2 correct/wrong updates Level 2 score only.
+- [ ] Switching levels does not reset or alter either score.
 
-## Accessibility checks — run after any UI change
+## Accessibility checks
 
 ### Keyboard navigation
-- [ ] Tab through the page. Every interactive element shows brass focus outline.
-- [ ] Tab order is logical: skip link → tabs → direction → Play / Repeat /
-      Skip → answers → root mode buttons → root chooser (when visible) →
-      tempo slider → reference buttons → pool chips.
-- [ ] Space activates Play (when not focused on slider/input).
-- [ ] R activates Repeat Last; S activates Skip.
-- [ ] Number keys 1–9 pick the Nth visible answer.
-- [ ] Arrow keys (Left/Right) move between mode tabs.
-- [ ] Tempo slider responds to arrow keys when focused.
-- [ ] Skip-to-main-content link appears at top-left when Tab-focused.
+- [ ] Tab reaches every interactive element on both levels.
+- [ ] Brass focus outline visible everywhere.
+- [ ] Arrow keys navigate within tab groups (level tabs, mode tabs).
+- [ ] Space = Play; R = Repeat; S = Skip (routes to active level).
+- [ ] Enter submits Level 2 answer when Submit is enabled.
+- [ ] Tempo sliders respond to arrow keys when focused.
 
 ### Screen reader
-- [ ] Mode tabs announce as "Melodic tab, selected, 1 of 2".
-- [ ] Direction toolbar is announced as a toolbar with its label.
-- [ ] Interval pool chips announce their pressed state.
-- [ ] Answer buttons read as "Answer 3: Major 3rd, 4 semitones".
-- [ ] Feedback changes are announced (live region).
-- [ ] Reference buttons say "Play Perfect 5th reference" etc.
-- [ ] Root chooser announces as a radio group; each note labeled.
-- [ ] Tempo slider announces current value when focused.
-
-### Color & motion
-- [ ] With OS-level reduced-motion, transitions are near-instant.
-- [ ] ✓ / ✕ symbols visible alongside green/red coloring.
-- [ ] Text readable against dark backgrounds at normal viewing distance.
+- [ ] Level tabs announce as "Level 1: Intervals tab, selected, 1 of 2".
+- [ ] Mode tabs (within each level) also announce properly.
+- [ ] Feedback live region announces correct/wrong.
+- [ ] Answer buttons have descriptive aria-labels.
+- [ ] Pool chips announce pressed/unpressed state.
+- [ ] Partial-credit feedback in Level 2 reads naturally.
 
 ### TODO
-- [ ] Eventually: real testing with sight-impaired users on their
-      preferred screen readers.
+- [ ] Real testing with sight-impaired users on their preferred
+      screen readers.

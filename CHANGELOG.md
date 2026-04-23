@@ -1,6 +1,7 @@
 # Changelog
 
-All notable changes to the Interval Trainer are documented in this file.
+All notable changes to the Ear Trainer (formerly Interval Trainer) are
+documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,90 +9,112 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Decide whether quiz auto-advance delay should be user-adjustable
-- Sing-first practice mode: user hears root, sings the target interval,
-  then plays the actual interval to self-check (its own mode/tab)
-- Triads and inversions module
-- Drop-2 voicings module
-- Sight-reading trainer (using VexFlow)
+- Add diminished and augmented triads to Level 2 quality pool
+- Sing-first practice mode (hear root, sing interval/triad, verify)
+- Seventh chords (Level 3)
+- Rhythm training
+- Sight-reading trainer (VexFlow)
+
+---
+
+## [0.6.1] — 2026-04-23
+
+### Changed
+- **Level 2 settings renamed and regrouped as "Triad Focus."**
+  The settings section now has a clear top-level heading ("Triad Focus")
+  with a short description of what it does. Subheadings updated from
+  "Quality pool" → "Chord quality" and "Inversion pool" → "Chord inversion."
+- **Quiz answer labels updated to match:** "Quality" → "Chord Quality"
+  and "Inversion" → "Chord Inversion" on the Level 2 answer rows.
+  Consistency between settings and quiz labels throughout.
+- **Triad Focus panel repositioned** between the score and the Reference
+  panel (previously was at the bottom of the page). Accessible from a
+  natural reading position after answering a question.
+- **All font sizes bumped up one point** for readability. H1 header,
+  tab labels, button text, answer buttons, feedback, panel headings,
+  chips — everything is slightly larger. Helps anyone with mild visual
+  fatigue or small-screen viewing.
+
+### Fixed
+- **Keyboard hint badge contrast on primary buttons.** The small "Space"
+  and "Enter" badges on the brass-colored Play and Submit buttons were
+  nearly unreadable (low-contrast dim text on bright background). They
+  now use a near-black color on brass backgrounds. The R and S badges
+  on transparent-background buttons are unchanged (still readable there).
+
+### Technical notes
+- Added `--ink-on-brass` CSS variable for high-contrast text on
+  brass-colored surfaces. Used via `.btn-primary .kbd` and
+  `.btn-submit .kbd` selectors.
+- No logic changes in this release; purely cosmetic/UX polish.
+
+---
+
+## [0.6.0] — 2026-04-23
+
+### Added
+- **Level 2: Triads** — new training level for major and minor triads
+  with all three inversions.
+  - Blocked mode: three notes simultaneously.
+  - Arpeggiated mode: notes in sequence, with direction toolbar.
+  - Two-axis answer UI (Quality row + Inversion row) with explicit
+    Submit button and Clear Picks affordance.
+  - Partial-credit feedback distinguishes "quality right, inversion wrong"
+    from "both wrong."
+  - Keyboard shortcut: Enter submits.
+  - Level 2 Reference panel with per-combination buttons.
+- **Level 1 / Level 2 tab structure** at top of app.
+- **Separate scores per level.**
+
+### Changed
+- **Renamed project from "Interval Trainer" to "Ear Trainer."**
+  File renamed from `interval-trainer.html` to `ear-trainer.html`.
+- Refactored state into `state.l1` and `state.l2` sub-objects.
 
 ---
 
 ## [0.5.0] — 2026-04-20
 
 ### Added
-- **Reference panel: root note selector.** New "Random / Fixed" toggle
-  above the interval grid. When Fixed is selected, a chromatic chooser
-  (C through B) appears. The chosen root applies to all reference button
-  clicks until changed. Default behavior unchanged (Random).
-- **Reference panel: adjustable melodic spacing.** New slider sets the
-  delay between the two notes in melodic Reference playback, from 0.4s
-  to 4s. Default 1.5s — slow enough to sing the interval before the
-  second note plays. Quiz still uses fixed 0.6s for snappier testing.
-  Slider is automatically disabled in harmonic mode (spacing has no
-  meaning when notes play together).
+- Reference panel: root note selector (Random/Fixed with chromatic chooser).
+- Reference panel: adjustable melodic spacing slider.
 
 ### Changed
-- Refactored `playQuestion` and `playIntervalOnDemand` to share a single
-  underlying `playSequence` that takes a `gap` parameter. Quiz passes
-  0.6, Reference passes the slider value. One playback path, two callers.
-- Reference root chooser uses `role="radio"` semantics (only one root
-  active at a time) rather than toggle-button semantics, while reusing
-  the chip styling. Screen readers announce it as a radio group.
+- Refactored `playQuestion`/`playIntervalOnDemand` to share
+  `playSequence(q)` with a `gap` parameter.
 
 ---
 
 ## [0.4.0] — 2026-04-20
 
 ### Changed
-- **Direction controls moved up** directly below the mode tabs as a
-  proper ARIA toolbar. Previously buried at the bottom of settings.
+- Direction controls moved below mode tabs as an ARIA toolbar.
 
 ### Added — accessibility baseline
-- Semantic HTML throughout: real `<button>` elements, `<main>` and
-  `<section>` landmarks.
-- Proper ARIA tab pattern (Melodic/Harmonic) with arrow-key navigation.
-- `aria-pressed` on toggle buttons; `aria-live` on feedback region.
-- Keyboard shortcuts: Space / R / S / 1-9. Visible on the buttons.
-- Visible focus indicators (`:focus-visible` brass outline).
-- ✓ / ✕ symbols alongside color on right/wrong feedback.
-- Skip-to-main-content link (visible on focus).
-- `prefers-reduced-motion` support.
-- Bumped `--ink-dim` and accent colors for WCAG AA contrast.
+- Semantic HTML, ARIA tab/toolbar/live-region patterns, keyboard
+  shortcuts, focus indicators, ✓/✕ symbols, skip-to-main-content link,
+  prefers-reduced-motion support, contrast bumps.
 
 ---
 
 ## [0.3.0] — 2026-04-19
 
 ### Added
-- Reference panel: click any of 12 intervals to hear it on a random root.
-- Brass-colored flash on reference buttons.
+- Reference panel.
 
 ### Fixed
-- Stale-question bug: pool/direction/mode changes now invalidate any
-  pending question via new `invalidateCurrent()` helper.
+- Stale-question bug when pool/direction/mode changed mid-question.
 
 ---
 
 ## [0.2.0] — 2026-04-19
 
 ### Added
-- Harmonic mode (notes played simultaneously).
-- Auto-advance on correct answers (1.2s).
-- Repeat Last button.
-- Mode-aware header subtitle and hint.
-
-### Changed
-- Split `state.current` from `state.lastQuestion` to support Repeat Last
-  after auto-advance.
+- Harmonic mode, auto-advance on correct, Repeat Last button.
 
 ---
 
 ## [0.1.0] — 2026-04-19
 
 ### Added
-- Initial working version: melodic interval trainer.
-- Sampled piano via Tone.js + Salamander Grand Piano.
-- Configurable interval pool and direction.
-- Score tracking (correct / total / streak).
-- Dark studio-gear aesthetic.
+- Initial working version: melodic interval trainer with sampled piano.
