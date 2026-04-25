@@ -7,17 +7,15 @@ and Now → Done (which gets written to CHANGELOG.md).
 
 *(What I'm actively working on. Max 3 items.)*
 
-- [ ] Try out Level 2 thoroughly — does blocked mode feel right?
-      Does arpeggiated teach what I hoped about scale-tone progression?
-- [~] Decide whether quiz auto-advance delay should be user-adjustable
-- [ ] Font size and color - make font size 1 larger overall and in the Question Play Box, the "space" text needs to have more contrast as it is difficult to read.  
-
+- [ ] Change Tritone to "Tritone AKA (Aug4/Dim5)" in the Sing First practice target area. I think it will be fine (even if not consistent) with the tritone choice, but there is the space to put it there. 
+- [ ] 
+- [ ] 
 ## Next
 
 *(The queue.)*
 
-- [ ] Add diminished and augmented triad qualities to Level 2
-- [ ] Sing-first practice mode (hear root → sing interval/triad →
+- [x] Add diminished and augmented triad qualities to Level 2
+- [~] Sing-first practice mode (hear root → sing interval/triad →
       play to verify). Likely its own tab or sub-mode within a level.
 - [ ] Reference panel: option to fix the root note for Level 1 (done
       at v0.5.0; item kept as reminder to make sure it still works after

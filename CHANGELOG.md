@@ -9,66 +9,82 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Add diminished and augmented triads to Level 2 quality pool
-- Sing-first practice mode (hear root, sing interval/triad, verify)
-- Seventh chords (Level 3)
+- Seventh chords (Level 4?)
+- Drop-2 voicings
 - Rhythm training
-- Sight-reading trainer (VexFlow)
+- Sight-reading trainer (VexFlow library)
+- Per-interval / per-quality score tracking
+- Save settings to localStorage so they persist across sessions
+- Real-user testing with sight-impaired screen reader users
+- Mobile-friendly layout review
+- Reference manual (separate from getting-started guide)
+
+---
+
+## [0.7.1] — 2026-04-24
+
+### Added
+- **User manual**: a getting-started guide for first-time users.
+  Covers all three levels with light music theory context for users
+  new to formal theory (intervals, triads, inversions explained with
+  evocative musical examples). Available as:
+  - `USER-MANUAL.md` — Markdown source, the editable working version
+  - `USER-MANUAL.pdf` — polished PDF for distribution to testers,
+    11 pages, generated via reportlab with serif typography matching
+    the app's calm/literary aesthetic
+- Manual includes sections on: quick start, three-levels overview,
+  music theory primer, per-level practice loops with settings
+  explained, tips for effective practice, full keyboard shortcut
+  reference, and an explicit accessibility features section.
+
+### Notes
+- No app code changes in this release. The HTML file is unchanged
+  from v0.7.0.
+- The Markdown source is the canonical version. PDF should be
+  regenerated when the manual changes (build script: build_manual_pdf.py
+  if kept in the project for reference).
+
+---
+
+## [0.7.0] — 2026-04-24
+
+### Added
+- **Diminished and augmented triads** in Level 2 (off by default).
+- **Level 3: Sing-First practice mode** — pick a target, hear root,
+  sing the interval/triad, then verify. Voice-range selector
+  (Bass/Tenor/Alto/Soprano), adjustable wait timer (1–15s),
+  continuous practice toggle, "Got It / Missed It" self-rating.
+  Both intervals and triads supported.
+- Third level tab and keyboard shortcuts for Level 3 (Space, T, G, M).
+
+### Changed
+- Stage indicator light gains a green "waiting" state for L3 countdown.
 
 ---
 
 ## [0.6.1] — 2026-04-23
 
 ### Changed
-- **Level 2 settings renamed and regrouped as "Triad Focus."**
-  The settings section now has a clear top-level heading ("Triad Focus")
-  with a short description of what it does. Subheadings updated from
-  "Quality pool" → "Chord quality" and "Inversion pool" → "Chord inversion."
-- **Quiz answer labels updated to match:** "Quality" → "Chord Quality"
-  and "Inversion" → "Chord Inversion" on the Level 2 answer rows.
-  Consistency between settings and quiz labels throughout.
-- **Triad Focus panel repositioned** between the score and the Reference
-  panel (previously was at the bottom of the page). Accessible from a
-  natural reading position after answering a question.
-- **All font sizes bumped up one point** for readability. H1 header,
-  tab labels, button text, answer buttons, feedback, panel headings,
-  chips — everything is slightly larger. Helps anyone with mild visual
-  fatigue or small-screen viewing.
+- Level 2 settings renamed/regrouped as "Triad Focus" with consistent
+  "Chord quality" / "Chord inversion" labels in both settings and quiz.
+- Triad Focus repositioned between score and Reference panel.
+- All font sizes bumped up one point.
 
 ### Fixed
-- **Keyboard hint badge contrast on primary buttons.** The small "Space"
-  and "Enter" badges on the brass-colored Play and Submit buttons were
-  nearly unreadable (low-contrast dim text on bright background). They
-  now use a near-black color on brass backgrounds. The R and S badges
-  on transparent-background buttons are unchanged (still readable there).
-
-### Technical notes
-- Added `--ink-on-brass` CSS variable for high-contrast text on
-  brass-colored surfaces. Used via `.btn-primary .kbd` and
-  `.btn-submit .kbd` selectors.
-- No logic changes in this release; purely cosmetic/UX polish.
+- Keyboard hint badge contrast on primary (brass) buttons.
 
 ---
 
 ## [0.6.0] — 2026-04-23
 
 ### Added
-- **Level 2: Triads** — new training level for major and minor triads
-  with all three inversions.
-  - Blocked mode: three notes simultaneously.
-  - Arpeggiated mode: notes in sequence, with direction toolbar.
-  - Two-axis answer UI (Quality row + Inversion row) with explicit
-    Submit button and Clear Picks affordance.
-  - Partial-credit feedback distinguishes "quality right, inversion wrong"
-    from "both wrong."
-  - Keyboard shortcut: Enter submits.
-  - Level 2 Reference panel with per-combination buttons.
-- **Level 1 / Level 2 tab structure** at top of app.
-- **Separate scores per level.**
+- **Level 2: Triads** — blocked/arpeggiated, major/minor, three
+  inversions, two-axis answer UI with explicit Submit, partial credit.
+- Level 1 / Level 2 tab structure.
+- Separate scores per level.
 
 ### Changed
-- **Renamed project from "Interval Trainer" to "Ear Trainer."**
-  File renamed from `interval-trainer.html` to `ear-trainer.html`.
+- Renamed project from "Interval Trainer" to "Ear Trainer."
 - Refactored state into `state.l1` and `state.l2` sub-objects.
 
 ---
@@ -76,12 +92,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.0] — 2026-04-20
 
 ### Added
-- Reference panel: root note selector (Random/Fixed with chromatic chooser).
-- Reference panel: adjustable melodic spacing slider.
+- Reference panel: root note selector and adjustable spacing slider.
 
 ### Changed
-- Refactored `playQuestion`/`playIntervalOnDemand` to share
-  `playSequence(q)` with a `gap` parameter.
+- Refactored to share `playSequence(q)` with a `gap` parameter.
 
 ---
 
@@ -91,9 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Direction controls moved below mode tabs as an ARIA toolbar.
 
 ### Added — accessibility baseline
-- Semantic HTML, ARIA tab/toolbar/live-region patterns, keyboard
-  shortcuts, focus indicators, ✓/✕ symbols, skip-to-main-content link,
-  prefers-reduced-motion support, contrast bumps.
+- Semantic HTML, ARIA patterns, keyboard shortcuts, focus indicators,
+  ✓/✕ symbols, skip link, prefers-reduced-motion, contrast bumps.
 
 ---
 
