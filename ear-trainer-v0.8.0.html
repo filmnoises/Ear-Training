@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.7.2 · 2026-04-25
-  Patch: Tritone shows as "Tritone (Aug4/Dim5)" in the Level 3
-  target picker only. All other locations unchanged.
+  Ear Trainer · v0.8.0 · 2026-04-25
+  Minor release: adds Level 4 (7th chords). Four common qualities
+  (maj7, min7, dom7, m7b5) × four inversions × tight/open (drop-2)
+  voicings. Mirrors Level 2 architecture (two-axis answer UI,
+  blocked/arpeggiated modes, reference panel, focus settings).
   See CHANGELOG.md for version history.
 -->
 <html lang="en">
@@ -513,6 +515,10 @@
             class="level-tab"
             aria-selected="false" aria-controls="level-3-panel"
             data-level="3">Level 3 · Sing-First</button>
+    <button role="tab" id="level-4-tab"
+            class="level-tab"
+            aria-selected="false" aria-controls="level-4-panel"
+            data-level="4">Level 4 · 7th Chords</button>
   </div>
 
   <div class="loading-banner" id="loadingBanner"
@@ -833,16 +839,127 @@
       </section>
     </section>
 
+    <section id="level-4-panel" class="level-panel"
+             role="tabpanel" aria-labelledby="level-4-tab" hidden>
+
+      <div role="tablist" class="mode-tabs" aria-label="7th chord playback mode"
+           style="padding-top: 0;">
+        <button role="tab" id="tab-l4-blocked" class="mode-tab"
+                aria-selected="false" data-l4mode="blocked">Blocked</button>
+        <button role="tab" id="tab-l4-arpeggiated" class="mode-tab"
+                aria-selected="true" data-l4mode="arpeggiated">Arpeggiated</button>
+      </div>
+
+      <div class="direction-bar"
+           id="l4-directionBar"
+           role="toolbar"
+           aria-label="Arpeggio direction">
+        <span class="label" aria-hidden="true">Direction</span>
+      </div>
+
+      <section class="stage" id="l4-stage" aria-labelledby="l4-stage-heading">
+        <div class="prompt">
+          <h2 id="l4-stage-heading" style="all: unset;">Question</h2>
+          <span class="mode-hint" id="l4-modeHint" aria-hidden="true">four notes · one after the other</span>
+        </div>
+        <div class="play-row">
+          <button class="btn-primary" id="l4-playBtn" disabled aria-keyshortcuts="Space">
+            ▶ Play<span class="kbd" aria-hidden="true">Space</span>
+          </button>
+          <button id="l4-replayBtn" disabled aria-keyshortcuts="R">
+            ↻ Repeat Last<span class="kbd" aria-hidden="true">R</span>
+          </button>
+          <button id="l4-skipBtn" disabled aria-keyshortcuts="S">
+            Skip →<span class="kbd" aria-hidden="true">S</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="feedback" id="l4-feedback"
+           role="status" aria-live="polite" aria-atomic="true">Press Play to begin.</div>
+
+      <div class="axis-group" role="group" aria-labelledby="l4-quality-label">
+        <span class="axis-label" id="l4-quality-label">Chord Quality</span>
+        <div class="axis-buttons answers" id="l4-qualityAnswers"></div>
+      </div>
+      <div class="axis-group" role="group" aria-labelledby="l4-inversion-label">
+        <span class="axis-label" id="l4-inversion-label">Chord Inversion</span>
+        <div class="axis-buttons answers" id="l4-inversionAnswers"></div>
+      </div>
+      <div class="submit-row">
+        <button class="btn-submit" id="l4-submitBtn" disabled>Submit Answer<span class="kbd" aria-hidden="true">Enter</span></button>
+        <button id="l4-clearBtn" disabled>Clear Picks</button>
+      </div>
+
+      <div class="stats" aria-label="Level 4 score">
+        <div>Correct <strong id="l4-scoreCorrect">0</strong></div>
+        <div>Total <strong id="l4-scoreTotal">0</strong></div>
+        <div>Streak <strong id="l4-scoreStreak">0</strong></div>
+      </div>
+
+      <section class="panel" style="margin-top: 28px" aria-labelledby="l4-focus-heading">
+        <h2 id="l4-focus-heading">Seventh Focus</h2>
+        <div class="panel-sub">
+          Narrow your practice to specific qualities, inversions, or
+          voicings. The default starting pool is Major 7 vs Dominant 7
+          in root and 1st inversion — broaden as your ear builds.
+        </div>
+        <h3>Chord quality</h3>
+        <div class="setting-row" id="l4-qualityPool"
+             role="group" aria-label="Toggle which 7th chord qualities appear in the quiz"></div>
+        <h3 style="margin-top: 20px">Chord inversion</h3>
+        <div class="setting-row" id="l4-inversionPool"
+             role="group" aria-label="Toggle which inversions appear in the quiz"></div>
+        <h3 style="margin-top: 20px">Voicing</h3>
+        <div class="setting-row" id="l4-voicingPool"
+             role="radiogroup" aria-label="Choose tight (closed) or open (drop-2) voicing"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="l4-ref-heading">
+        <h2 id="l4-ref-heading">Reference · hear any 7th chord</h2>
+        <div class="panel-sub">Click any chord to hear it. Uses the current mode, direction, and voicing.</div>
+
+        <div class="ref-controls">
+          <div class="ref-control-row">
+            <span class="ref-control-label" aria-hidden="true">Root</span>
+            <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+              <button class="chip" id="l4-rootRandomBtn" aria-pressed="true">Random</button>
+              <button class="chip" id="l4-rootFixedBtn" aria-pressed="false">Fixed</button>
+            </div>
+            <div class="root-chooser" id="l4-rootChooser"
+                 role="radiogroup" aria-label="Choose fixed root note" hidden></div>
+          </div>
+          <div class="ref-control-row">
+            <span class="ref-control-label" aria-hidden="true">Spacing</span>
+            <div class="tempo-control" id="l4-tempoControl">
+              <label for="l4-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
+              <input type="range" id="l4-tempoSlider"
+                     class="tempo-slider"
+                     min="0.2" max="2" step="0.1" value="0.5"
+                     aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
+              <span class="tempo-value" id="l4-tempoValue" aria-hidden="true">0.5 s</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ref-grid" id="l4-refGrid" role="group" aria-label="Reference 7th chords"></div>
+      </section>
+    </section>
+
   </main>
 
 </div>
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.7.2
-   Patch on v0.7.0:
-   - Tritone shows as "Tritone (Aug4/Dim5)" in the Level 3
-     target picker only. All other appearances unchanged.
+   EAR TRAINER v0.8.0
+   Adds Level 4: 7th chords.
+   - Qualities: maj7, min7, dom7, m7b5 (dim7 reserved for future toggle)
+   - Inversions: root, 1st, 2nd, 3rd
+   - Voicings: tight (closed) and open (drop-2)
+   - Architecture mirrors Level 2: two-axis answer UI with explicit
+     Submit, blocked/arpeggiated modes, "Seventh Focus" settings panel,
+     reference grid for on-demand listening.
    ============================================================ */
 
 const INTERVALS = [
@@ -899,6 +1016,70 @@ function buildTriadMidi(rootMidi, qualityKey, inversionKey) {
   return [r, third, fifth];
 }
 
+/* === LEVEL 4: 7th chord data ===
+   Kept separate from triad constants so changes here cannot affect
+   Levels 2 or 3. dim7 is intentionally omitted from the user-facing
+   pool but the data structure supports adding it later as an
+   advanced toggle (intervals: [0, 3, 6, 9]). */
+
+const SEVENTH_QUALITIES = [
+  { key: 'maj7',  name: 'Major 7',         shortName: 'Maj7',  intervals: [0, 4, 7, 11] },
+  { key: 'min7',  name: 'Minor 7',         shortName: 'Min7',  intervals: [0, 3, 7, 10] },
+  { key: 'dom7',  name: 'Dominant 7',      shortName: 'Dom7',  intervals: [0, 4, 7, 10] },
+  { key: 'm7b5',  name: 'Half-diminished', shortName: 'm7♭5',  intervals: [0, 3, 6, 10] },
+];
+
+const SEVENTH_INVERSIONS = [
+  { key: 'root', name: 'Root position', shortName: 'Root' },
+  { key: 'inv1', name: '1st inversion', shortName: '1st' },
+  { key: 'inv2', name: '2nd inversion', shortName: '2nd' },
+  { key: 'inv3', name: '3rd inversion', shortName: '3rd' },
+];
+
+const SEVENTH_VOICINGS = [
+  { key: 'tight', name: 'Tight (closed)' },
+  { key: 'open',  name: 'Open (drop-2)'  },
+];
+
+/**
+ * Build MIDI note array for a 7th chord.
+ *
+ * Tight (closed): chord tones stacked in close position. Each
+ *   inversion rotates which chord tone is in the bass and pushes
+ *   the lower tones up an octave to keep the voicing close.
+ *
+ * Open (drop-2): take the tight voicing, then drop the
+ *   second-from-top voice down an octave. Chord spans roughly a
+ *   10th instead of a 7th — the standard jazz "spread" sound.
+ *   Result is re-sorted low-to-high so arpeggiated playback
+ *   plays the notes in pitch order.
+ *
+ * @returns {number[]} array of MIDI numbers, low to high
+ */
+function buildSeventhMidi(rootMidi, qualityKey, inversionKey, voicingType) {
+  const quality = SEVENTH_QUALITIES.find(q => q.key === qualityKey);
+  if (!quality) return [];
+  const [r, third, fifth, seventh] = quality.intervals.map(iv => rootMidi + iv);
+
+  let tight;
+  if (inversionKey === 'root')      tight = [r,       third,   fifth,      seventh];
+  else if (inversionKey === 'inv1') tight = [third,   fifth,   seventh,    r + 12];
+  else if (inversionKey === 'inv2') tight = [fifth,   seventh, r + 12,     third + 12];
+  else if (inversionKey === 'inv3') tight = [seventh, r + 12,  third + 12, fifth + 12];
+  else return [];
+
+  if (voicingType === 'tight') return tight;
+
+  if (voicingType === 'open') {
+    const dropped = [...tight];
+    const secondFromTopIdx = tight.length - 2;
+    dropped[secondFromTopIdx] = tight[secondFromTopIdx] - 12;
+    return dropped.sort((a, b) => a - b);
+  }
+
+  return tight;
+}
+
 function midiToNoteName(midi) {
   const names = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   const octave = Math.floor(midi / 12) - 1;
@@ -941,6 +1122,25 @@ const state = {
     stage: 'idle',
     total: 0, got: 0, missed: 0,
   },
+  /* Level 4 defaults: easier onramp.
+     - maj7 vs dom7 = the most pedagogically meaningful starter pair
+       (the "home" sound vs the "going somewhere" sound)
+     - root + 1st inversion only
+     - arpeggiated (the 7th lands as a discrete event, easier to hear)
+     - tight voicing
+     User can broaden the pool from the Seventh Focus settings. */
+  l4: {
+    mode: 'arpeggiated',
+    voicing: 'tight',
+    activeQualities: new Set(['maj7', 'dom7']),
+    activeInversions: new Set(['root', 'inv1']),
+    directions: new Set(['up']),
+    current: null, lastQuestion: null, answered: false,
+    selectedQuality: null, selectedInversion: null,
+    correct: 0, total: 0, streak: 0,
+    autoAdvanceTimer: null,
+    refRootMode: 'random', refRootMidi: 60, refArpDelay: 0.5,
+  },
 };
 
 const piano = new Tone.Sampler({
@@ -957,8 +1157,10 @@ const piano = new Tone.Sampler({
     document.getElementById('l1-playBtn').disabled = false;
     document.getElementById('l2-playBtn').disabled = false;
     document.getElementById('l3-playRootBtn').disabled = false;
+    document.getElementById('l4-playBtn').disabled = false;
     document.getElementById('l1-feedback').textContent = 'Ready. Press Play.';
     document.getElementById('l2-feedback').textContent = 'Ready. Press Play.';
+    document.getElementById('l4-feedback').textContent = 'Ready. Press Play.';
   }
 }).toDestination();
 
@@ -1812,6 +2014,379 @@ document.getElementById('l3-continuousToggle').addEventListener('change', (e) =>
   state.l3.continuous = e.target.checked;
 });
 
+/* === LEVEL 4: 7th chords ===
+   Architecture mirrors Level 2 (l2_*) closely. Where the patterns
+   are identical, comments are kept light; differences from Level 2
+   (voicing toggle, 4-note arpeggios) are noted where they appear. */
+
+function l4_invalidateCurrent() {
+  const s = state.l4;
+  s.current = null; s.answered = false;
+  s.selectedQuality = null; s.selectedInversion = null;
+  if (s.autoAdvanceTimer) { clearTimeout(s.autoAdvanceTimer); s.autoAdvanceTimer = null; }
+  l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_updateSubmitButton();
+  const fb = document.getElementById('l4-feedback');
+  if (!fb.textContent.startsWith('Enable')) {
+    fb.textContent = 'Ready. Press Play.';
+    fb.className = 'feedback';
+  }
+}
+
+function l4_newQuestion() {
+  const s = state.l4;
+  if (s.autoAdvanceTimer) { clearTimeout(s.autoAdvanceTimer); s.autoAdvanceTimer = null; }
+  const qualityArr = SEVENTH_QUALITIES.filter(q => s.activeQualities.has(q.key));
+  const inversionArr = SEVENTH_INVERSIONS.filter(i => s.activeInversions.has(i.key));
+  if (qualityArr.length === 0 || inversionArr.length === 0) {
+    document.getElementById('l4-feedback').textContent = 'Enable at least one chord quality and one inversion below.';
+    return;
+  }
+  const quality = qualityArr[Math.floor(Math.random() * qualityArr.length)];
+  const inversion = inversionArr[Math.floor(Math.random() * inversionArr.length)];
+  let direction = 'up';
+  if (s.mode === 'arpeggiated') {
+    const dirs = [...s.directions];
+    direction = dirs[Math.floor(Math.random() * dirs.length)];
+  }
+  /* Root range: 48-58 (C3 to A#3). Narrower than Level 2's 48-60
+     because open voicings can extend the chord up by an octave —
+     keeping the root low ensures the top note stays within the
+     piano sample range (A6 / MIDI 93) even for tight 3rd inversion
+     of a major 7 starting high. */
+  const low = 48, high = 58;
+  const rootMidi = low + Math.floor(Math.random() * (high - low + 1));
+  s.current = {
+    rootMidi,
+    qualityKey: quality.key,
+    inversionKey: inversion.key,
+    voicing: s.voicing,
+    direction,
+    mode: s.mode,
+    gap: s.refArpDelay,
+  };
+  s.answered = false; s.selectedQuality = null; s.selectedInversion = null;
+  l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_updateSubmitButton();
+  document.getElementById('l4-feedback').textContent = 'Listening…';
+  document.getElementById('l4-feedback').className = 'feedback';
+  document.getElementById('l4-replayBtn').disabled = false;
+  document.getElementById('l4-skipBtn').disabled = false;
+  l4_playChord(s.current);
+  s.lastQuestion = s.current;
+}
+
+function l4_playChord(q) {
+  if (!q) return;
+  const { rootMidi, qualityKey, inversionKey, voicing, direction, mode, gap } = q;
+  const midis = buildSeventhMidi(rootMidi, qualityKey, inversionKey, voicing);
+  if (midis.length === 0) return;
+  const stage = document.getElementById('l4-stage');
+  stage.classList.add('playing');
+  const now = Tone.now();
+  if (mode === 'blocked') {
+    piano.triggerAttackRelease(midis.map(midiToNoteName), '1n', now);
+    setTimeout(() => stage.classList.remove('playing'), 1600);
+  } else {
+    const sequence = direction === 'down' ? [...midis].reverse() : midis;
+    const spacing = typeof gap === 'number' ? gap : 0.5;
+    sequence.forEach((midi, i) => {
+      piano.triggerAttackRelease(midiToNoteName(midi), '1n', now + i * spacing);
+    });
+    setTimeout(() => stage.classList.remove('playing'), (spacing * sequence.length * 1000) + 600);
+  }
+}
+
+function l4_playChordOnDemand(qualityKey, inversionKey, buttonEl) {
+  const s = state.l4;
+  let direction = 'up';
+  if (s.mode === 'arpeggiated') {
+    const dirs = [...s.directions];
+    direction = dirs[Math.floor(Math.random() * dirs.length)];
+  }
+  let rootMidi;
+  if (s.refRootMode === 'fixed') {
+    /* Clamp the fixed root into the L4 quiz range for consistency. */
+    rootMidi = s.refRootMidi;
+    while (rootMidi > 58) rootMidi -= 12;
+    while (rootMidi < 48) rootMidi += 12;
+  } else {
+    rootMidi = 48 + Math.floor(Math.random() * 11);
+  }
+  l4_playChord({
+    rootMidi, qualityKey, inversionKey,
+    voicing: s.voicing,
+    direction, mode: s.mode, gap: s.refArpDelay,
+  });
+  if (buttonEl) {
+    buttonEl.classList.add('flash');
+    setTimeout(() => buttonEl.classList.remove('flash'), 600);
+  }
+}
+
+function l4_selectQuality(k) { if (state.l4.answered) return; state.l4.selectedQuality = k; l4_renderQualityAnswers(); l4_updateSubmitButton(); }
+function l4_selectInversion(k) { if (state.l4.answered) return; state.l4.selectedInversion = k; l4_renderInversionAnswers(); l4_updateSubmitButton(); }
+
+function l4_updateSubmitButton() {
+  const s = state.l4;
+  const submit = document.getElementById('l4-submitBtn');
+  const clear = document.getElementById('l4-clearBtn');
+  submit.disabled = !(!s.answered && s.current && s.selectedQuality !== null && s.selectedInversion !== null);
+  clear.disabled = s.answered || !(s.selectedQuality !== null || s.selectedInversion !== null);
+}
+
+function l4_clearPicks() {
+  if (state.l4.answered) return;
+  state.l4.selectedQuality = null; state.l4.selectedInversion = null;
+  l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_updateSubmitButton();
+}
+
+function l4_submitAnswer() {
+  const s = state.l4;
+  if (s.answered || !s.current) return;
+  if (s.selectedQuality === null || s.selectedInversion === null) return;
+  s.answered = true; s.total++;
+  const correctQuality = s.selectedQuality === s.current.qualityKey;
+  const correctInversion = s.selectedInversion === s.current.inversionKey;
+  const allCorrect = correctQuality && correctInversion;
+  const quality = SEVENTH_QUALITIES.find(q => q.key === s.current.qualityKey);
+  const inversion = SEVENTH_INVERSIONS.find(i => i.key === s.current.inversionKey);
+  const answerText = `${quality.name} ${inversion.name.toLowerCase()}`;
+  const fb = document.getElementById('l4-feedback');
+  if (allCorrect) {
+    s.correct++; s.streak++;
+    fb.textContent = `Correct. That was a ${answerText}.`;
+    fb.className = 'feedback good';
+  } else {
+    s.streak = 0;
+    let msg = `Not quite. That was a ${answerText}.`;
+    if (correctQuality && !correctInversion) msg = `Quality right, inversion wrong. That was a ${answerText}.`;
+    else if (!correctQuality && correctInversion) msg = `Inversion right, quality wrong. That was a ${answerText}.`;
+    msg += ' Press R to hear it again.';
+    fb.textContent = msg;
+    fb.className = 'feedback bad';
+  }
+  l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_updateSubmitButton(); l4_renderStats();
+  if (allCorrect) s.autoAdvanceTimer = setTimeout(() => l4_newQuestion(), 1400);
+}
+
+function l4_renderQualityAnswers() {
+  const s = state.l4;
+  const box = document.getElementById('l4-qualityAnswers');
+  box.innerHTML = '';
+  const enabled = SEVENTH_QUALITIES.filter(q => s.activeQualities.has(q.key));
+  enabled.forEach((q, idx) => {
+    const btn = document.createElement('button');
+    btn.dataset.qualityKey = q.key;
+    btn.setAttribute('aria-label', `Chord quality ${idx + 1}: ${q.name}`);
+    btn.innerHTML = `${q.name}<span class="semitones">${q.shortName}</span>`;
+    if (s.selectedQuality === q.key && !s.answered) btn.classList.add('selected');
+    if (s.answered) {
+      if (q.key === s.current.qualityKey) btn.classList.add('correct');
+      else if (q.key === s.selectedQuality) btn.classList.add('wrong');
+    }
+    btn.onclick = () => l4_selectQuality(q.key);
+    box.appendChild(btn);
+  });
+}
+
+function l4_renderInversionAnswers() {
+  const s = state.l4;
+  const box = document.getElementById('l4-inversionAnswers');
+  box.innerHTML = '';
+  const enabled = SEVENTH_INVERSIONS.filter(i => s.activeInversions.has(i.key));
+  enabled.forEach((inv, idx) => {
+    const btn = document.createElement('button');
+    btn.dataset.inversionKey = inv.key;
+    btn.setAttribute('aria-label', `Chord inversion ${idx + 1}: ${inv.name}`);
+    btn.innerHTML = `${inv.name}<span class="semitones">${inv.shortName}</span>`;
+    if (s.selectedInversion === inv.key && !s.answered) btn.classList.add('selected');
+    if (s.answered) {
+      if (inv.key === s.current.inversionKey) btn.classList.add('correct');
+      else if (inv.key === s.selectedInversion) btn.classList.add('wrong');
+    }
+    btn.onclick = () => l4_selectInversion(inv.key);
+    box.appendChild(btn);
+  });
+}
+
+function l4_renderStats() {
+  document.getElementById('l4-scoreCorrect').textContent = state.l4.correct;
+  document.getElementById('l4-scoreTotal').textContent   = state.l4.total;
+  document.getElementById('l4-scoreStreak').textContent  = state.l4.streak;
+}
+
+function l4_renderReference() {
+  const box = document.getElementById('l4-refGrid');
+  box.innerHTML = '';
+  const qualities = SEVENTH_QUALITIES.filter(q => state.l4.activeQualities.has(q.key));
+  const inversions = SEVENTH_INVERSIONS.filter(i => state.l4.activeInversions.has(i.key));
+  qualities.forEach(q => {
+    inversions.forEach(inv => {
+      const b = document.createElement('button');
+      b.className = 'ref-btn';
+      /* aria-label uses the full inversion name and the human-readable
+         quality name. The screen-reader announcement reads like:
+         "Play Major 7 / Root reference, 1st inversion" — clear and
+         unambiguous. */
+      b.setAttribute('aria-label', `Play ${q.name} / ${inv.name} reference`);
+      b.innerHTML =
+        `<span>${q.shortName} / ${inv.shortName}</span>` +
+        `<span class="code" aria-hidden="true">${q.key}·${inv.key}</span>`;
+      b.onclick = async () => { await Tone.start(); l4_playChordOnDemand(q.key, inv.key, b); };
+      box.appendChild(b);
+    });
+  });
+}
+
+function l4_renderRootChooser() {
+  const box = document.getElementById('l4-rootChooser');
+  box.innerHTML = '';
+  ROOT_OPTIONS.forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.setAttribute('role', 'radio');
+    const isOn = r.midi === state.l4.refRootMidi;
+    btn.setAttribute('aria-checked', isOn ? 'true' : 'false');
+    btn.setAttribute('aria-label', `Root note ${r.name}`);
+    btn.textContent = r.name;
+    btn.onclick = () => { state.l4.refRootMidi = r.midi; l4_renderRootChooser(); };
+    box.appendChild(btn);
+  });
+}
+
+function l4_renderDirectionBar() {
+  const bar = document.getElementById('l4-directionBar');
+  bar.querySelectorAll('.chip').forEach(el => el.remove());
+  const blocked = state.l4.mode === 'blocked';
+  bar.setAttribute('aria-disabled', blocked ? 'true' : 'false');
+  [['up','Ascending'],['down','Descending'],['both','Mixed']].forEach(([key, label]) => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    const isOn = key === 'both'
+      ? (state.l4.directions.has('up') && state.l4.directions.has('down'))
+      : (state.l4.directions.has(key) && state.l4.directions.size === 1);
+    btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+    btn.textContent = label;
+    btn.disabled = blocked;
+    btn.onclick = () => {
+      if (blocked) return;
+      if (key === 'both') state.l4.directions = new Set(['up','down']);
+      else state.l4.directions = new Set([key]);
+      l4_renderDirectionBar(); updateHeader(); l4_invalidateCurrent();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function l4_renderQualityPool() {
+  const box = document.getElementById('l4-qualityPool');
+  box.innerHTML = '';
+  SEVENTH_QUALITIES.forEach(q => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    const on = state.l4.activeQualities.has(q.key);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', `${q.name}, ${on ? 'currently in quiz pool' : 'currently excluded from quiz'}`);
+    btn.textContent = q.name;
+    btn.onclick = () => {
+      if (state.l4.activeQualities.has(q.key)) state.l4.activeQualities.delete(q.key);
+      else state.l4.activeQualities.add(q.key);
+      l4_renderQualityPool(); l4_renderQualityAnswers(); l4_renderReference(); l4_invalidateCurrent();
+    };
+    box.appendChild(btn);
+  });
+}
+
+function l4_renderInversionPool() {
+  const box = document.getElementById('l4-inversionPool');
+  box.innerHTML = '';
+  SEVENTH_INVERSIONS.forEach(inv => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    const on = state.l4.activeInversions.has(inv.key);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', `${inv.name}, ${on ? 'currently in quiz pool' : 'currently excluded from quiz'}`);
+    btn.textContent = inv.name;
+    btn.onclick = () => {
+      if (state.l4.activeInversions.has(inv.key)) state.l4.activeInversions.delete(inv.key);
+      else state.l4.activeInversions.add(inv.key);
+      l4_renderInversionPool(); l4_renderInversionAnswers(); l4_renderReference(); l4_invalidateCurrent();
+    };
+    box.appendChild(btn);
+  });
+}
+
+/* Voicing is a single-choice (radio), not a toggle pool — the user
+   picks tight OR open. Using role="radio" with aria-checked rather
+   than aria-pressed so screen readers announce it as a radio group
+   selection rather than a multi-select. */
+function l4_renderVoicingPool() {
+  const box = document.getElementById('l4-voicingPool');
+  box.innerHTML = '';
+  SEVENTH_VOICINGS.forEach(v => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.setAttribute('role', 'radio');
+    const on = state.l4.voicing === v.key;
+    btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', `Voicing: ${v.name}`);
+    btn.textContent = v.name;
+    btn.onclick = () => {
+      state.l4.voicing = v.key;
+      l4_renderVoicingPool();
+      l4_invalidateCurrent();
+    };
+    box.appendChild(btn);
+  });
+}
+
+function l4_updateReferenceControls() {
+  const s = state.l4;
+  const random = s.refRootMode === 'random';
+  document.getElementById('l4-rootRandomBtn').setAttribute('aria-pressed', random ? 'true' : 'false');
+  document.getElementById('l4-rootFixedBtn').setAttribute('aria-pressed', !random ? 'true' : 'false');
+  document.getElementById('l4-rootChooser').hidden = random;
+  const tempoCtl = document.getElementById('l4-tempoControl');
+  const tempoSlider = document.getElementById('l4-tempoSlider');
+  if (s.mode === 'blocked') {
+    tempoCtl.setAttribute('aria-disabled', 'true');
+    tempoSlider.disabled = true;
+  } else {
+    tempoCtl.removeAttribute('aria-disabled');
+    tempoSlider.disabled = false;
+  }
+}
+
+document.querySelectorAll('#level-4-panel [role="tab"].mode-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('#level-4-panel [role="tab"].mode-tab').forEach(t => t.setAttribute('aria-selected', 'false'));
+    tab.setAttribute('aria-selected', 'true');
+    state.l4.mode = tab.dataset.l4mode;
+    l4_invalidateCurrent();
+    document.getElementById('l4-replayBtn').disabled = true;
+    document.getElementById('l4-skipBtn').disabled = true;
+    l4_renderDirectionBar(); updateHeader(); l4_updateReferenceControls();
+  };
+});
+
+document.getElementById('l4-playBtn').onclick = async () => {
+  await Tone.start();
+  if (!state.l4.current || state.l4.answered) l4_newQuestion();
+  else l4_playChord(state.l4.current);
+};
+document.getElementById('l4-replayBtn').onclick = () => { if (state.l4.lastQuestion) l4_playChord(state.l4.lastQuestion); };
+document.getElementById('l4-skipBtn').onclick = () => l4_newQuestion();
+document.getElementById('l4-submitBtn').onclick = l4_submitAnswer;
+document.getElementById('l4-clearBtn').onclick = l4_clearPicks;
+document.getElementById('l4-rootRandomBtn').onclick = () => { state.l4.refRootMode = 'random'; l4_updateReferenceControls(); };
+document.getElementById('l4-rootFixedBtn').onclick = () => { state.l4.refRootMode = 'fixed'; l4_updateReferenceControls(); };
+document.getElementById('l4-tempoSlider').addEventListener('input', () => {
+  const slider = document.getElementById('l4-tempoSlider');
+  const v = parseFloat(slider.value);
+  state.l4.refArpDelay = v;
+  document.getElementById('l4-tempoValue').textContent = v.toFixed(1) + ' s';
+  slider.setAttribute('aria-valuenow', v);
+});
+
 /* === SHARED === */
 
 function updateHeader() {
@@ -1838,6 +2413,18 @@ function updateHeader() {
       sub.textContent = `Level 2 · arpeggiated · ${dirLabel}`;
       document.getElementById('l2-modeHint').textContent = 'three notes · one after the other';
     }
+  } else if (state.currentLevel === 4) {
+    const s = state.l4;
+    const voicingLabel = s.voicing === 'open' ? 'open' : 'tight';
+    if (s.mode === 'blocked') {
+      sub.textContent = `Level 4 · blocked · ${voicingLabel}`;
+      document.getElementById('l4-modeHint').textContent = 'four notes · at the same time';
+    } else {
+      const dirs = [...s.directions];
+      const dirLabel = dirs.length > 1 ? 'mixed' : (dirs[0] === 'up' ? 'ascending' : 'descending');
+      sub.textContent = `Level 4 · arpeggiated · ${dirLabel} · ${voicingLabel}`;
+      document.getElementById('l4-modeHint').textContent = 'four notes · one after the other';
+    }
   } else {
     const s = state.l3;
     sub.textContent = `Level 3 · sing-first · ${s.contentMode}`;
@@ -1858,6 +2445,7 @@ document.querySelectorAll('[role="tab"].level-tab').forEach(tab => {
     document.getElementById('level-1-panel').hidden = level !== 1;
     document.getElementById('level-2-panel').hidden = level !== 2;
     document.getElementById('level-3-panel').hidden = level !== 3;
+    document.getElementById('level-4-panel').hidden = level !== 4;
     updateHeader();
   };
   tab.onkeydown = (e) => {
@@ -1897,7 +2485,7 @@ document.addEventListener('keydown', (e) => {
     }
     return;
   }
-  const prefix = level === 1 ? 'l1' : 'l2';
+  const prefix = level === 1 ? 'l1' : (level === 4 ? 'l4' : 'l2');
   if (key === ' ' || key === 'spacebar') {
     e.preventDefault();
     document.getElementById(`${prefix}-playBtn`).click();
@@ -1909,9 +2497,9 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     const b = document.getElementById(`${prefix}-skipBtn`);
     if (!b.disabled) b.click();
-  } else if (key === 'enter' && level === 2) {
+  } else if (key === 'enter' && (level === 2 || level === 4)) {
     e.preventDefault();
-    const b = document.getElementById('l2-submitBtn');
+    const b = document.getElementById(`${prefix}-submitBtn`);
     if (!b.disabled) b.click();
   } else if (/^[1-9]$/.test(key) && level === 1) {
     const buttons = document.querySelectorAll('#l1-answers button');
@@ -1935,6 +2523,12 @@ l3_renderTriadTargetPickers();
 l3_updateContentMode();
 l3_renderStats();
 l3_updateTargetDisplay();
+
+l4_renderQualityPool(); l4_renderInversionPool(); l4_renderVoicingPool();
+l4_renderDirectionBar();
+l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_renderReference();
+l4_renderRootChooser(); l4_renderStats(); l4_updateReferenceControls();
+l4_updateSubmitButton();
 
 updateHeader();
 </script>

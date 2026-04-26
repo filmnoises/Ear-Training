@@ -8,6 +8,9 @@ Format: date, a line or two, move on. Don't polish.
 
 ---
 
+* ** 2026-04-25
+Have been exploring Level 2 triads and had a thought that in the blocked mode once the user submits their answer, they could hear it again arpeggiated to help fix that in their mind. The reverse would be the case if they are in the arpeggiated mode, they blocked triad would play. Almost as a reward before the next question happens. I'm unsure if this would be a default mode or an option the user could choose. 
+
 * **2026-04-23 — shipped v0.6.1**
 
 UX polish release: Triad Focus panel repositioned and renamed,

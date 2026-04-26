@@ -7,7 +7,7 @@ and Now → Done (which gets written to CHANGELOG.md).
 
 *(What I'm actively working on. Max 3 items.)*
 
-- [ ] Change Tritone to "Tritone AKA (Aug4/Dim5)" in the Sing First practice target area. I think it will be fine (even if not consistent) with the tritone choice, but there is the space to put it there. 
+- [x] Change Tritone to "Tritone AKA (Aug4/Dim5)" in the Sing First practice target area. I think it will be fine (even if not consistent) with the tritone choice, but there is the space to put it there. 
 - [ ] 
 - [ ] 
 ## Next
