@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.8.3 · 2026-04-28
-  Patch release: User Manual link now points to GitHub's rendered
-  markdown view instead of the PDF. The PDF will eventually be
-  retired since markdown is easier to maintain (single source) and
-  renders nicely on github.com.
+  Ear Trainer · v0.8.2 · 2026-04-28
+  Patch release: accessibility and ADHD-friendliness pass.
+  - In-app screen reader keyboard-shortcut guidance (per-level)
+  - Skip link now actually moves focus (tabindex on <main>)
+  - Mode hint spans now announced by screen readers
+  - Reference and Settings panels collapsed by default (<details>)
+  - L3 settings split into Target (open) + Practice settings (collapsed)
+  - Reduced-motion handling strengthened
+  - Feedback strings tightened (always start with Correct/Incorrect/
+    Got it/Missed for unambiguous screen reader announcement)
+  - Audio banner downgraded to polite live region
   See CHANGELOG.md for version history.
 -->
 <html lang="en">
@@ -772,9 +778,9 @@
     <div class="header-main">
       <h1>Ear Trainer</h1>
       <a class="manual-link"
-         href="https://github.com/filmnoises/Ear-Training/blob/main/USER-MANUAL.md"
+         href="https://filmnoises.github.io/Ear-Training/USER-MANUAL.pdf"
          target="_blank" rel="noopener noreferrer"
-         aria-label="Open User Manual in a new tab">
+         aria-label="Open User Manual in a new tab (PDF)">
         User Manual <span aria-hidden="true">↗</span>
       </a>
     </div>
@@ -1342,10 +1348,19 @@
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.8.3
-   Patch on v0.8.2: User Manual link points to GitHub's rendered
-   markdown view (USER-MANUAL.md) instead of the PDF. Single
-   source of truth, no PDF re-export step in the release workflow.
+   EAR TRAINER v0.8.2
+   Patch on v0.8.1: accessibility and ADHD-friendliness pass.
+   - Per-level "Keyboard shortcuts" disclosure with screen
+     reader focus-mode hint (item 1b)
+   - <main tabindex="-1"> so the skip link moves focus (item 2)
+   - Mode hints announced (item 3)
+   - Reduced-motion strengthening (item 4)
+   - Reference/Settings/Focus panels wrapped in <details>
+     collapsed by default; L3 split into Target + Practice
+     settings (item 5)
+   - Feedback strings always lead with Correct/Incorrect/
+     Got it/Missed (item 6)
+   - Audio banner aria-live downgraded to polite
    ============================================================ */
 
 const INTERVALS = [

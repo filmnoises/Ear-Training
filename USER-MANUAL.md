@@ -1,6 +1,11 @@
 # Ear Trainer — Getting Started
 
-*A guide for v0.7.0*
+*Last updated April 2026*
+
+> **Note:** This guide currently documents Levels 1–3. Level 4
+> (7th chords) shipped in v0.8.0 and will be added to this guide in
+> a future update. The in-app interface has tooltips and labels that
+> should let you find your way around Level 4 in the meantime.
 
 ---
 
@@ -397,6 +402,28 @@ The app is built with accessibility as a priority:
 - **Skip-to-main-content link** at the top of the page (visible when
   Tab-focused) lets keyboard and screen-reader users bypass the
   header and tabs.
+
+### Using a screen reader?
+
+This app uses single-letter shortcuts (R, S, T, G, M, Space) for quick
+actions. Most screen readers also use these letters to navigate by
+region, heading, or button. To use the app's shortcuts, switch your
+screen reader into **focus mode** (sometimes called forms mode or
+pass-through mode):
+
+- **NVDA:** press NVDA key + Space to toggle focus mode
+- **JAWS:** press Insert + Z to toggle the virtual cursor off
+- **VoiceOver (Mac):** press Control + Option + Shift + Down Arrow to
+  interact with the page
+- **Narrator (Windows):** press Caps Lock + Spacebar to toggle scan
+  mode off
+
+When you're done practicing, switch back to your normal browse mode
+to navigate the rest of the web.
+
+A reminder of this is also available inside the app — each level
+panel has a "Keyboard shortcuts" disclosure near the top that lists
+the per-level shortcuts and includes a brief screen-reader note.
 
 If you find an accessibility issue, please report it — these features
 have been designed thoughtfully but real-world testing always finds

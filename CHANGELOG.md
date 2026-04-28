@@ -18,10 +18,132 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended chords (Levels 5+): 9th, 11th, 13th — deserve their own
   design conversation around voicing range and pedagogical sequencing.
 - Save settings to localStorage so they persist across sessions.
-- Real-user testing with sight-impaired screen reader users.
-- Continued mobile-friendly layout review (initial audio-reliability
-  fixes shipped in v0.8.1; layout itself still needs review).
+- Continued mobile-friendly layout review.
 - Reference manual (separate from getting-started guide).
+- Full User Manual catch-up: Level 4 (7th chords) section, 7th-chord
+  music theory primer, v0.7.2 Tritone label note, v0.8.1 audio banner
+  documentation. Was deferred from v0.8.2 to its own dedicated session
+  to do the theory writeups carefully.
+
+---
+
+## [0.8.3] — 2026-04-28
+
+Patch release: workflow cleanup. The User Manual link in the app
+header now points to GitHub's rendered markdown view of
+`USER-MANUAL.md` instead of the PDF. The PDF is no longer the
+canonical reference — markdown is the single source of truth,
+which removes the PDF re-export step from every release that
+touches the manual.
+
+### Changed
+- **Manual link target.** From
+  `https://filmnoises.github.io/Ear-Training/USER-MANUAL.pdf` to
+  `https://github.com/filmnoises/Ear-Training/blob/main/USER-MANUAL.md`.
+  GitHub renders markdown attractively in the browser; users land
+  on the rendered manual without needing a separate PDF viewer.
+  Mobile users in particular benefit (PDFs are clunky on phones).
+- **Aria-label.** "Open User Manual in a new tab (PDF)" → "Open
+  User Manual in a new tab" (no longer a PDF).
+
+### Notes
+- The `USER-MANUAL.pdf` file in the repo is now unreferenced from
+  the app. It can be deleted in a future cleanup (or left in place
+  for users who have bookmarked the old URL — old PDF stays
+  accessible at the existing path).
+- Going forward, manual edits are a single-file change: edit
+  `USER-MANUAL.md`, push, and the linked rendered view updates
+  automatically.
+
+### Files touched
+
+- `ear-trainer.html` (regenerated)
+- `CHANGELOG.md` (this entry)
+
+---
+
+## [0.8.2] — 2026-04-28
+
+Patch release: accessibility and ADHD-friendliness pass. Triggered
+by feedback from a sight-impaired tester (single-letter shortcuts
+collide with screen reader navigation keys) plus a design review
+flagging that the page below the stage area piles up with reference
+grids and settings, which is hard for users with ADHD.
+
+### Added
+- **In-app "Keyboard shortcuts" disclosure on every level panel.**
+  Collapsed by default; opens to show the per-level shortcuts plus a
+  brief screen-reader focus-mode warning. Users who hit the conflict
+  the moment they try a shortcut now get the warning in context, not
+  only buried in the PDF manual.
+- **Screen reader focus-mode guidance in the User Manual.** Per-screen-
+  reader instructions for NVDA, JAWS, VoiceOver, and Narrator on how
+  to enable focus / forms / pass-through mode.
+
+### Changed
+- **Reference, Settings, and Focus panels are collapsed by default.**
+  Wrapped in native `<details>` elements with custom `<summary>`
+  styling that matches the existing panel typography. Native
+  `<details>` handles keyboard, focus, and screen reader state
+  ("collapsed" / "expanded") automatically — no JavaScript toggle
+  needed. Page now arrives quiet, with only the question, answer
+  choices, and score visible. Users who want their Reference grid or
+  pool toggles open can simply click the disclosure once per session
+  (state does not persist — that's a localStorage feature in the
+  Unreleased section).
+- **Level 3's settings split into two panels: Target (open) and
+  Practice settings (collapsed).** Target picker is required to start
+  practicing, so it stays open by default. Voice range, wait timer,
+  and continuous toggle move into the collapsed Practice settings.
+- **Skip link now actually moves focus.** Added `tabindex="-1"` to
+  `<main>` so activating the skip link moves focus there in addition
+  to scrolling. Previously, the link scrolled the viewport but left
+  focus on the link itself, so screen reader users heard nothing
+  change after activating it.
+- **Mode hint spans now announced to screen readers.** Removed
+  `aria-hidden="true"` from the four `.mode-hint` spans (e.g., "two
+  notes · at the same time"). Sighted users were getting useful
+  context that screen reader users weren't.
+- **Feedback strings always lead with an unambiguous status word.**
+  L1 already led with "Correct" / "Incorrect"; L2 and L4 now also
+  lead with "Incorrect" instead of "Not quite" (the warm partial-
+  credit text remains, just demoted to the second clause). L3 self-
+  rating feedback now leads with "Got it —" or "Missed —" before the
+  warm continuation message. Ensures the first word a screen reader
+  announces tells the user the result.
+- **Audio banner aria-live downgraded** from `assertive` to `polite`.
+  The banner is visually prominent enough on its own; assertive was
+  interrupting screen readers mid-sentence whenever the banner
+  appeared, which is louder than warranted now that the affordance
+  is stable and well-tested.
+- **Reduced-motion handling strengthened.** The existing wildcard
+  block (`*` selector with `transition-duration: 0.01ms`) was already
+  good for transitions. Added explicit rules for `box-shadow` glow
+  effects (which the wildcard misses), plus belt-and-suspenders for
+  `animation-iteration-count` and `scroll-behavior`. Comment in the
+  CSS explains the philosophy: flatten transitions and animations
+  while preserving state visibility (the stage indicator still turns
+  green; it just doesn't pulse or glow).
+
+### Notes
+- Two new CSS components: `details.panel-collapsible` (wraps the
+  Reference / Settings / Focus panels with matching typography and
+  custom +/- indicator) and `details.shortcuts-help` (the quieter
+  per-level keyboard shortcut disclosure at the top of each panel).
+- No new state. The collapsed/expanded state of each panel resets on
+  reload — persisting it via localStorage is queued for the
+  Unreleased section.
+- Followed the user's suggested pattern of letting native `<details>`
+  do all the work — no JavaScript, no aria-expanded toggling, just
+  semantic HTML doing what it's designed to do.
+
+### Files touched
+
+- `ear-trainer.html` (regenerated)
+- `CHANGELOG.md` (this entry)
+- `USER-MANUAL.md` (screen-reader section added; version label
+  changed to date-based; Level 4 catch-up deferred to a dedicated
+  session)
 
 ---
 
