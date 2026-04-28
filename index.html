@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.8.3 · 2026-04-28
-  Patch release: User Manual link now points to GitHub's rendered
-  markdown view instead of the PDF. The PDF will eventually be
-  retired since markdown is easier to maintain (single source) and
-  renders nicely on github.com.
+  Ear Trainer · v0.8.4 · 2026-04-28
+  Patch release: User Manual now served as a styled HTML page on the
+  same domain as the app, instead of linking out to GitHub. Cleaner
+  experience for non-technical users — no GitHub repo chrome around
+  the documentation.
   See CHANGELOG.md for version history.
 -->
 <html lang="en">
@@ -772,7 +772,7 @@
     <div class="header-main">
       <h1>Ear Trainer</h1>
       <a class="manual-link"
-         href="https://github.com/filmnoises/Ear-Training/blob/main/USER-MANUAL.md"
+         href="USER-MANUAL.html"
          target="_blank" rel="noopener noreferrer"
          aria-label="Open User Manual in a new tab">
         User Manual <span aria-hidden="true">↗</span>
@@ -1342,10 +1342,10 @@
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.8.3
-   Patch on v0.8.2: User Manual link points to GitHub's rendered
-   markdown view (USER-MANUAL.md) instead of the PDF. Single
-   source of truth, no PDF re-export step in the release workflow.
+   EAR TRAINER v0.8.4
+   Patch on v0.8.3: User Manual link points to a styled HTML page
+   (USER-MANUAL.html) hosted on the same domain as the app. No
+   GitHub chrome, no PDF reader needed, prints cleanly.
    ============================================================ */
 
 const INTERVALS = [

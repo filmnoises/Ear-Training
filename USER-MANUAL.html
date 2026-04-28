@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<!--
+  Ear Trainer — User Manual
+  Standalone documentation page. Light docs aesthetic, print-friendly.
+  Source of truth lives in this file directly (not regenerated from markdown).
+  Edit USER-MANUAL.html when content changes; USER-MANUAL.md is kept in
+  the repo for reference but is no longer the canonical version.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ear Trainer — User Manual</title>
+<meta name="description" content="Getting started guide for the Ear Trainer app." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* === Light docs aesthetic ===
+     Designed for comfortable on-screen reading and clean printing.
+     Color palette is warmer-than-white to reduce eye strain; printed
+     output uses pure black on white with stripped chrome. */
+
+  :root {
+    --bg:            #faf6ee;   /* cream, easier on eyes than #ffffff */
+    --bg-elevated:   #fffaf0;
+    --ink:           #2b2620;   /* warm near-black */
+    --ink-soft:      #5a4f44;   /* secondary text */
+    --ink-muted:     #8a7f74;
+    --accent:        #9a6f1e;   /* darker, muted version of app's brass */
+    --accent-soft:   #c08e2c;
+    --rule:          #d9d0bf;
+    --code-bg:       #f0e8d6;
+    --note-bg:       #fbf2dc;
+    --note-border:   #e0c98a;
+  }
+
+  * { box-sizing: border-box; }
+
+  *:focus { outline: none; }
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  /* Comfortable reading measure: 32rem ≈ 65–75 chars at this font size.
+     Generous vertical breathing room because this is a sit-and-read page,
+     not a glanceable UI. */
+  .doc {
+    max-width: 38rem;
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+  }
+
+  /* Top utility bar — back-to-app link plus subtle metadata */
+  .topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-muted);
+  }
+  .topbar a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .topbar a:hover { border-bottom-color: var(--accent); }
+
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 42px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+  }
+  .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-muted);
+    margin-bottom: 36px;
+  }
+
+  h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.25;
+    color: var(--accent);
+    margin: 56px 0 16px 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+  }
+  h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--ink);
+    margin: 32px 0 10px 0;
+  }
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    margin: 24px 0 8px 0;
+  }
+
+  p { margin: 0 0 16px 0; }
+
+  ul, ol {
+    margin: 0 0 18px 0;
+    padding-left: 28px;
+  }
+  li { margin-bottom: 8px; }
+  li > ul, li > ol { margin-top: 8px; }
+
+  strong { font-weight: 500; color: var(--ink); }
+  em { font-style: italic; }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-soft);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  a:hover {
+    color: var(--accent-soft);
+    border-bottom-color: var(--accent);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 40px 0;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  /* Note callout — used for the "Level 4 not yet documented" warning
+     and similar parenthetical guidance. */
+  .note {
+    background: var(--note-bg);
+    border-left: 3px solid var(--note-border);
+    padding: 14px 18px;
+    margin: 24px 0;
+    border-radius: 2px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .note strong { color: var(--accent); }
+  .note p:last-child { margin-bottom: 0; }
+
+  /* Definition list for the screen reader / shortcut keys section */
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 18px;
+    row-gap: 6px;
+    margin: 16px 0 20px;
+  }
+  dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    padding-top: 2px;
+  }
+  dd {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  /* The shortcut keys list at the end of each level section */
+  .shortcut-list {
+    background: var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 16px 22px;
+    margin: 16px 0 24px;
+  }
+  .shortcut-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 18px;
+    row-gap: 4px;
+  }
+  .shortcut-list li {
+    display: contents;
+    margin: 0;
+  }
+  .shortcut-list .key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .shortcut-list .desc {
+    color: var(--ink-soft);
+  }
+
+  /* Table of contents — quick-jump nav near the top */
+  nav.toc {
+    background: var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 18px 24px;
+    margin-bottom: 40px;
+    font-size: 16px;
+  }
+  nav.toc h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+  nav.toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  nav.toc li {
+    margin-bottom: 4px;
+  }
+  nav.toc a {
+    border-bottom: none;
+  }
+  nav.toc a:hover { text-decoration: underline; }
+
+  /* Skip link for keyboard users */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+  }
+  .skip-link:focus {
+    left: 16px;
+    top: 16px;
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 14px;
+    z-index: 100;
+    border-radius: 2px;
+  }
+
+  /* === Print stylesheet ===
+     Pure black on white, no chrome, sensible margins, kill the
+     back-to-app link and TOC (irrelevant on paper). */
+  @media print {
+    @page { margin: 0.75in; }
+    html, body {
+      background: #fff;
+      color: #000;
+      font-size: 11pt;
+    }
+    .doc {
+      max-width: none;
+      padding: 0;
+    }
+    .topbar, nav.toc, .skip-link { display: none; }
+    h1 { font-size: 28pt; }
+    h2 {
+      font-size: 18pt;
+      color: #000;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 14pt;
+      page-break-after: avoid;
+    }
+    h4 { color: #000; }
+    a { color: #000; border-bottom: none; }
+    a[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: 9pt;
+      color: #555;
+    }
+    code, .shortcut-list .key, dt {
+      background: #f0f0f0;
+      color: #000;
+    }
+    .note {
+      background: #f8f4e8;
+      border-color: #888;
+      page-break-inside: avoid;
+    }
+    .shortcut-list, nav.toc {
+      background: #fafafa;
+      page-break-inside: avoid;
+    }
+    p, li { orphans: 3; widows: 3; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#content">Skip to main content</a>
+
+<div class="doc">
+
+  <div class="topbar" role="navigation" aria-label="Document navigation">
+    <a href="https://filmnoises.github.io/Ear-Training/"
+       aria-label="Return to the Ear Trainer app">← Back to app</a>
+    <span aria-hidden="true">User Manual · Last updated April 2026</span>
+  </div>
+
+  <main id="content">
+
+  <h1>Ear Trainer</h1>
+  <div class="subtitle">Getting Started</div>
+
+  <div class="note">
+    <p><strong>Note:</strong> This guide currently documents Levels 1–3.
+    Level 4 (7th chords) shipped in version 0.8.0 and will be added to
+    this guide in a future update. The in-app interface has tooltips
+    and labels that should let you find your way around Level 4 in the
+    meantime.</p>
+  </div>
+
+  <p>Welcome. This is a small app for training your musical ear: hearing
+  the distance between two notes, the quality of a chord, and (eventually)
+  producing those sounds with your own voice. It runs in your web browser,
+  no install needed, and the audio you'll hear is real piano samples.</p>
+
+  <p>This guide will walk you through your first session and explain a
+  little music theory along the way. You don't need to read it cover to
+  cover. Skim what you need, skip what you don't.</p>
+
+  <nav class="toc" aria-label="Table of contents">
+    <h4>Contents</h4>
+    <ul>
+      <li><a href="#quick-start">Quick start (60 seconds)</a></li>
+      <li><a href="#three-levels">The three levels at a glance</a></li>
+      <li><a href="#theory">A little music theory you'll want to know</a></li>
+      <li><a href="#level-1">Level 1 · Intervals</a></li>
+      <li><a href="#level-2">Level 2 · Triads</a></li>
+      <li><a href="#level-3">Level 3 · Sing-First</a></li>
+      <li><a href="#tips">Tips for effective practice</a></li>
+      <li><a href="#accessibility">Accessibility features</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="quick-start">Quick start (60 seconds)</h2>
+
+  <ol>
+    <li>Open the app in your web browser. Wait a few seconds for the
+    message "Loading piano samples…" to disappear.</li>
+    <li>Make sure your computer's volume is up and your speakers or
+    headphones are working.</li>
+    <li>Click the brass-colored <strong>▶ Play</strong> button. You'll
+    hear two piano notes played one after the other.</li>
+    <li>Underneath, you'll see buttons for each interval (Minor 2nd,
+    Major 2nd, Minor 3rd, etc.). Click whichever one you think you heard.</li>
+    <li>The app tells you if you were right or wrong. If right, the next
+    question plays automatically. If wrong, listen again with the
+    <strong>↻ Repeat Last</strong> button.</li>
+  </ol>
+
+  <p>That's the basic loop. The rest of this guide explains everything else.</p>
+
+  <h2 id="three-levels">The three levels at a glance</h2>
+
+  <p>The app is organized into three levels, shown as tabs across the top:</p>
+
+  <ul>
+    <li><strong>Level 1 · Intervals</strong> — recognizing two-note
+    distances by ear</li>
+    <li><strong>Level 2 · Triads</strong> — recognizing three-note chords
+    (and their inversions) by ear</li>
+    <li><strong>Level 3 · Sing-First</strong> — practicing by
+    <em>producing</em> notes with your voice, then verifying with the app</li>
+  </ul>
+
+  <p>You can move between levels freely. They each have their own score,
+  so working in Level 2 doesn't affect your Level 1 progress, and vice
+  versa. There's no "unlocking" — visit any level whenever you want.</p>
+
+  <p>The intended progression is roughly Level 1 → Level 2 → Level 3,
+  but many musicians benefit from doing all three in any session. Use
+  what serves you.</p>
+
+  <h2 id="theory">A little music theory you'll want to know</h2>
+
+  <p>If you're new to formal music theory, three concepts will get you
+  90% of the way through this app. If you already know these, skip ahead.</p>
+
+  <h3>Pitch and notes</h3>
+
+  <p>Music is built from <strong>notes</strong> — specific pitches like
+  C, D, E, F, G, A, B. After B, the cycle repeats: the next C is called
+  the same name but is one <strong>octave</strong> higher. A piano
+  keyboard makes this visible — each white key has a name (CDEFGAB),
+  and the pattern repeats up and down the keyboard.</p>
+
+  <p>Between most adjacent white keys, there's a black key. Each
+  adjacent pair of keys (white-to-black, or in two places,
+  white-to-white) is called a <strong>half step</strong> or
+  <strong>semitone</strong>. The whole keyboard is divided into these
+  equal half steps — twelve of them per octave.</p>
+
+  <h3>Intervals</h3>
+
+  <p>An <strong>interval</strong> is the distance between two notes,
+  measured in half steps. Some have evocative names; some are just
+  numbered:</p>
+
+  <ul>
+    <li><strong>Minor 2nd</strong> — 1 half step. <em>Jaws</em> theme.
+    Tense, neighboring.</li>
+    <li><strong>Major 2nd</strong> — 2 half steps. The first two notes
+    of "Happy Birthday."</li>
+    <li><strong>Minor 3rd</strong> — 3 half steps. The first two notes
+    of "Greensleeves."</li>
+    <li><strong>Major 3rd</strong> — 4 half steps. The first two notes
+    of "When the Saints Go Marching In." Bright, open.</li>
+    <li><strong>Perfect 4th</strong> — 5 half steps. "Here Comes the
+    Bride." Stable.</li>
+    <li><strong>Tritone</strong> — 6 half steps. "Maria" from West Side
+    Story. Tense.</li>
+    <li><strong>Perfect 5th</strong> — 7 half steps. The Star Wars theme
+    opening. Strong, consonant.</li>
+    <li><strong>Minor 6th</strong> — 8 half steps. "The Entertainer."</li>
+    <li><strong>Major 6th</strong> — 9 half steps. "My Bonnie Lies Over
+    the Ocean."</li>
+    <li><strong>Minor 7th</strong> — 10 half steps. "There's a Place for
+    Us" from West Side Story.</li>
+    <li><strong>Major 7th</strong> — 11 half steps. The opening of "Take
+    On Me" by A-ha (the falsetto leap).</li>
+    <li><strong>Octave</strong> — 12 half steps. "Somewhere Over the
+    Rainbow." Same note, higher.</li>
+  </ul>
+
+  <p>Hearing which interval is which is what Level 1 trains.</p>
+
+  <h3>Triads</h3>
+
+  <p>A <strong>triad</strong> is a three-note chord built by stacking
+  two intervals above a root note. The four common qualities:</p>
+
+  <ul>
+    <li><strong>Major triad</strong> — bright, "happy" sound. Root + 4
+    half steps + 3 half steps.</li>
+    <li><strong>Minor triad</strong> — darker, "sad" sound. Root + 3
+    half steps + 4 half steps.</li>
+    <li><strong>Diminished triad</strong> — tense, unresolved. Root + 3 + 3.</li>
+    <li><strong>Augmented triad</strong> — dreamlike, suspended. Root + 4 + 4.</li>
+  </ul>
+
+  <h3>Inversions</h3>
+
+  <p>The same three notes of a triad can be arranged with any of them
+  on the bottom. Take a C major triad — C, E, G. The three arrangements:</p>
+
+  <ul>
+    <li><strong>Root position</strong> — C is on the bottom: C-E-G.</li>
+    <li><strong>1st inversion</strong> — E (the third) is on the bottom: E-G-C.</li>
+    <li><strong>2nd inversion</strong> — G (the fifth) is on the bottom: G-C-E.</li>
+  </ul>
+
+  <p>It's still the "same chord," but each inversion has a different
+  sound character. Hearing which inversion is being played is part of
+  what Level 2 trains. (Triads only have three inversions. Four-note
+  chords like sevenths add a fourth inversion — but those aren't in
+  the app yet.)</p>
+
+  <p>That's the whole theory baseline. Onward.</p>
+
+  <h2 id="level-1">Level 1 · Intervals</h2>
+
+  <h3>What it teaches</h3>
+
+  <p>Recognizing intervals by ear — the foundational ear training skill.
+  Most other skills (melody dictation, chord recognition, transcription,
+  improvisation) build on this.</p>
+
+  <h3>The loop</h3>
+
+  <ol>
+    <li>Press <strong>▶ Play</strong>. Two notes play.</li>
+    <li>Click one of the answer buttons (Minor 2nd, Major 2nd, etc.).</li>
+    <li>Right? It auto-advances to a new question after about a second.
+    Wrong? It tells you what it actually was, and waits for you to
+    continue.</li>
+    <li><strong>↻ Repeat Last</strong> plays the most recent interval
+    again. Especially useful after a wrong answer, when you now know
+    what to listen for.</li>
+    <li><strong>Skip →</strong> generates a new question without grading
+    the current one.</li>
+  </ol>
+
+  <h3>The two playback modes</h3>
+
+  <p>At the top of Level 1, you'll see two tabs:</p>
+
+  <ul>
+    <li><strong>Melodic</strong> — the two notes play one after the other
+    (like a melody). Easier to identify because you hear the distance
+    directly.</li>
+    <li><strong>Harmonic</strong> — the two notes play at the same time.
+    Harder, because your ear hears the <em>combined sound</em>, not the
+    distance.</li>
+  </ul>
+
+  <p>Start with melodic. Move to harmonic once you're scoring well.</p>
+
+  <h3>Direction (melodic only)</h3>
+
+  <p>When in melodic mode, you can choose:</p>
+
+  <ul>
+    <li><strong>Ascending</strong> — second note is higher than the first</li>
+    <li><strong>Descending</strong> — second note is lower than the first</li>
+    <li><strong>Mixed</strong> — randomized for each question</li>
+  </ul>
+
+  <p>Descending is harder than ascending for most people. Worth
+  practicing both. Mixed is the realistic test once you're confident in
+  each separately.</p>
+
+  <h3>Settings: Interval Pool</h3>
+
+  <p>At the bottom of Level 1, there's a row of small buttons (called
+  "chips" in the app) — one for each interval. Toggle them on or off to
+  control which intervals appear in the quiz.</p>
+
+  <p><strong>Recommended starting pool:</strong> just Perfect 5th, Major
+  3rd, Minor 3rd, and Octave. These four are the most distinct and the
+  easiest to learn. Once you can distinguish them reliably (say, 8 out
+  of 10 right), add the next set: Perfect 4th and Major 6th. Build up
+  gradually. Trying to learn all 12 at once is a recipe for frustration.</p>
+
+  <h3>The Reference panel</h3>
+
+  <p>Above the settings, you'll find a panel labeled "Reference · hear
+  any interval." Click any interval here to hear it. This is for
+  <em>learning</em> the sound of an interval, separate from the quiz.</p>
+
+  <p>The Reference panel has three controls:</p>
+
+  <ul>
+    <li><strong>Root: Random or Fixed.</strong> Random plays each
+    interval from a different starting note. Fixed lets you pick the
+    starting note (C, C♯, D, etc.) so you can compare intervals from
+    the same root. Try Fixed = C, then click Major 3rd, then Perfect
+    4th, then Tritone — you'll hear how each interval relates to the
+    same starting point.</li>
+    <li><strong>Spacing slider.</strong> Controls the time between the
+    two notes in melodic playback. Default is 1.5 seconds. Slower (try
+    3+ seconds) gives you time to internalize the first note before the
+    second arrives.</li>
+  </ul>
+
+  <h4>Keyboard shortcuts (Level 1)</h4>
+  <div class="shortcut-list">
+    <ul>
+      <li><span class="key">Space</span><span class="desc">Play</span></li>
+      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
+      <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">1, 2, 3…</span><span class="desc">Pick the Nth visible answer button</span></li>
+    </ul>
+  </div>
+
+  <h2 id="level-2">Level 2 · Triads</h2>
+
+  <h3>What it teaches</h3>
+
+  <p>Recognizing the <em>quality</em> of a triad (major / minor /
+  diminished / augmented) and which <em>inversion</em> it's in. This is
+  the foundation for hearing chord progressions in real music.</p>
+
+  <h3>The loop</h3>
+
+  <ol>
+    <li>Press <strong>▶ Play</strong>. Three notes play (either at once
+    or in sequence).</li>
+    <li>Pick a chord quality from the <strong>Chord Quality</strong> row.</li>
+    <li>Pick an inversion from the <strong>Chord Inversion</strong> row.</li>
+    <li>Click <strong>Submit Answer</strong> (or press Enter).</li>
+    <li>The app tells you if you got it right. If you got <em>part</em>
+    of it right (quality but not inversion, or vice versa), it'll tell
+    you which.</li>
+  </ol>
+
+  <p>You can change your picks before submitting.
+  <strong>Clear Picks</strong> resets both selections.</p>
+
+  <h3>The two playback modes</h3>
+
+  <ul>
+    <li><strong>Blocked</strong> — all three notes at the same time,
+    like a held chord. This is how you usually encounter chords in real
+    music.</li>
+    <li><strong>Arpeggiated</strong> — the notes play one at a time,
+    bottom to top (or top to bottom, depending on direction setting).
+    This makes inversions easier to hear because you can clearly
+    identify the bottom note.</li>
+  </ul>
+
+  <p>Most people find arpeggiated easier for inversions and blocked
+  easier for quality. Switch between them depending on what you're
+  working on.</p>
+
+  <h3>Direction (arpeggiated only)</h3>
+
+  <p>Same options as Level 1 — Ascending, Descending, Mixed. In blocked
+  mode, direction is meaningless and the controls are dimmed.</p>
+
+  <h3>The Triad Focus panel</h3>
+
+  <p>Below the score, you'll find a panel called "Triad Focus" with two
+  sets of toggleable chips:</p>
+
+  <ul>
+    <li><strong>Chord quality:</strong> Major, Minor, Diminished,
+    Augmented. <em>Diminished and Augmented are off by default</em> —
+    they're harder, so you can opt in when ready.</li>
+    <li><strong>Chord inversion:</strong> Root position, 1st inversion,
+    2nd inversion.</li>
+  </ul>
+
+  <p>This is your practice focus tool. Want to drill just major vs minor
+  in root position? Turn off everything else. Want to focus on
+  identifying inversions of a specific quality? Same idea — narrow the
+  pool.</p>
+
+  <h3>The Reference panel</h3>
+
+  <p>Same idea as Level 1, but with one button per <em>combination</em>
+  of quality and inversion (so 6 buttons with just major/minor, 12 if
+  all four qualities are on). Click any to hear that specific voicing.</p>
+
+  <h4>Keyboard shortcuts (Level 2)</h4>
+  <div class="shortcut-list">
+    <ul>
+      <li><span class="key">Space</span><span class="desc">Play</span></li>
+      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
+      <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">Enter</span><span class="desc">Submit Answer</span></li>
+    </ul>
+  </div>
+
+  <h2 id="level-3">Level 3 · Sing-First</h2>
+
+  <h3>What it teaches</h3>
+
+  <p>Producing intervals and chord tones with your voice. This is a
+  fundamentally different skill than recognition — and it's how working
+  musicians (singers especially, but also instrumentalists) develop
+  deep internalization of musical sounds. If you can sing it, you really
+  know it.</p>
+
+  <h3>The loop</h3>
+
+  <ol>
+    <li>Pick a target — for example, "Perfect 5th" — from the practice
+    settings panel below.</li>
+    <li>Press <strong>▶ Play Root</strong>. You'll hear one piano note.
+    That's your reference root.</li>
+    <li>A countdown begins (default 5 seconds). During the countdown,
+    sing up the interval from the root note. For a Perfect 5th from a
+    root of C, you'd sing up to G.</li>
+    <li>When the countdown hits zero, the app plays the actual root +
+    the target note so you can verify whether you sang the right pitch.</li>
+    <li>Click <strong>✓ Got It</strong> if you sang it accurately,
+    <strong>✕ Missed It</strong> if not. Be honest with yourself; nobody's
+    grading you but you.</li>
+    <li>Press <strong>↻ New Root, Same Target</strong> to try the same
+    interval from a different starting note.</li>
+  </ol>
+
+  <h3>Why this matters</h3>
+
+  <p>The recognition skill (Levels 1 and 2) trains your ear to
+  <em>receive</em>. Sing-first trains your ear to <em>generate</em>.
+  Most professional musicians will tell you that being able to produce
+  an interval on demand is the deeper skill. It's how you internalize
+  that "Perfect 5th" isn't just a label but a felt sound you can summon.</p>
+
+  <h3>The two content modes</h3>
+
+  <p>At the top of Level 3, choose:</p>
+
+  <ul>
+    <li><strong>Intervals</strong> — sing one note up from the root.</li>
+    <li><strong>Triads</strong> — sing the three chord tones up from the
+    root, in sequence (root, third, fifth). The app verifies by playing
+    the arpeggiated triad.</li>
+  </ul>
+
+  <h3>Practice settings</h3>
+
+  <ul>
+    <li><strong>Voice range</strong> — pick from Bass, Tenor, Alto,
+    Soprano. This sets the range of root notes the app will pick, so
+    the notes stay in your comfortable singing range. If you're not
+    sure, start with Tenor (mid-range) and adjust if notes feel too
+    high or too low.</li>
+    <li><strong>Wait timer</strong> — how long the countdown is, from 1
+    to 15 seconds. Default is 5. Most singers want between 3 and 8.
+    Beginners often benefit from longer (8+ seconds) to give themselves
+    time to find the pitch carefully. Advanced singers can drill faster
+    (2–3 seconds).</li>
+    <li><strong>Continuous practice</strong> — when on, after you
+    self-rate, a new root plays automatically. Great for getting into a
+    flow state and drilling the same interval across many keys quickly.
+    Turn off when you want to think between attempts.</li>
+  </ul>
+
+  <h3>Tips for sing-first practice</h3>
+
+  <ul>
+    <li><strong>Pick one target and stay with it for a while.</strong>
+    Sing 10 or 20 Perfect 5ths in a row across different roots before
+    switching. Repetition is what builds the internalization.</li>
+    <li><strong>Don't worry about being "in tune" with the piano
+    exactly.</strong> Get in the right pitch range. Approximate is fine;
+    you'll refine over time.</li>
+    <li><strong>If you can't hear yourself well</strong>, use headphones
+    with one ear off, or sing louder. Some people benefit from cupping
+    a hand to one ear.</li>
+    <li><strong>Honest self-rating matters more than getting "Got It" a
+    lot.</strong> Marking yourself "Missed It" when you actually missed
+    is part of the training — it tells you which intervals need more
+    work.</li>
+  </ul>
+
+  <h4>Keyboard shortcuts (Level 3)</h4>
+  <div class="shortcut-list">
+    <ul>
+      <li><span class="key">Space</span><span class="desc">Play Root</span></li>
+      <li><span class="key">T</span><span class="desc">Play Target Now (skip the wait)</span></li>
+      <li><span class="key">G</span><span class="desc">Got It</span></li>
+      <li><span class="key">M</span><span class="desc">Missed It</span></li>
+    </ul>
+  </div>
+
+  <h2 id="tips">Tips for effective practice</h2>
+
+  <ul>
+    <li><strong>Short sessions, often.</strong> Five to ten minutes
+    daily is far more effective than an hour once a week. Ear training
+    builds slowly and consistently.</li>
+    <li><strong>Start narrow.</strong> Master a small set of
+    intervals/qualities before expanding. Trying to do everything at
+    once leads to confusion and discouragement.</li>
+    <li><strong>Sing what you hear.</strong> Even in Level 1, try to
+    sing the second note before clicking your answer. This bridges
+    recognition and production.</li>
+    <li><strong>Use the Reference panel deliberately.</strong> Before
+    quizzing yourself on a new interval, hear it in the Reference panel
+    a few times. Lock the sound into memory first, then test.</li>
+    <li><strong>Mix it up.</strong> Don't only practice ascending. Don't
+    only practice blocked chords. Variety builds generalization.</li>
+    <li><strong>Track patterns in what you miss.</strong> If you keep
+    confusing Major 3rd and Perfect 4th, slow down and isolate just
+    those two for a session.</li>
+  </ul>
+
+  <h2 id="accessibility">Accessibility features</h2>
+
+  <p>The app is built with accessibility as a priority:</p>
+
+  <ul>
+    <li><strong>Full keyboard navigation.</strong> Every interactive
+    element can be reached with Tab. A visible brass outline shows
+    what's focused.</li>
+    <li><strong>Keyboard shortcuts</strong> for the most common actions
+    in each level (see the level sections above).</li>
+    <li><strong>Screen reader support.</strong> All controls have
+    descriptive labels. Feedback announcements (correct, wrong, the
+    chord that was played) are announced via ARIA live regions
+    automatically.</li>
+    <li><strong>Reduced motion support.</strong> If your operating
+    system has "reduce motion" enabled, the app's transitions become
+    near-instant.</li>
+    <li><strong>Color is never the only signal.</strong> Right and wrong
+    answers have ✓ and ✕ symbols alongside the green/red coloring, so
+    users with color vision differences (or in challenging lighting)
+    still get unambiguous feedback.</li>
+    <li><strong>Skip-to-main-content link</strong> at the top of the
+    page (visible when Tab-focused) lets keyboard and screen-reader
+    users bypass the header and tabs.</li>
+  </ul>
+
+  <h3>Using a screen reader?</h3>
+
+  <p>This app uses single-letter shortcuts (R, S, T, G, M, Space) for
+  quick actions. Most screen readers also use these letters to navigate
+  by region, heading, or button. To use the app's shortcuts, switch
+  your screen reader into <strong>focus mode</strong> (sometimes called
+  forms mode or pass-through mode):</p>
+
+  <dl>
+    <dt>NVDA</dt>
+    <dd>press <code>NVDA key + Space</code> to toggle focus mode</dd>
+    <dt>JAWS</dt>
+    <dd>press <code>Insert + Z</code> to toggle the virtual cursor off</dd>
+    <dt>VoiceOver (Mac)</dt>
+    <dd>press <code>Control + Option + Shift + Down Arrow</code> to interact with the page</dd>
+    <dt>Narrator (Windows)</dt>
+    <dd>press <code>Caps Lock + Spacebar</code> to toggle scan mode off</dd>
+  </dl>
+
+  <p>When you're done practicing, switch back to your normal browse
+  mode to navigate the rest of the web.</p>
+
+  <p>A reminder of this is also available inside the app — each level
+  panel has a "Keyboard shortcuts" disclosure near the top that lists
+  the per-level shortcuts and includes a brief screen-reader note.</p>
+
+  <p>If you find an accessibility issue, please report it — these
+  features have been designed thoughtfully but real-world testing
+  always finds gaps.</p>
+
+  <hr>
+
+  <h2>A final note</h2>
+
+  <p>Ear training is a slow build. Don't expect to be hearing complex
+  chord qualities perfectly after a week — most musicians take months
+  or years to internalize this stuff deeply. The goal isn't to get a
+  high score; it's to gradually grow a more accurate, more flexible
+  musical ear. Some sessions you'll feel sharp. Others you won't. Both
+  are part of the process.</p>
+
+  <p>Have fun with it.</p>
+
+  </main>
+
+</div>
+
+</body>
+</html>

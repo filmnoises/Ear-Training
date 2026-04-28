@@ -27,6 +27,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.8.4] — 2026-04-28
+
+Patch release: User Manual is now a styled HTML page hosted on the
+same domain as the app. Replaces the GitHub-rendered markdown link
+from v0.8.3 because the GitHub view wraps the manual in repository
+chrome (file browser, repo nav, commit history sidebar) that is
+confusing for non-technical users.
+
+### Added
+- **`USER-MANUAL.html`** — standalone documentation page styled in a
+  light docs aesthetic: cream background, Fraunces serif body type,
+  warm muted accent color for headings, ~65–75 character measure
+  for comfortable reading. Includes a table of contents, anchored
+  section IDs for deep linking, a "← Back to app" link, and a print
+  stylesheet that strips chrome and uses pure black on white.
+- The HTML manual is now the canonical documentation. The markdown
+  source (`USER-MANUAL.md`) remains in the repo for historical
+  reference but is no longer the source of truth — when content
+  needs updating, edit `USER-MANUAL.html` directly.
+
+### Changed
+- **Manual link target.** From the GitHub repository file viewer
+  back to a relative path (`USER-MANUAL.html`) hosted on the same
+  domain as the app. Same-domain serving means: no GitHub chrome,
+  no third-party site, no PDF viewer, no domain switch.
+- The relative URL works regardless of the hosting domain — useful
+  if the project ever moves off `filmnoises.github.io`.
+
+### Notes
+- This is the third change to the manual link in three days
+  (PDF → GitHub markdown → standalone HTML). The pace was
+  exploratory; this version is the intended end state. Future
+  manual edits will simply update `USER-MANUAL.html`.
+- The "Level 4 not yet documented" notice in the manual is
+  preserved. Full Level 4 / 7th-chord theory documentation remains
+  queued in the Unreleased section.
+
+### Files touched
+
+- `ear-trainer.html` (regenerated)
+- `USER-MANUAL.html` (new file — replaces the PDF as the canonical manual)
+- `CHANGELOG.md` (this entry)
+
+---
+
 ## [0.8.3] — 2026-04-28
 
 Patch release: workflow cleanup. The User Manual link in the app
