@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.8.1 · 2026-04-26
-  Patch release: usability and reliability.
-  - Prominent "audio not ready" banner with iOS silent-switch hint
-  - Auto-resume AudioContext on first user interaction
-  - Sample loading timeout/failure detection
-  - "User Manual" link in the header (opens GitHub-hosted PDF in new tab)
+  Ear Trainer · v0.8.3 · 2026-04-28
+  Patch release: User Manual link now points to GitHub's rendered
+  markdown view instead of the PDF. The PDF will eventually be
+  retired since markdown is easier to maintain (single source) and
+  renders nicely on github.com.
   See CHANGELOG.md for version history.
 -->
 <html lang="en">
@@ -305,6 +304,166 @@
     font-size: 15px;
     margin-bottom: 20px;
   }
+
+  /* === v0.8.2: collapsible panels ===
+     Reference, Settings, and Focus panels are wrapped in <details>
+     so they arrive collapsed and the page is quiet by default. Native
+     <details> handles keyboard, focus, and screen reader state for us
+     ("collapsed" / "expanded" announcements come for free). The trick
+     is making the chrome match the existing .panel look:
+
+     - <details class="panel-collapsible"> replaces the old <section
+       class="panel"> wrapper. We keep the same border/background.
+     - The <summary> takes the panel's outer padding and matches the
+       h2 typography (JetBrains Mono uppercase letterspaced).
+     - When open, the summary gets a bottom border separating it from
+       the content. When closed, it stands alone.
+     - Content inside <details> goes in a .panel-body div which carries
+       its own padding so the closed summary doesn't look weirdly tall.
+     - Custom +/- indicator replaces the default disclosure triangle. */
+
+  details.panel-collapsible {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 0;
+    font-size: 15px;
+  }
+  details.panel-collapsible > summary {
+    list-style: none;          /* hide default triangle (Firefox) */
+    cursor: pointer;
+    padding: 18px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-dim);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    user-select: none;
+  }
+  details.panel-collapsible > summary::-webkit-details-marker {
+    display: none;             /* hide default triangle (Safari/Chrome) */
+  }
+  details.panel-collapsible > summary:hover {
+    color: var(--ink);
+    background: rgba(212, 162, 76, 0.04);
+  }
+  details.panel-collapsible[open] > summary {
+    color: var(--accent);
+    border-bottom: 1px solid var(--line);
+    border-radius: 4px 4px 0 0;
+  }
+  /* Custom +/- indicator (right-aligned).
+     Closed = +, Open = -. Uses ::after on summary so it stays inside
+     the focus ring without any extra DOM. */
+  details.panel-collapsible > summary::after {
+    content: '+';
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  details.panel-collapsible[open] > summary::after {
+    content: '−';              /* U+2212 minus sign — width matches + */
+    color: var(--accent);
+  }
+  details.panel-collapsible:hover > summary::after { color: var(--ink); }
+  details.panel-collapsible[open]:hover > summary::after { color: var(--accent-hot); }
+
+  details.panel-collapsible > .panel-body {
+    padding: 22px 28px 24px;
+  }
+  /* Inside a collapsible panel, the existing h2 styling fights with
+     the summary, so we suppress h2 inside .panel-body — the summary
+     IS the heading now. The summary's text serves as both visual and
+     semantic heading via aria-label inheritance from <details>. */
+  details.panel-collapsible > .panel-body > h2:first-child {
+    display: none;
+  }
+  details.panel-collapsible > .panel-body > .panel-sub:first-child,
+  details.panel-collapsible > .panel-body > h2:first-child + .panel-sub {
+    margin-top: 0;
+  }
+
+  /* === v0.8.2: in-app keyboard shortcuts disclosure (item 1b) ===
+     Lives at the top of each level panel. Same collapsible pattern as
+     the other panels but visually quieter — no panel background, just
+     a thin border and tighter padding. */
+  details.shortcuts-help {
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    margin: 14px 0 8px;
+    font-size: 13px;
+    background: transparent;
+  }
+  details.shortcuts-help > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-dim);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  details.shortcuts-help > summary::-webkit-details-marker { display: none; }
+  details.shortcuts-help > summary:hover { color: var(--ink); }
+  details.shortcuts-help > summary::after {
+    content: '+';
+    font-size: 14px;
+    color: var(--ink-dim);
+    line-height: 1;
+  }
+  details.shortcuts-help[open] > summary::after { content: '−'; color: var(--accent); }
+  details.shortcuts-help[open] > summary { color: var(--accent); border-bottom: 1px solid var(--line); }
+  details.shortcuts-help > .shortcuts-body {
+    padding: 12px 16px 14px;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-dim);
+  }
+  details.shortcuts-help .sr-warning {
+    font-style: italic;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  details.shortcuts-help dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 16px;
+    row-gap: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+  details.shortcuts-help dt {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  details.shortcuts-help dd {
+    margin: 0;
+    color: var(--ink-dim);
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+  }
   .panel h2, .panel h3 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
@@ -574,12 +733,32 @@
     white-space: nowrap;
   }
 
+  /* === v0.8.2: reduced motion — strengthened ===
+     Philosophy: flatten ALL transitions and animations (including
+     glow effects, transforms, and box-shadow changes the broad
+     `*` selector misses) without removing the state changes
+     themselves. A user who needs reduced motion still sees the
+     stage indicator turn green; they just don't see it pulse or
+     glow. State visibility is preserved; movement is not. */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
     .countdown { transition: none; }
+    /* Kill the stage indicator's glow effect — the box-shadow isn't
+       a transition property so the wildcard above doesn't catch it. */
+    .stage::before,
+    .stage.playing::before,
+    .stage.waiting::before {
+      box-shadow: none !important;
+    }
+    /* Kill any flash animations on reference buttons */
+    .ref-btn.flash {
+      animation: none !important;
+    }
   }
 </style>
 </head>
@@ -593,9 +772,9 @@
     <div class="header-main">
       <h1>Ear Trainer</h1>
       <a class="manual-link"
-         href="https://filmnoises.github.io/Ear-Training/USER-MANUAL.pdf"
+         href="https://github.com/filmnoises/Ear-Training/blob/main/USER-MANUAL.md"
          target="_blank" rel="noopener noreferrer"
-         aria-label="Open User Manual in a new tab (PDF)">
+         aria-label="Open User Manual in a new tab">
         User Manual <span aria-hidden="true">↗</span>
       </a>
     </div>
@@ -621,8 +800,12 @@
             data-level="4">Level 4 · 7th Chords</button>
   </div>
 
+  <!-- v0.8.2: aria-live downgraded from assertive to polite. The banner
+       is visually prominent enough on its own; assertive interrupts the
+       screen reader mid-sentence whenever it appears, which is louder
+       than warranted now that this is a stable, well-tested affordance. -->
   <div class="audio-banner" id="audioBanner"
-       role="alert" aria-live="assertive" hidden>
+       role="status" aria-live="polite" hidden>
     <div class="audio-banner-icon" aria-hidden="true">🔊</div>
     <div class="audio-banner-content">
       <div class="audio-banner-title" id="audioBannerTitle">Tap any button to enable sound</div>
@@ -638,7 +821,7 @@
   <div class="loading-banner" id="loadingBanner"
        role="status" aria-live="polite">Loading piano samples…</div>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
 
     <section id="level-1-panel" class="level-panel"
              role="tabpanel" aria-labelledby="level-1-tab">
@@ -651,6 +834,24 @@
                 aria-selected="false" data-mode="harmonic">Harmonic</button>
       </div>
 
+      <details class="shortcuts-help">
+        <summary>Keyboard shortcuts</summary>
+        <div class="shortcuts-body">
+          <p class="sr-warning">
+            Screen reader users: these shortcuts may conflict with your screen reader's
+            navigation keys. Switch your screen reader into focus mode (sometimes called
+            forms mode or pass-through mode) while practicing, then switch back when
+            you're done. See the User Manual for per-screen-reader instructions.
+          </p>
+          <dl>
+            <dt>Space</dt><dd>Play / next question</dd>
+            <dt>R</dt><dd>Repeat last</dd>
+            <dt>S</dt><dd>Skip</dd>
+            <dt>1–9</dt><dd>Pick the Nth visible answer</dd>
+          </dl>
+        </div>
+      </details>
+
       <div class="direction-bar"
            id="directionBar"
            role="toolbar"
@@ -661,7 +862,7 @@
       <section class="stage" id="l1-stage" aria-labelledby="l1-stage-heading">
         <div class="prompt">
           <h2 id="l1-stage-heading" style="all: unset;">Question</h2>
-          <span class="mode-hint" id="l1-modeHint" aria-hidden="true">two notes · one after the other</span>
+          <span class="mode-hint" id="l1-modeHint">two notes · one after the other</span>
         </div>
         <div class="play-row">
           <button class="btn-primary" id="l1-playBtn" disabled aria-keyshortcuts="Space">
@@ -688,42 +889,46 @@
         <div>Streak <strong id="l1-scoreStreak">0</strong></div>
       </div>
 
-      <section class="panel" style="margin-top: 28px" aria-labelledby="l1-ref-heading">
-        <h2 id="l1-ref-heading">Reference · hear any interval</h2>
-        <div class="panel-sub">Click any interval to hear it. Uses the current mode and direction.</div>
+      <details class="panel-collapsible" style="margin-top: 28px">
+        <summary>Reference · hear any interval</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Click any interval to hear it. Uses the current mode and direction.</div>
 
-        <div class="ref-controls">
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Root</span>
-            <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
-              <button class="chip" id="l1-rootRandomBtn" aria-pressed="true">Random</button>
-              <button class="chip" id="l1-rootFixedBtn" aria-pressed="false">Fixed</button>
+          <div class="ref-controls">
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Root</span>
+              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+                <button class="chip" id="l1-rootRandomBtn" aria-pressed="true">Random</button>
+                <button class="chip" id="l1-rootFixedBtn" aria-pressed="false">Fixed</button>
+              </div>
+              <div class="root-chooser" id="l1-rootChooser"
+                   role="radiogroup" aria-label="Choose fixed root note" hidden></div>
             </div>
-            <div class="root-chooser" id="l1-rootChooser"
-                 role="radiogroup" aria-label="Choose fixed root note" hidden></div>
-          </div>
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Spacing</span>
-            <div class="tempo-control" id="l1-tempoControl">
-              <label for="l1-tempoSlider" class="sr-only">Time between notes in melodic playback</label>
-              <input type="range" id="l1-tempoSlider"
-                     class="tempo-slider"
-                     min="0.4" max="4" step="0.1" value="1.5"
-                     aria-valuemin="0.4" aria-valuemax="4" aria-valuenow="1.5">
-              <span class="tempo-value" id="l1-tempoValue" aria-hidden="true">1.5 s</span>
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Spacing</span>
+              <div class="tempo-control" id="l1-tempoControl">
+                <label for="l1-tempoSlider" class="sr-only">Time between notes in melodic playback</label>
+                <input type="range" id="l1-tempoSlider"
+                       class="tempo-slider"
+                       min="0.4" max="4" step="0.1" value="1.5"
+                       aria-valuemin="0.4" aria-valuemax="4" aria-valuenow="1.5">
+                <span class="tempo-value" id="l1-tempoValue" aria-hidden="true">1.5 s</span>
+              </div>
             </div>
           </div>
+
+          <div class="ref-grid" id="l1-refGrid" role="group" aria-label="Reference intervals"></div>
         </div>
+      </details>
 
-        <div class="ref-grid" id="l1-refGrid" role="group" aria-label="Reference intervals"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="l1-settings-heading">
-        <h2 id="l1-settings-heading" class="sr-only">Level 1 settings</h2>
-        <h3>Interval pool</h3>
-        <div class="setting-row" id="intervalPool"
-             role="group" aria-label="Toggle which intervals appear in the quiz"></div>
-      </section>
+      <details class="panel-collapsible">
+        <summary>Interval pool</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Toggle which intervals appear in the quiz.</div>
+          <div class="setting-row" id="intervalPool"
+               role="group" aria-label="Toggle which intervals appear in the quiz"></div>
+        </div>
+      </details>
     </section>
 
     <section id="level-2-panel" class="level-panel"
@@ -737,6 +942,24 @@
                 aria-selected="false" data-triadmode="arpeggiated">Arpeggiated</button>
       </div>
 
+      <details class="shortcuts-help">
+        <summary>Keyboard shortcuts</summary>
+        <div class="shortcuts-body">
+          <p class="sr-warning">
+            Screen reader users: these shortcuts may conflict with your screen reader's
+            navigation keys. Switch your screen reader into focus mode (sometimes called
+            forms mode or pass-through mode) while practicing, then switch back when
+            you're done. See the User Manual for per-screen-reader instructions.
+          </p>
+          <dl>
+            <dt>Space</dt><dd>Play / next question</dd>
+            <dt>R</dt><dd>Repeat last</dd>
+            <dt>S</dt><dd>Skip</dd>
+            <dt>Enter</dt><dd>Submit answer</dd>
+          </dl>
+        </div>
+      </details>
+
       <div class="direction-bar"
            id="l2-directionBar"
            role="toolbar"
@@ -747,7 +970,7 @@
       <section class="stage" id="l2-stage" aria-labelledby="l2-stage-heading">
         <div class="prompt">
           <h2 id="l2-stage-heading" style="all: unset;">Question</h2>
-          <span class="mode-hint" id="l2-modeHint" aria-hidden="true">three notes · at the same time</span>
+          <span class="mode-hint" id="l2-modeHint">three notes · at the same time</span>
         </div>
         <div class="play-row">
           <button class="btn-primary" id="l2-playBtn" disabled aria-keyshortcuts="Space">
@@ -784,50 +1007,54 @@
         <div>Streak <strong id="l2-scoreStreak">0</strong></div>
       </div>
 
-      <section class="panel" style="margin-top: 28px" aria-labelledby="l2-focus-heading">
-        <h2 id="l2-focus-heading">Triad Focus</h2>
-        <div class="panel-sub">
-          Narrow your practice to specific qualities or inversions.
-          Toggle off anything you don't want in the quiz. Diminished and
-          Augmented are off by default — turn them on when you're ready.
-        </div>
-        <h3>Chord quality</h3>
-        <div class="setting-row" id="qualityPool"
-             role="group" aria-label="Toggle which triad qualities appear in the quiz"></div>
-        <h3 style="margin-top: 20px">Chord inversion</h3>
-        <div class="setting-row" id="inversionPool"
-             role="group" aria-label="Toggle which inversions appear in the quiz"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="l2-ref-heading">
-        <h2 id="l2-ref-heading">Reference · hear any triad</h2>
-        <div class="panel-sub">Click any triad to hear it. Uses the current mode and direction.</div>
-
-        <div class="ref-controls">
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Root</span>
-            <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
-              <button class="chip" id="l2-rootRandomBtn" aria-pressed="true">Random</button>
-              <button class="chip" id="l2-rootFixedBtn" aria-pressed="false">Fixed</button>
-            </div>
-            <div class="root-chooser" id="l2-rootChooser"
-                 role="radiogroup" aria-label="Choose fixed root note" hidden></div>
+      <details class="panel-collapsible" style="margin-top: 28px">
+        <summary>Triad Focus</summary>
+        <div class="panel-body">
+          <div class="panel-sub">
+            Narrow your practice to specific qualities or inversions.
+            Toggle off anything you don't want in the quiz. Diminished and
+            Augmented are off by default — turn them on when you're ready.
           </div>
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Spacing</span>
-            <div class="tempo-control" id="l2-tempoControl">
-              <label for="l2-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
-              <input type="range" id="l2-tempoSlider"
-                     class="tempo-slider"
-                     min="0.2" max="2" step="0.1" value="0.5"
-                     aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
-              <span class="tempo-value" id="l2-tempoValue" aria-hidden="true">0.5 s</span>
+          <h3>Chord quality</h3>
+          <div class="setting-row" id="qualityPool"
+               role="group" aria-label="Toggle which triad qualities appear in the quiz"></div>
+          <h3 style="margin-top: 20px">Chord inversion</h3>
+          <div class="setting-row" id="inversionPool"
+               role="group" aria-label="Toggle which inversions appear in the quiz"></div>
+        </div>
+      </details>
+
+      <details class="panel-collapsible">
+        <summary>Reference · hear any triad</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Click any triad to hear it. Uses the current mode and direction.</div>
+
+          <div class="ref-controls">
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Root</span>
+              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+                <button class="chip" id="l2-rootRandomBtn" aria-pressed="true">Random</button>
+                <button class="chip" id="l2-rootFixedBtn" aria-pressed="false">Fixed</button>
+              </div>
+              <div class="root-chooser" id="l2-rootChooser"
+                   role="radiogroup" aria-label="Choose fixed root note" hidden></div>
+            </div>
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Spacing</span>
+              <div class="tempo-control" id="l2-tempoControl">
+                <label for="l2-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
+                <input type="range" id="l2-tempoSlider"
+                       class="tempo-slider"
+                       min="0.2" max="2" step="0.1" value="0.5"
+                       aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
+                <span class="tempo-value" id="l2-tempoValue" aria-hidden="true">0.5 s</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="ref-grid" id="l2-refGrid" role="group" aria-label="Reference triads"></div>
-      </section>
+          <div class="ref-grid" id="l2-refGrid" role="group" aria-label="Reference triads"></div>
+        </div>
+      </details>
     </section>
 
     <section id="level-3-panel" class="level-panel"
@@ -841,10 +1068,28 @@
                 aria-selected="false" data-l3mode="triads">Triads</button>
       </div>
 
+      <details class="shortcuts-help">
+        <summary>Keyboard shortcuts</summary>
+        <div class="shortcuts-body">
+          <p class="sr-warning">
+            Screen reader users: these shortcuts may conflict with your screen reader's
+            navigation keys. Switch your screen reader into focus mode (sometimes called
+            forms mode or pass-through mode) while practicing, then switch back when
+            you're done. See the User Manual for per-screen-reader instructions.
+          </p>
+          <dl>
+            <dt>Space</dt><dd>Play root</dd>
+            <dt>T</dt><dd>Play target now (skip the wait)</dd>
+            <dt>G</dt><dd>Got it</dd>
+            <dt>M</dt><dd>Missed it</dd>
+          </dl>
+        </div>
+      </details>
+
       <section class="stage" id="l3-stage" aria-labelledby="l3-stage-heading" style="margin-top: 22px;">
         <div class="prompt">
           <h2 id="l3-stage-heading" style="all: unset;">Sing-First Practice</h2>
-          <span class="mode-hint" id="l3-modeHint" aria-hidden="true">pick a target · hear root · sing it · verify</span>
+          <span class="mode-hint" id="l3-modeHint">pick a target · hear root · sing it · verify</span>
         </div>
 
         <div class="l3-target-display" id="l3-targetDisplay">
@@ -886,71 +1131,80 @@
         <div>Missed <strong id="l3-scoreMissed">0</strong></div>
       </div>
 
-      <section class="panel" style="margin-top: 28px" aria-labelledby="l3-settings-heading">
-        <h2 id="l3-settings-heading">Practice settings</h2>
-        <div class="panel-sub">
-          Pick what you're working on and how long you want to sing
-          before the app plays the answer.
-        </div>
+      <details class="panel-collapsible" style="margin-top: 28px" open>
+        <summary>Target <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--ink-dim);font-style:italic;margin-left:8px;">(click one to select)</span></summary>
+        <div class="panel-body">
+          <div class="panel-sub">
+            Pick what you're working on — sing this from each new root.
+          </div>
 
-        <div class="ref-controls">
+          <div id="l3-intervalTargetPicker"
+               role="radiogroup"
+               aria-label="Choose an interval to practice"
+               style="display: flex; flex-wrap: wrap; gap: 6px;">
+          </div>
 
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Voice</span>
-            <div id="l3-voiceChooser" role="radiogroup"
-                 aria-label="Voice range (sets comfortable root note range)"
+          <div id="l3-triadTargetPicker" hidden>
+            <h3 style="margin-top: 4px; font-size: 11px;">Quality</h3>
+            <div role="radiogroup"
+                 id="l3-triadQualityPicker"
+                 aria-label="Choose a triad quality to practice"
+                 style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+            <h3 style="margin-top: 14px; font-size: 11px;">Inversion</h3>
+            <div role="radiogroup"
+                 id="l3-triadInversionPicker"
+                 aria-label="Choose an inversion to practice"
                  style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
           </div>
+        </div>
+      </details>
 
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Wait</span>
-            <div class="tempo-control" id="l3-waitControl">
-              <label for="l3-waitSlider" class="sr-only">Seconds to wait after root before playing target</label>
-              <input type="range" id="l3-waitSlider"
-                     class="tempo-slider"
-                     min="1" max="15" step="1" value="5"
-                     aria-valuemin="1" aria-valuemax="15" aria-valuenow="5">
-              <span class="tempo-value" id="l3-waitValue" aria-hidden="true">5 s</span>
+      <details class="panel-collapsible">
+        <summary>Practice settings</summary>
+        <div class="panel-body">
+          <div class="panel-sub">
+            Voice range, how long the countdown is, and whether to
+            auto-advance after each rating.
+          </div>
+
+          <div class="ref-controls">
+
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Voice</span>
+              <div id="l3-voiceChooser" role="radiogroup"
+                   aria-label="Voice range (sets comfortable root note range)"
+                   style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+            </div>
+
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Wait</span>
+              <div class="tempo-control" id="l3-waitControl">
+                <label for="l3-waitSlider" class="sr-only">Seconds to wait after root before playing target</label>
+                <input type="range" id="l3-waitSlider"
+                       class="tempo-slider"
+                       min="1" max="15" step="1" value="5"
+                       aria-valuemin="1" aria-valuemax="15" aria-valuenow="5">
+                <span class="tempo-value" id="l3-waitValue" aria-hidden="true">5 s</span>
+              </div>
+            </div>
+
+            <div class="ref-control-row">
+              <label style="display:flex; align-items:center; gap:8px;
+                            font-family:'JetBrains Mono', monospace;
+                            font-size:11px; text-transform:uppercase;
+                            letter-spacing:0.15em; color:var(--ink-dim); cursor:pointer;">
+                <input type="checkbox" id="l3-continuousToggle"
+                       style="accent-color: var(--accent);">
+                Continuous practice
+                <span style="text-transform:none; letter-spacing:0; font-size:12px; font-style:italic; color:var(--ink-dim);">
+                  (after rating, auto-advance to new root)
+                </span>
+              </label>
             </div>
           </div>
-
-          <div class="ref-control-row">
-            <label style="display:flex; align-items:center; gap:8px;
-                          font-family:'JetBrains Mono', monospace;
-                          font-size:11px; text-transform:uppercase;
-                          letter-spacing:0.15em; color:var(--ink-dim); cursor:pointer;">
-              <input type="checkbox" id="l3-continuousToggle"
-                     style="accent-color: var(--accent);">
-              Continuous practice
-              <span style="text-transform:none; letter-spacing:0; font-size:12px; font-style:italic; color:var(--ink-dim);">
-                (after rating, auto-advance to new root)
-              </span>
-            </label>
-          </div>
         </div>
+      </details>
 
-        <h3 style="margin-top: 4px">Target <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(click one to select)</span></h3>
-
-        <div id="l3-intervalTargetPicker"
-             role="radiogroup"
-             aria-label="Choose an interval to practice"
-             style="display: flex; flex-wrap: wrap; gap: 6px;">
-        </div>
-
-        <div id="l3-triadTargetPicker" hidden>
-          <h3 style="margin-top: 16px; font-size: 11px;">Quality</h3>
-          <div role="radiogroup"
-               id="l3-triadQualityPicker"
-               aria-label="Choose a triad quality to practice"
-               style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
-          <h3 style="margin-top: 14px; font-size: 11px;">Inversion</h3>
-          <div role="radiogroup"
-               id="l3-triadInversionPicker"
-               aria-label="Choose an inversion to practice"
-               style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
-        </div>
-
-      </section>
     </section>
 
     <section id="level-4-panel" class="level-panel"
@@ -964,6 +1218,24 @@
                 aria-selected="true" data-l4mode="arpeggiated">Arpeggiated</button>
       </div>
 
+      <details class="shortcuts-help">
+        <summary>Keyboard shortcuts</summary>
+        <div class="shortcuts-body">
+          <p class="sr-warning">
+            Screen reader users: these shortcuts may conflict with your screen reader's
+            navigation keys. Switch your screen reader into focus mode (sometimes called
+            forms mode or pass-through mode) while practicing, then switch back when
+            you're done. See the User Manual for per-screen-reader instructions.
+          </p>
+          <dl>
+            <dt>Space</dt><dd>Play / next question</dd>
+            <dt>R</dt><dd>Repeat last</dd>
+            <dt>S</dt><dd>Skip</dd>
+            <dt>Enter</dt><dd>Submit answer</dd>
+          </dl>
+        </div>
+      </details>
+
       <div class="direction-bar"
            id="l4-directionBar"
            role="toolbar"
@@ -974,7 +1246,7 @@
       <section class="stage" id="l4-stage" aria-labelledby="l4-stage-heading">
         <div class="prompt">
           <h2 id="l4-stage-heading" style="all: unset;">Question</h2>
-          <span class="mode-hint" id="l4-modeHint" aria-hidden="true">four notes · one after the other</span>
+          <span class="mode-hint" id="l4-modeHint">four notes · one after the other</span>
         </div>
         <div class="play-row">
           <button class="btn-primary" id="l4-playBtn" disabled aria-keyshortcuts="Space">
@@ -1011,53 +1283,57 @@
         <div>Streak <strong id="l4-scoreStreak">0</strong></div>
       </div>
 
-      <section class="panel" style="margin-top: 28px" aria-labelledby="l4-focus-heading">
-        <h2 id="l4-focus-heading">Seventh Focus</h2>
-        <div class="panel-sub">
-          Narrow your practice to specific qualities, inversions, or
-          voicings. The default starting pool is Major 7 vs Dominant 7
-          in root and 1st inversion — broaden as your ear builds.
-        </div>
-        <h3>Chord quality</h3>
-        <div class="setting-row" id="l4-qualityPool"
-             role="group" aria-label="Toggle which 7th chord qualities appear in the quiz"></div>
-        <h3 style="margin-top: 20px">Chord inversion</h3>
-        <div class="setting-row" id="l4-inversionPool"
-             role="group" aria-label="Toggle which inversions appear in the quiz"></div>
-        <h3 style="margin-top: 20px">Voicing</h3>
-        <div class="setting-row" id="l4-voicingPool"
-             role="radiogroup" aria-label="Choose tight (closed) or open (drop-2) voicing"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="l4-ref-heading">
-        <h2 id="l4-ref-heading">Reference · hear any 7th chord</h2>
-        <div class="panel-sub">Click any chord to hear it. Uses the current mode, direction, and voicing.</div>
-
-        <div class="ref-controls">
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Root</span>
-            <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
-              <button class="chip" id="l4-rootRandomBtn" aria-pressed="true">Random</button>
-              <button class="chip" id="l4-rootFixedBtn" aria-pressed="false">Fixed</button>
-            </div>
-            <div class="root-chooser" id="l4-rootChooser"
-                 role="radiogroup" aria-label="Choose fixed root note" hidden></div>
+      <details class="panel-collapsible" style="margin-top: 28px">
+        <summary>Seventh Focus</summary>
+        <div class="panel-body">
+          <div class="panel-sub">
+            Narrow your practice to specific qualities, inversions, or
+            voicings. The default starting pool is Major 7 vs Dominant 7
+            in root and 1st inversion — broaden as your ear builds.
           </div>
-          <div class="ref-control-row">
-            <span class="ref-control-label" aria-hidden="true">Spacing</span>
-            <div class="tempo-control" id="l4-tempoControl">
-              <label for="l4-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
-              <input type="range" id="l4-tempoSlider"
-                     class="tempo-slider"
-                     min="0.2" max="2" step="0.1" value="0.5"
-                     aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
-              <span class="tempo-value" id="l4-tempoValue" aria-hidden="true">0.5 s</span>
+          <h3>Chord quality</h3>
+          <div class="setting-row" id="l4-qualityPool"
+               role="group" aria-label="Toggle which 7th chord qualities appear in the quiz"></div>
+          <h3 style="margin-top: 20px">Chord inversion</h3>
+          <div class="setting-row" id="l4-inversionPool"
+               role="group" aria-label="Toggle which inversions appear in the quiz"></div>
+          <h3 style="margin-top: 20px">Voicing</h3>
+          <div class="setting-row" id="l4-voicingPool"
+               role="radiogroup" aria-label="Choose tight (closed) or open (drop-2) voicing"></div>
+        </div>
+      </details>
+
+      <details class="panel-collapsible">
+        <summary>Reference · hear any 7th chord</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Click any chord to hear it. Uses the current mode, direction, and voicing.</div>
+
+          <div class="ref-controls">
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Root</span>
+              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+                <button class="chip" id="l4-rootRandomBtn" aria-pressed="true">Random</button>
+                <button class="chip" id="l4-rootFixedBtn" aria-pressed="false">Fixed</button>
+              </div>
+              <div class="root-chooser" id="l4-rootChooser"
+                   role="radiogroup" aria-label="Choose fixed root note" hidden></div>
+            </div>
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Spacing</span>
+              <div class="tempo-control" id="l4-tempoControl">
+                <label for="l4-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
+                <input type="range" id="l4-tempoSlider"
+                       class="tempo-slider"
+                       min="0.2" max="2" step="0.1" value="0.5"
+                       aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
+                <span class="tempo-value" id="l4-tempoValue" aria-hidden="true">0.5 s</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="ref-grid" id="l4-refGrid" role="group" aria-label="Reference 7th chords"></div>
-      </section>
+          <div class="ref-grid" id="l4-refGrid" role="group" aria-label="Reference 7th chords"></div>
+        </div>
+      </details>
     </section>
 
   </main>
@@ -1066,13 +1342,10 @@
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.8.1
-   Patch on v0.8.0:
-   - Prominent audio-not-ready banner (iOS silent-switch hint
-     surfaced because mobile users were getting silent failures)
-   - Auto-resume of suspended AudioContext on user gesture
-   - Sample loading timeout + error state
-   - User Manual link in the header
+   EAR TRAINER v0.8.3
+   Patch on v0.8.2: User Manual link points to GitHub's rendered
+   markdown view (USER-MANUAL.md) instead of the PDF. Single
+   source of truth, no PDF re-export step in the release workflow.
    ============================================================ */
 
 const INTERVALS = [
@@ -1773,9 +2046,12 @@ function l2_submitAnswer() {
     fb.className = 'feedback good';
   } else {
     s.streak = 0;
-    let msg = `Not quite. That was a ${answerText}.`;
-    if (correctQuality && !correctInversion) msg = `Quality right, inversion wrong. That was a ${answerText}.`;
-    else if (!correctQuality && correctInversion) msg = `Inversion right, quality wrong. That was a ${answerText}.`;
+    /* v0.8.2: lead with "Incorrect" instead of "Not quite" so the
+       first word screen readers announce is unambiguous. The warm
+       partial-credit variants are preserved as the second clause. */
+    let msg = `Incorrect. That was a ${answerText}.`;
+    if (correctQuality && !correctInversion) msg = `Incorrect — quality right, inversion wrong. That was a ${answerText}.`;
+    else if (!correctQuality && correctInversion) msg = `Incorrect — inversion right, quality wrong. That was a ${answerText}.`;
     msg += ' Press R to hear it again.';
     fb.textContent = msg;
     fb.className = 'feedback bad';
@@ -2079,8 +2355,8 @@ function l3_rate(gotIt) {
   s.stage = 'rated';
   l3_renderStats();
   document.getElementById('l3-feedback').textContent = gotIt
-    ? 'Nice. Keep it going.'
-    : 'No worries — try again. Listening is a slow build.';
+    ? 'Got it — nice, keep it going.'
+    : 'Missed — no worries, try again. Listening is a slow build.';
   document.getElementById('l3-feedback').className = gotIt ? 'feedback good' : 'feedback bad';
   document.getElementById('l3-gotItBtn').disabled = true;
   document.getElementById('l3-missedBtn').disabled = true;
@@ -2395,9 +2671,10 @@ function l4_submitAnswer() {
     fb.className = 'feedback good';
   } else {
     s.streak = 0;
-    let msg = `Not quite. That was a ${answerText}.`;
-    if (correctQuality && !correctInversion) msg = `Quality right, inversion wrong. That was a ${answerText}.`;
-    else if (!correctQuality && correctInversion) msg = `Inversion right, quality wrong. That was a ${answerText}.`;
+    /* v0.8.2: lead with "Incorrect" — see L2 comment. */
+    let msg = `Incorrect. That was a ${answerText}.`;
+    if (correctQuality && !correctInversion) msg = `Incorrect — quality right, inversion wrong. That was a ${answerText}.`;
+    else if (!correctQuality && correctInversion) msg = `Incorrect — inversion right, quality wrong. That was a ${answerText}.`;
     msg += ' Press R to hear it again.';
     fb.textContent = msg;
     fb.className = 'feedback bad';
