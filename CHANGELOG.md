@@ -9,12 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- First-run onboarding overlay (v0.9.0) — explain "this is a guessing
-  game; press Play, then click your guess; new to intervals? try the
-  Reference panel first." Real-user feedback (April 2026) showed
-  multiple non-musician testers didn't understand they were the one
-  making the guesses, and didn't discover the Reference panel below
-  the fold.
 - Extended chords (Levels 5+): 9th, 11th, 13th — deserve their own
   design conversation around voicing range and pedagogical sequencing.
 - Save settings to localStorage so they persist across sessions.
@@ -24,6 +18,129 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   music theory primer, v0.7.2 Tritone label note, v0.8.1 audio banner
   documentation. Was deferred from v0.8.2 to its own dedicated session
   to do the theory writeups carefully.
+
+---
+
+## [0.9.0] — 2026-05-01
+
+Minor release: UX redesign aimed at first-run discovery. Earlier real-
+user testing (April 2026) showed that several non-musician testers
+didn't understand they were the one making the guesses, and didn't
+discover the Reference panel because it sat below the fold under the
+quiz. The original v0.9.0 plan was a modal first-run onboarding overlay;
+this release takes a lighter approach instead — making the page itself
+self-explanatory by labeling controls, repositioning the Reference
+panel, and pointing at it with a small inline caption.
+
+### Changed — layout reorder (per level)
+
+- **Mode row gets an explicit "MODE" label.** Previously the mode tabs
+  (Melodic/Harmonic, Blocked/Arpeggiated, etc.) sat alone at the top of
+  each level panel with no caption. Sighted first-run users were reading
+  them as decorative header chrome instead of as live controls. The
+  uppercase JetBrains Mono "MODE" label sits to their left now.
+- **Direction row gets an explicit "INTERVAL DIRECTION" (L1) or
+  "ARPEGGIO DIRECTION" (L2/L4) label.** Same problem, same fix. L3 has
+  no direction control.
+- **Reference panel moved ABOVE the quiz/stage.** Was the single biggest
+  finding from testing — non-musicians never scrolled down to find it.
+  Now it's right above the Play button on L1, L2, L4. L3 has no
+  Reference panel (the Target picker serves a different role).
+- **"Quiz Choices" panels moved to the bottom of each level.** Settings
+  for narrowing the quiz pool aren't first-run material; they belong
+  out of the way until you want them.
+- **New inline caption above each Reference panel:** "↓ New here? Open
+  the Reference section first to hear and learn the sounds." Italic
+  body type with a green ↓ marker; speaks directly to the user testing
+  finding.
+
+### Changed — labels and naming
+
+- **Stage headings become explicit verbs:**
+  - L1: "Question" → "Guess The Interval"
+  - L2: "Question" → "Guess The Triad"
+  - L3: "Sing-First Practice" → "Practice"
+  - L4: "Question" → "Guess The 7th Chord"
+- **Quiz Choices panels rename for plain-English clarity:**
+  - L1: "Interval pool" → "Interval Quiz Choices"
+  - L2: "Triad Focus" → "Triad Quiz Choices"
+  - L4: "Seventh Focus" → "7th Chord Quiz Choices"
+  - L3 keeps its existing structure (Target + Practice settings, a
+    different shape entirely — Target is required, not a filter).
+- **"Mixed" stays "Mixed."** Considered renaming it to "Random," but
+  that would collide with the Random/Fixed root setting on the
+  Reference panel.
+
+### Changed — Reference defaults
+
+- **Reference root default flipped from Random to Fixed.** Users
+  exploring the Reference grid for the first time benefit from a stable
+  reference pitch (C4) — random root makes intervals harder to compare
+  side-by-side. The chooser also now shows from page load (the `hidden`
+  attribute is gone), so the C4 selection is immediately visible.
+- **Fixed/Random button order swapped: Fixed on the left, Random on the
+  right.** Matches the new default and reads left-to-right as
+  "this is what's on; here's the alternative."
+
+### Changed — keyboard shortcuts disclosure consolidated
+
+- **The four per-level "Keyboard shortcuts" disclosures from v0.8.2
+  collapse into ONE global disclosure** that lives between the header
+  and the level tabs. Its contents update via `updateGlobalShortcuts()`
+  whenever the level changes. The screen-reader focus-mode warning now
+  appears once instead of four times — same warning, same wording, just
+  no longer duplicated.
+- New `SHORTCUT_SETS` object keys the per-level shortcut tables; the
+  updater rebuilds the `<dl>` from whichever set matches `state.currentLevel`.
+
+### Changed — Play button
+
+- **Play button now green** (var(--good)) instead of brass
+  (var(--accent)). The brass was the same color used for selection
+  highlights on answer buttons; some testers were misreading the Play
+  button as "already selected" rather than "press me." Green reads
+  cleanly as a primary go-action.
+- Hover color matches the existing Submit button hover (`#b0d598`) —
+  green primary actions across the app behave consistently now.
+- Slightly larger: `font-size: 17px`, `padding: 14px 22px`. Bigger hit
+  area and more visual weight for the primary CTA.
+
+### Notes
+
+- All accessibility features from v0.8.2 are preserved: ARIA roles and
+  labels still match the new structure (label IDs are referenced via
+  `aria-labelledby` on the mode tablists and direction toolbars), the
+  skip link still moves focus, mode-hint spans are still announced,
+  reduced-motion handling is unchanged, the `<details>`-based panel
+  collapse pattern is unchanged.
+- New CSS components: `.control-row-with-label`, `.control-label-large`,
+  `.ref-onboarding-hint`. The existing `details.shortcuts-help` styling
+  from v0.8.2 is reused unchanged for the global disclosure.
+- JS changes are surgical: `state.l{1,2,4}.refRootMode` defaults flip
+  to `'fixed'`; new `SHORTCUT_SETS` table and `updateGlobalShortcuts()`
+  function; one new line in the level-tab onclick handler and one at
+  init. Engine logic, audio handling, render functions, and event
+  wiring are all unchanged.
+
+### Files touched
+
+- `ear-trainer.html` (regenerated)
+- `CHANGELOG.md` (this entry; obsolete v0.9.0 overlay bullet removed
+  from `[Unreleased]`)
+
+### Deferred to next session (deliberate scope split)
+
+- `USER-MANUAL.html` updates — quick-start step ordering, per-level
+  layout descriptions, settings panel names, Play button color, stage
+  heading names, and the "shortcuts now live in one place" note.
+  Split out so this release ships small and reviewable rather than
+  blowing the tool budget like last time.
+
+### Tooling
+
+- New `release.sh` shell script — first release using the streamlined
+  workflow. See the script's header comment and the accompanying
+  tutorial for details.
 
 ---
 

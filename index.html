@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.8.4 · 2026-04-28
-  Patch release: User Manual now served as a styled HTML page on the
-  same domain as the app, instead of linking out to GitHub. Cleaner
-  experience for non-technical users — no GitHub repo chrome around
-  the documentation.
+  Ear Trainer · v0.9.0 · 2026-05-01
+  Minor release: UX redesign aimed at first-run discovery. Reference
+  panel moves above the quiz/answers on each level; Mode and Direction
+  rows gain explicit labels; settings panels rename to "X Quiz Choices"
+  to make their function obvious. Reference root defaults to fixed C4
+  on a visible chooser. Per-level keyboard-shortcut disclosures
+  consolidate into one global disclosure that updates per level. Play
+  button restyled green with larger hit area.
   See CHANGELOG.md for version history.
 -->
 <html lang="en">
@@ -147,6 +150,72 @@
     cursor: not-allowed;
   }
 
+  /* v0.9.0: Layout reorder support.
+     The Mode and Direction rows now sit inside a flex container that
+     pairs an explicit uppercase label ("MODE", "INTERVAL DIRECTION",
+     "ARPEGGIO DIRECTION") with the controls themselves. Real-user
+     testing showed first-run users couldn't tell what the unlabeled
+     mode tabs and direction chips were *for* — they read as decorative
+     header chrome. Explicit labels turn them into obvious controls. */
+  .control-row-with-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-top: 14px;
+  }
+  .control-row-with-label + .control-row-with-label {
+    padding-top: 10px;
+  }
+  /* When the labeled row wraps a mode-tabs tablist, suppress the tablist's
+     own top padding so the spacing is owned by the labeled-row container. */
+  .control-row-with-label > [role="tablist"].mode-tabs {
+    padding-top: 0;
+  }
+  /* When the labeled row wraps a direction-bar, suppress its built-in
+     padding/border/margin since those belong to the labeled-row layout. */
+  .control-row-with-label > .direction-bar {
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  /* The original .direction-bar had its own internal "Direction" label;
+     in v0.9.0 the explicit labeled-row provides the label, so hide the
+     inner one when the direction-bar lives inside a labeled row. */
+  .control-row-with-label > .direction-bar > .label {
+    display: none;
+  }
+  .control-label-large {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-dim);
+    flex-shrink: 0;
+    min-width: 120px;
+  }
+
+  /* v0.9.0: Reference onboarding hint.
+     Small inline caption sitting above each Reference panel that says
+     "↓ New here? Open the Reference section first to hear and learn
+     the sounds." Addresses the testing finding that non-musician users
+     weren't discovering the Reference panel — it's now both visually
+     adjacent to the quiz and verbally pointed at. */
+  .ref-onboarding-hint {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-dim);
+    margin: 22px 0 6px;
+    line-height: 1.5;
+  }
+  .ref-onboarding-hint .arrow {
+    font-style: normal;
+    color: var(--good);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
   .stage {
     background: var(--panel); border: 1px solid var(--line);
     border-radius: 4px; padding: 36px 32px; margin-bottom: 28px;
@@ -188,12 +257,19 @@
   button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-hot); }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
 
+  /* v0.9.0: Play button restyled. Green (var(--good)) instead of brass
+     (var(--accent)) so it visually screams "go / safe / press me" rather
+     than blending with the accent color used for selection states. Bumped
+     padding and font-size to make the primary CTA more obvious to first-
+     run users who weren't realizing they were the one driving the quiz. */
   .btn-primary {
-    background: var(--accent); color: var(--bg);
-    border-color: var(--accent); font-weight: 500;
+    background: var(--good); color: var(--bg);
+    border-color: var(--good); font-weight: 500;
+    font-size: 17px;
+    padding: 14px 22px;
   }
   .btn-primary:hover:not(:disabled) {
-    background: var(--accent-hot); border-color: var(--accent-hot); color: var(--bg);
+    background: #b0d598; border-color: #b0d598; color: var(--bg);
   }
 
   .btn-submit {
@@ -781,6 +857,24 @@
     <div class="sub" id="headerSub" aria-live="polite">Level 1 · melodic · ascending</div>
   </header>
 
+  <!-- v0.9.0: ONE global keyboard shortcuts disclosure (replaces the four
+       per-level disclosures from v0.8.2). Contents update via
+       updateGlobalShortcuts() whenever the level changes. The screen
+       reader focus-mode warning lives here once instead of being repeated
+       four times. -->
+  <details class="shortcuts-help" id="globalShortcuts">
+    <summary>Keyboard shortcuts</summary>
+    <div class="shortcuts-body">
+      <p class="sr-warning">
+        Screen reader users: these shortcuts may conflict with your screen reader's
+        navigation keys. Switch your screen reader into focus mode (sometimes called
+        forms mode or pass-through mode) while practicing, then switch back when
+        you're done. See the User Manual for per-screen-reader instructions.
+      </p>
+      <dl id="globalShortcutsList"></dl>
+    </div>
+  </details>
+
   <div role="tablist" class="level-tabs" aria-label="Training level">
     <button role="tab" id="level-1-tab"
             class="level-tab"
@@ -826,42 +920,76 @@
     <section id="level-1-panel" class="level-panel"
              role="tabpanel" aria-labelledby="level-1-tab">
 
-      <div role="tablist" class="mode-tabs" aria-label="Interval playback mode"
-           style="padding-top: 0;">
-        <button role="tab" id="tab-melodic" class="mode-tab"
-                aria-selected="true" data-mode="melodic">Melodic</button>
-        <button role="tab" id="tab-harmonic" class="mode-tab"
-                aria-selected="false" data-mode="harmonic">Harmonic</button>
+      <!-- v0.9.0: Mode row gets explicit MODE label. -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l1-mode-label">Mode</span>
+        <div role="tablist" class="mode-tabs" aria-labelledby="l1-mode-label">
+          <button role="tab" id="tab-melodic" class="mode-tab"
+                  aria-selected="true" data-mode="melodic">Melodic</button>
+          <button role="tab" id="tab-harmonic" class="mode-tab"
+                  aria-selected="false" data-mode="harmonic">Harmonic</button>
+        </div>
       </div>
 
-      <details class="shortcuts-help">
-        <summary>Keyboard shortcuts</summary>
-        <div class="shortcuts-body">
-          <p class="sr-warning">
-            Screen reader users: these shortcuts may conflict with your screen reader's
-            navigation keys. Switch your screen reader into focus mode (sometimes called
-            forms mode or pass-through mode) while practicing, then switch back when
-            you're done. See the User Manual for per-screen-reader instructions.
-          </p>
-          <dl>
-            <dt>Space</dt><dd>Play / next question</dd>
-            <dt>R</dt><dd>Repeat last</dd>
-            <dt>S</dt><dd>Skip</dd>
-            <dt>1–9</dt><dd>Pick the Nth visible answer</dd>
-          </dl>
+      <!-- v0.9.0: Direction row gets explicit INTERVAL DIRECTION label. -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l1-direction-label">Interval Direction</span>
+        <div class="direction-bar"
+             id="directionBar"
+             role="toolbar"
+             aria-labelledby="l1-direction-label">
+          <span class="label" aria-hidden="true">Direction</span>
+        </div>
+      </div>
+
+      <!-- v0.9.0: Onboarding hint pointing at the Reference panel below. -->
+      <p class="ref-onboarding-hint">
+        <span class="arrow" aria-hidden="true">↓</span>
+        New here? Open the Reference section first to hear and learn the sounds.
+      </p>
+
+      <!-- v0.9.0: Reference panel moved ABOVE the quiz/stage so first-run
+           users actually find it. Previously it sat below the fold. -->
+      <details class="panel-collapsible">
+        <summary>Reference · hear any interval</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Click any interval to hear it. Uses the current mode and direction.</div>
+
+          <div class="ref-controls">
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Root</span>
+              <!-- v0.9.0: Fixed/Random order swapped (Fixed on left now),
+                   aria-pressed flipped to match new 'fixed' default. -->
+              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+                <button class="chip" id="l1-rootFixedBtn" aria-pressed="true">Fixed</button>
+                <button class="chip" id="l1-rootRandomBtn" aria-pressed="false">Random</button>
+              </div>
+              <!-- v0.9.0: chooser visible from start (no `hidden` attribute). -->
+              <div class="root-chooser" id="l1-rootChooser"
+                   role="radiogroup" aria-label="Choose fixed root note"></div>
+            </div>
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Spacing</span>
+              <div class="tempo-control" id="l1-tempoControl">
+                <label for="l1-tempoSlider" class="sr-only">Time between notes in melodic playback</label>
+                <input type="range" id="l1-tempoSlider"
+                       class="tempo-slider"
+                       min="0.4" max="4" step="0.1" value="1.5"
+                       aria-valuemin="0.4" aria-valuemax="4" aria-valuenow="1.5">
+                <span class="tempo-value" id="l1-tempoValue" aria-hidden="true">1.5 s</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ref-grid" id="l1-refGrid" role="group" aria-label="Reference intervals"></div>
         </div>
       </details>
 
-      <div class="direction-bar"
-           id="directionBar"
-           role="toolbar"
-           aria-label="Melodic direction">
-        <span class="label" aria-hidden="true">Direction</span>
-      </div>
-
-      <section class="stage" id="l1-stage" aria-labelledby="l1-stage-heading">
+      <!-- v0.9.0: Stage heading renamed "Question" → "Guess The Interval". -->
+      <section class="stage" id="l1-stage" aria-labelledby="l1-stage-heading"
+               style="margin-top: 28px;">
         <div class="prompt">
-          <h2 id="l1-stage-heading" style="all: unset;">Question</h2>
+          <h2 id="l1-stage-heading" style="all: unset;">Guess The Interval</h2>
           <span class="mode-hint" id="l1-modeHint">two notes · one after the other</span>
         </div>
         <div class="play-row">
@@ -889,40 +1017,11 @@
         <div>Streak <strong id="l1-scoreStreak">0</strong></div>
       </div>
 
+      <!-- v0.9.0: "Interval pool" renamed "Interval Quiz Choices". The
+           old name was technically correct but didn't read as plain
+           English to non-musicians. Settings panel stays at the bottom. -->
       <details class="panel-collapsible" style="margin-top: 28px">
-        <summary>Reference · hear any interval</summary>
-        <div class="panel-body">
-          <div class="panel-sub">Click any interval to hear it. Uses the current mode and direction.</div>
-
-          <div class="ref-controls">
-            <div class="ref-control-row">
-              <span class="ref-control-label" aria-hidden="true">Root</span>
-              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
-                <button class="chip" id="l1-rootRandomBtn" aria-pressed="true">Random</button>
-                <button class="chip" id="l1-rootFixedBtn" aria-pressed="false">Fixed</button>
-              </div>
-              <div class="root-chooser" id="l1-rootChooser"
-                   role="radiogroup" aria-label="Choose fixed root note" hidden></div>
-            </div>
-            <div class="ref-control-row">
-              <span class="ref-control-label" aria-hidden="true">Spacing</span>
-              <div class="tempo-control" id="l1-tempoControl">
-                <label for="l1-tempoSlider" class="sr-only">Time between notes in melodic playback</label>
-                <input type="range" id="l1-tempoSlider"
-                       class="tempo-slider"
-                       min="0.4" max="4" step="0.1" value="1.5"
-                       aria-valuemin="0.4" aria-valuemax="4" aria-valuenow="1.5">
-                <span class="tempo-value" id="l1-tempoValue" aria-hidden="true">1.5 s</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="ref-grid" id="l1-refGrid" role="group" aria-label="Reference intervals"></div>
-        </div>
-      </details>
-
-      <details class="panel-collapsible">
-        <summary>Interval pool</summary>
+        <summary>Interval Quiz Choices</summary>
         <div class="panel-body">
           <div class="panel-sub">Toggle which intervals appear in the quiz.</div>
           <div class="setting-row" id="intervalPool"
@@ -934,42 +1033,73 @@
     <section id="level-2-panel" class="level-panel"
              role="tabpanel" aria-labelledby="level-2-tab" hidden>
 
-      <div role="tablist" class="mode-tabs" aria-label="Triad playback mode"
-           style="padding-top: 0;">
-        <button role="tab" id="tab-blocked" class="mode-tab"
-                aria-selected="true" data-triadmode="blocked">Blocked</button>
-        <button role="tab" id="tab-arpeggiated" class="mode-tab"
-                aria-selected="false" data-triadmode="arpeggiated">Arpeggiated</button>
+      <!-- v0.9.0: Mode row gets explicit MODE label. -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l2-mode-label">Mode</span>
+        <div role="tablist" class="mode-tabs" aria-labelledby="l2-mode-label">
+          <button role="tab" id="tab-blocked" class="mode-tab"
+                  aria-selected="true" data-triadmode="blocked">Blocked</button>
+          <button role="tab" id="tab-arpeggiated" class="mode-tab"
+                  aria-selected="false" data-triadmode="arpeggiated">Arpeggiated</button>
+        </div>
       </div>
 
-      <details class="shortcuts-help">
-        <summary>Keyboard shortcuts</summary>
-        <div class="shortcuts-body">
-          <p class="sr-warning">
-            Screen reader users: these shortcuts may conflict with your screen reader's
-            navigation keys. Switch your screen reader into focus mode (sometimes called
-            forms mode or pass-through mode) while practicing, then switch back when
-            you're done. See the User Manual for per-screen-reader instructions.
-          </p>
-          <dl>
-            <dt>Space</dt><dd>Play / next question</dd>
-            <dt>R</dt><dd>Repeat last</dd>
-            <dt>S</dt><dd>Skip</dd>
-            <dt>Enter</dt><dd>Submit answer</dd>
-          </dl>
+      <!-- v0.9.0: Direction row gets explicit ARPEGGIO DIRECTION label. -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l2-direction-label">Arpeggio Direction</span>
+        <div class="direction-bar"
+             id="l2-directionBar"
+             role="toolbar"
+             aria-labelledby="l2-direction-label">
+          <span class="label" aria-hidden="true">Direction</span>
+        </div>
+      </div>
+
+      <!-- v0.9.0: Onboarding hint pointing at the Reference panel below. -->
+      <p class="ref-onboarding-hint">
+        <span class="arrow" aria-hidden="true">↓</span>
+        New here? Open the Reference section first to hear and learn the sounds.
+      </p>
+
+      <!-- v0.9.0: Reference panel moved ABOVE the quiz/stage. -->
+      <details class="panel-collapsible">
+        <summary>Reference · hear any triad</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Click any triad to hear it. Uses the current mode and direction.</div>
+
+          <div class="ref-controls">
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Root</span>
+              <!-- v0.9.0: Fixed/Random order swapped, default is now 'fixed'. -->
+              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+                <button class="chip" id="l2-rootFixedBtn" aria-pressed="true">Fixed</button>
+                <button class="chip" id="l2-rootRandomBtn" aria-pressed="false">Random</button>
+              </div>
+              <div class="root-chooser" id="l2-rootChooser"
+                   role="radiogroup" aria-label="Choose fixed root note"></div>
+            </div>
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Spacing</span>
+              <div class="tempo-control" id="l2-tempoControl">
+                <label for="l2-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
+                <input type="range" id="l2-tempoSlider"
+                       class="tempo-slider"
+                       min="0.2" max="2" step="0.1" value="0.5"
+                       aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
+                <span class="tempo-value" id="l2-tempoValue" aria-hidden="true">0.5 s</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ref-grid" id="l2-refGrid" role="group" aria-label="Reference triads"></div>
         </div>
       </details>
 
-      <div class="direction-bar"
-           id="l2-directionBar"
-           role="toolbar"
-           aria-label="Arpeggio direction">
-        <span class="label" aria-hidden="true">Direction</span>
-      </div>
-
-      <section class="stage" id="l2-stage" aria-labelledby="l2-stage-heading">
+      <!-- v0.9.0: Stage heading renamed "Question" → "Guess The Triad". -->
+      <section class="stage" id="l2-stage" aria-labelledby="l2-stage-heading"
+               style="margin-top: 28px;">
         <div class="prompt">
-          <h2 id="l2-stage-heading" style="all: unset;">Question</h2>
+          <h2 id="l2-stage-heading" style="all: unset;">Guess The Triad</h2>
           <span class="mode-hint" id="l2-modeHint">three notes · at the same time</span>
         </div>
         <div class="play-row">
@@ -1007,8 +1137,9 @@
         <div>Streak <strong id="l2-scoreStreak">0</strong></div>
       </div>
 
+      <!-- v0.9.0: "Triad Focus" renamed "Triad Quiz Choices". -->
       <details class="panel-collapsible" style="margin-top: 28px">
-        <summary>Triad Focus</summary>
+        <summary>Triad Quiz Choices</summary>
         <div class="panel-body">
           <div class="panel-sub">
             Narrow your practice to specific qualities or inversions.
@@ -1023,72 +1154,29 @@
                role="group" aria-label="Toggle which inversions appear in the quiz"></div>
         </div>
       </details>
-
-      <details class="panel-collapsible">
-        <summary>Reference · hear any triad</summary>
-        <div class="panel-body">
-          <div class="panel-sub">Click any triad to hear it. Uses the current mode and direction.</div>
-
-          <div class="ref-controls">
-            <div class="ref-control-row">
-              <span class="ref-control-label" aria-hidden="true">Root</span>
-              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
-                <button class="chip" id="l2-rootRandomBtn" aria-pressed="true">Random</button>
-                <button class="chip" id="l2-rootFixedBtn" aria-pressed="false">Fixed</button>
-              </div>
-              <div class="root-chooser" id="l2-rootChooser"
-                   role="radiogroup" aria-label="Choose fixed root note" hidden></div>
-            </div>
-            <div class="ref-control-row">
-              <span class="ref-control-label" aria-hidden="true">Spacing</span>
-              <div class="tempo-control" id="l2-tempoControl">
-                <label for="l2-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
-                <input type="range" id="l2-tempoSlider"
-                       class="tempo-slider"
-                       min="0.2" max="2" step="0.1" value="0.5"
-                       aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
-                <span class="tempo-value" id="l2-tempoValue" aria-hidden="true">0.5 s</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="ref-grid" id="l2-refGrid" role="group" aria-label="Reference triads"></div>
-        </div>
-      </details>
     </section>
 
     <section id="level-3-panel" class="level-panel"
              role="tabpanel" aria-labelledby="level-3-tab" hidden>
 
-      <div role="tablist" class="mode-tabs" aria-label="Sing-first mode content"
-           style="padding-top: 0;">
-        <button role="tab" id="tab-l3-intervals" class="mode-tab"
-                aria-selected="true" data-l3mode="intervals">Intervals</button>
-        <button role="tab" id="tab-l3-triads" class="mode-tab"
-                aria-selected="false" data-l3mode="triads">Triads</button>
+      <!-- v0.9.0: Mode row gets explicit MODE label. L3 has no direction
+           control (singing direction doesn't apply). -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l3-mode-label">Mode</span>
+        <div role="tablist" class="mode-tabs" aria-labelledby="l3-mode-label">
+          <button role="tab" id="tab-l3-intervals" class="mode-tab"
+                  aria-selected="true" data-l3mode="intervals">Intervals</button>
+          <button role="tab" id="tab-l3-triads" class="mode-tab"
+                  aria-selected="false" data-l3mode="triads">Triads</button>
+        </div>
       </div>
 
-      <details class="shortcuts-help">
-        <summary>Keyboard shortcuts</summary>
-        <div class="shortcuts-body">
-          <p class="sr-warning">
-            Screen reader users: these shortcuts may conflict with your screen reader's
-            navigation keys. Switch your screen reader into focus mode (sometimes called
-            forms mode or pass-through mode) while practicing, then switch back when
-            you're done. See the User Manual for per-screen-reader instructions.
-          </p>
-          <dl>
-            <dt>Space</dt><dd>Play root</dd>
-            <dt>T</dt><dd>Play target now (skip the wait)</dd>
-            <dt>G</dt><dd>Got it</dd>
-            <dt>M</dt><dd>Missed it</dd>
-          </dl>
-        </div>
-      </details>
-
+      <!-- v0.9.0: Stage heading renamed "Sing-First Practice" → "Practice".
+           L3 has no Reference panel above the stage; the Target picker
+           below serves a different role (it's required, not exploratory). -->
       <section class="stage" id="l3-stage" aria-labelledby="l3-stage-heading" style="margin-top: 22px;">
         <div class="prompt">
-          <h2 id="l3-stage-heading" style="all: unset;">Sing-First Practice</h2>
+          <h2 id="l3-stage-heading" style="all: unset;">Practice</h2>
           <span class="mode-hint" id="l3-modeHint">pick a target · hear root · sing it · verify</span>
         </div>
 
@@ -1210,42 +1298,73 @@
     <section id="level-4-panel" class="level-panel"
              role="tabpanel" aria-labelledby="level-4-tab" hidden>
 
-      <div role="tablist" class="mode-tabs" aria-label="7th chord playback mode"
-           style="padding-top: 0;">
-        <button role="tab" id="tab-l4-blocked" class="mode-tab"
-                aria-selected="false" data-l4mode="blocked">Blocked</button>
-        <button role="tab" id="tab-l4-arpeggiated" class="mode-tab"
-                aria-selected="true" data-l4mode="arpeggiated">Arpeggiated</button>
+      <!-- v0.9.0: Mode row gets explicit MODE label. -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l4-mode-label">Mode</span>
+        <div role="tablist" class="mode-tabs" aria-labelledby="l4-mode-label">
+          <button role="tab" id="tab-l4-blocked" class="mode-tab"
+                  aria-selected="false" data-l4mode="blocked">Blocked</button>
+          <button role="tab" id="tab-l4-arpeggiated" class="mode-tab"
+                  aria-selected="true" data-l4mode="arpeggiated">Arpeggiated</button>
+        </div>
       </div>
 
-      <details class="shortcuts-help">
-        <summary>Keyboard shortcuts</summary>
-        <div class="shortcuts-body">
-          <p class="sr-warning">
-            Screen reader users: these shortcuts may conflict with your screen reader's
-            navigation keys. Switch your screen reader into focus mode (sometimes called
-            forms mode or pass-through mode) while practicing, then switch back when
-            you're done. See the User Manual for per-screen-reader instructions.
-          </p>
-          <dl>
-            <dt>Space</dt><dd>Play / next question</dd>
-            <dt>R</dt><dd>Repeat last</dd>
-            <dt>S</dt><dd>Skip</dd>
-            <dt>Enter</dt><dd>Submit answer</dd>
-          </dl>
+      <!-- v0.9.0: Direction row gets explicit ARPEGGIO DIRECTION label. -->
+      <div class="control-row-with-label">
+        <span class="control-label-large" id="l4-direction-label">Arpeggio Direction</span>
+        <div class="direction-bar"
+             id="l4-directionBar"
+             role="toolbar"
+             aria-labelledby="l4-direction-label">
+          <span class="label" aria-hidden="true">Direction</span>
+        </div>
+      </div>
+
+      <!-- v0.9.0: Onboarding hint pointing at the Reference panel below. -->
+      <p class="ref-onboarding-hint">
+        <span class="arrow" aria-hidden="true">↓</span>
+        New here? Open the Reference section first to hear and learn the sounds.
+      </p>
+
+      <!-- v0.9.0: Reference panel moved ABOVE the quiz/stage. -->
+      <details class="panel-collapsible">
+        <summary>Reference · hear any 7th chord</summary>
+        <div class="panel-body">
+          <div class="panel-sub">Click any chord to hear it. Uses the current mode, direction, and voicing.</div>
+
+          <div class="ref-controls">
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Root</span>
+              <!-- v0.9.0: Fixed/Random order swapped, default is now 'fixed'. -->
+              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
+                <button class="chip" id="l4-rootFixedBtn" aria-pressed="true">Fixed</button>
+                <button class="chip" id="l4-rootRandomBtn" aria-pressed="false">Random</button>
+              </div>
+              <div class="root-chooser" id="l4-rootChooser"
+                   role="radiogroup" aria-label="Choose fixed root note"></div>
+            </div>
+            <div class="ref-control-row">
+              <span class="ref-control-label" aria-hidden="true">Spacing</span>
+              <div class="tempo-control" id="l4-tempoControl">
+                <label for="l4-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
+                <input type="range" id="l4-tempoSlider"
+                       class="tempo-slider"
+                       min="0.2" max="2" step="0.1" value="0.5"
+                       aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
+                <span class="tempo-value" id="l4-tempoValue" aria-hidden="true">0.5 s</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ref-grid" id="l4-refGrid" role="group" aria-label="Reference 7th chords"></div>
         </div>
       </details>
 
-      <div class="direction-bar"
-           id="l4-directionBar"
-           role="toolbar"
-           aria-label="Arpeggio direction">
-        <span class="label" aria-hidden="true">Direction</span>
-      </div>
-
-      <section class="stage" id="l4-stage" aria-labelledby="l4-stage-heading">
+      <!-- v0.9.0: Stage heading renamed "Question" → "Guess The 7th Chord". -->
+      <section class="stage" id="l4-stage" aria-labelledby="l4-stage-heading"
+               style="margin-top: 28px;">
         <div class="prompt">
-          <h2 id="l4-stage-heading" style="all: unset;">Question</h2>
+          <h2 id="l4-stage-heading" style="all: unset;">Guess The 7th Chord</h2>
           <span class="mode-hint" id="l4-modeHint">four notes · one after the other</span>
         </div>
         <div class="play-row">
@@ -1283,8 +1402,9 @@
         <div>Streak <strong id="l4-scoreStreak">0</strong></div>
       </div>
 
+      <!-- v0.9.0: "Seventh Focus" renamed "7th Chord Quiz Choices". -->
       <details class="panel-collapsible" style="margin-top: 28px">
-        <summary>Seventh Focus</summary>
+        <summary>7th Chord Quiz Choices</summary>
         <div class="panel-body">
           <div class="panel-sub">
             Narrow your practice to specific qualities, inversions, or
@@ -1302,38 +1422,6 @@
                role="radiogroup" aria-label="Choose tight (closed) or open (drop-2) voicing"></div>
         </div>
       </details>
-
-      <details class="panel-collapsible">
-        <summary>Reference · hear any 7th chord</summary>
-        <div class="panel-body">
-          <div class="panel-sub">Click any chord to hear it. Uses the current mode, direction, and voicing.</div>
-
-          <div class="ref-controls">
-            <div class="ref-control-row">
-              <span class="ref-control-label" aria-hidden="true">Root</span>
-              <div role="group" aria-label="Root note source" style="display:flex; gap:6px;">
-                <button class="chip" id="l4-rootRandomBtn" aria-pressed="true">Random</button>
-                <button class="chip" id="l4-rootFixedBtn" aria-pressed="false">Fixed</button>
-              </div>
-              <div class="root-chooser" id="l4-rootChooser"
-                   role="radiogroup" aria-label="Choose fixed root note" hidden></div>
-            </div>
-            <div class="ref-control-row">
-              <span class="ref-control-label" aria-hidden="true">Spacing</span>
-              <div class="tempo-control" id="l4-tempoControl">
-                <label for="l4-tempoSlider" class="sr-only">Time between notes in arpeggiated playback</label>
-                <input type="range" id="l4-tempoSlider"
-                       class="tempo-slider"
-                       min="0.2" max="2" step="0.1" value="0.5"
-                       aria-valuemin="0.2" aria-valuemax="2" aria-valuenow="0.5">
-                <span class="tempo-value" id="l4-tempoValue" aria-hidden="true">0.5 s</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="ref-grid" id="l4-refGrid" role="group" aria-label="Reference 7th chords"></div>
-        </div>
-      </details>
     </section>
 
   </main>
@@ -1342,10 +1430,15 @@
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.8.4
-   Patch on v0.8.3: User Manual link points to a styled HTML page
-   (USER-MANUAL.html) hosted on the same domain as the app. No
-   GitHub chrome, no PDF reader needed, prints cleanly.
+   EAR TRAINER v0.9.0
+   Minor release: UX redesign. See HTML comment at top of file
+   and CHANGELOG.md for the full story. JS changes here are
+   limited to (1) flipping refRootMode default from 'random' to
+   'fixed' on L1/L2/L4, (2) the new SHORTCUT_SETS table and
+   updateGlobalShortcuts() function that drive the single global
+   keyboard-shortcuts disclosure, and (3) hooking that updater
+   into level-tab onclick. Everything else (state shape, engine
+   functions, audio handling, etc.) is unchanged from v0.8.4.
    ============================================================ */
 
 const INTERVALS = [
@@ -1481,7 +1574,7 @@ const state = {
     current: null, lastQuestion: null, answered: false,
     correct: 0, total: 0, streak: 0,
     autoAdvanceTimer: null,
-    refRootMode: 'random', refRootMidi: 60, refMelodicDelay: 1.5,
+    refRootMode: 'fixed', refRootMidi: 60, refMelodicDelay: 1.5,
   },
   l2: {
     mode: 'blocked',
@@ -1492,7 +1585,7 @@ const state = {
     selectedQuality: null, selectedInversion: null,
     correct: 0, total: 0, streak: 0,
     autoAdvanceTimer: null,
-    refRootMode: 'random', refRootMidi: 60, refArpDelay: 0.5,
+    refRootMode: 'fixed', refRootMidi: 60, refArpDelay: 0.5,
   },
   l3: {
     contentMode: 'intervals',
@@ -1525,7 +1618,7 @@ const state = {
     selectedQuality: null, selectedInversion: null,
     correct: 0, total: 0, streak: 0,
     autoAdvanceTimer: null,
-    refRootMode: 'random', refRootMidi: 60, refArpDelay: 0.5,
+    refRootMode: 'fixed', refRootMidi: 60, refArpDelay: 0.5,
   },
 };
 
@@ -2904,6 +2997,55 @@ document.getElementById('l4-tempoSlider').addEventListener('input', () => {
 
 /* === SHARED === */
 
+/* v0.9.0: Single global keyboard-shortcuts disclosure (replaces the four
+   per-level disclosures from v0.8.2). The disclosure is always at the top
+   of the page; its <dl> contents are rebuilt whenever the level changes,
+   so the user only ever sees the shortcuts that apply right now.
+   The screen-reader focus-mode warning lives in HTML once instead of being
+   duplicated four times — the shortcuts list is the only thing that
+   varies by level. */
+const SHORTCUT_SETS = {
+  1: [
+    ['Space', 'Play / next question'],
+    ['R',     'Repeat last'],
+    ['S',     'Skip'],
+    ['1–9',   'Pick the Nth visible answer'],
+  ],
+  2: [
+    ['Space', 'Play / next question'],
+    ['R',     'Repeat last'],
+    ['S',     'Skip'],
+    ['Enter', 'Submit answer'],
+  ],
+  3: [
+    ['Space', 'Play root'],
+    ['T',     'Play target now (skip the wait)'],
+    ['G',     'Got it'],
+    ['M',     'Missed it'],
+  ],
+  4: [
+    ['Space', 'Play / next question'],
+    ['R',     'Repeat last'],
+    ['S',     'Skip'],
+    ['Enter', 'Submit answer'],
+  ],
+};
+
+function updateGlobalShortcuts() {
+  const dl = document.getElementById('globalShortcutsList');
+  if (!dl) return;
+  const set = SHORTCUT_SETS[state.currentLevel] || [];
+  dl.innerHTML = '';
+  set.forEach(([key, desc]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = key;
+    const dd = document.createElement('dd');
+    dd.textContent = desc;
+    dl.appendChild(dt);
+    dl.appendChild(dd);
+  });
+}
+
 function updateHeader() {
   const sub = document.getElementById('headerSub');
   if (state.currentLevel === 1) {
@@ -2962,6 +3104,7 @@ document.querySelectorAll('[role="tab"].level-tab').forEach(tab => {
     document.getElementById('level-3-panel').hidden = level !== 3;
     document.getElementById('level-4-panel').hidden = level !== 4;
     updateHeader();
+    updateGlobalShortcuts();
   };
   tab.onkeydown = (e) => {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
@@ -3046,6 +3189,7 @@ l4_renderRootChooser(); l4_renderStats(); l4_updateReferenceControls();
 l4_updateSubmitButton();
 
 updateHeader();
+updateGlobalShortcuts();
 </script>
 </body>
 </html>
