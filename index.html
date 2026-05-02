@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.9.0 · 2026-05-01
-  Minor release: UX redesign aimed at first-run discovery. Reference
-  panel moves above the quiz/answers on each level; Mode and Direction
-  rows gain explicit labels; settings panels rename to "X Quiz Choices"
-  to make their function obvious. Reference root defaults to fixed C4
-  on a visible chooser. Per-level keyboard-shortcut disclosures
-  consolidate into one global disclosure that updates per level. Play
-  button restyled green with larger hit area.
-  See CHANGELOG.md for version history.
+ Ear Trainer · v0.9.1 · 2026-05-02
+  Patch release. App code unchanged from v0.9.0; this release ships
+  documentation updates (USER-MANUAL.html now reflects the v0.9.0
+  UX redesign) plus repo housekeeping and a release.sh bug fix.
+  See CHANGELOG.md section [0.9.1] for full notes.
 -->
 <html lang="en">
 <head>
@@ -1430,15 +1426,10 @@
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.9.0
-   Minor release: UX redesign. See HTML comment at top of file
-   and CHANGELOG.md for the full story. JS changes here are
-   limited to (1) flipping refRootMode default from 'random' to
-   'fixed' on L1/L2/L4, (2) the new SHORTCUT_SETS table and
-   updateGlobalShortcuts() function that drive the single global
-   keyboard-shortcuts disclosure, and (3) hooking that updater
-   into level-tab onclick. Everything else (state shape, engine
-   functions, audio handling, etc.) is unchanged from v0.8.4.
+   EAR TRAINER v0.9.1
+   Patch release. JavaScript unchanged from v0.9.0; this release
+   contains documentation and tooling updates only. See HTML
+   comment at top of file and CHANGELOG.md for the full story.
    ============================================================ */
 
 const INTERVALS = [
