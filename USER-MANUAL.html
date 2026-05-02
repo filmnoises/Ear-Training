@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer — User Manual
+  Ear Trainer — User Manual · v0.9.0 · 2026-05-02
   Standalone documentation page. Light docs aesthetic, print-friendly.
   Source of truth lives in this file directly (not regenerated from markdown).
-  Edit USER-MANUAL.html when content changes; USER-MANUAL.md is kept in
-  the repo for reference but is no longer the canonical version.
+  USER-MANUAL.md was retired to a local archive in v0.9.1's repo cleanup;
+  edit this file when content changes.
+
+  v0.9.0 manual update covers the in-app UX redesign: explicit MODE and
+  DIRECTION labels, Reference panel moved above the quiz on Levels 1/2,
+  green Play button (was brass), renamed stage headings ("Guess The X"),
+  renamed settings panels ("X Quiz Choices"), and the consolidation of
+  per-level keyboard shortcuts into one global disclosure at the top.
 -->
 <html lang="en">
 <head>
@@ -345,7 +351,7 @@
   <div class="topbar" role="navigation" aria-label="Document navigation">
     <a href="https://filmnoises.github.io/Ear-Training/"
        aria-label="Return to the Ear Trainer app">← Back to app</a>
-    <span aria-hidden="true">User Manual · Last updated April 2026</span>
+    <span aria-hidden="true">User Manual · Last updated May 2026</span>
   </div>
 
   <main id="content">
@@ -356,9 +362,13 @@
   <div class="note">
     <p><strong>Note:</strong> This guide currently documents Levels 1–3.
     Level 4 (7th chords) shipped in version 0.8.0 and will be added to
-    this guide in a future update. The in-app interface has tooltips
-    and labels that should let you find your way around Level 4 in the
-    meantime.</p>
+    this guide in a future update — including a music theory primer
+    on 7th chords. The in-app interface has tooltips and labels that
+    should let you find your way around Level 4 in the meantime, and
+    its layout follows the same pattern described for Levels 1 and 2
+    (MODE row, ARPEGGIO DIRECTION row, Reference panel above the quiz,
+    "Guess The 7th Chord" stage, and a "7th Chord Quiz Choices" panel
+    at the bottom).</p>
   </div>
 
   <p>Welcome. This is a small app for training your musical ear: hearing
@@ -379,6 +389,7 @@
       <li><a href="#level-1">Level 1 · Intervals</a></li>
       <li><a href="#level-2">Level 2 · Triads</a></li>
       <li><a href="#level-3">Level 3 · Sing-First</a></li>
+      <li><a href="#shortcuts">Keyboard shortcuts</a></li>
       <li><a href="#tips">Tips for effective practice</a></li>
       <li><a href="#accessibility">Accessibility features</a></li>
     </ul>
@@ -391,8 +402,15 @@
     message "Loading piano samples…" to disappear.</li>
     <li>Make sure your computer's volume is up and your speakers or
     headphones are working.</li>
-    <li>Click the brass-colored <strong>▶ Play</strong> button. You'll
-    hear two piano notes played one after the other.</li>
+    <li><strong>Open the Reference panel first.</strong> On Level 1
+    (the default), you'll see a green ↓ caption that says "New here?
+    Open the Reference section first…" — click that section open.
+    Try clicking a few interval names (Major 3rd, Perfect 5th, Octave)
+    to hear what each one sounds like. This gets your ear oriented
+    before you start being quizzed.</li>
+    <li>Now click the <strong>green ▶ Play</strong> button under the
+    "Guess The Interval" heading. You'll hear two piano notes played
+    one after the other.</li>
     <li>Underneath, you'll see buttons for each interval (Minor 2nd,
     Major 2nd, Minor 3rd, etc.). Click whichever one you think you heard.</li>
     <li>The app tells you if you were right or wrong. If right, the next
@@ -517,6 +535,25 @@
   Most other skills (melody dictation, chord recognition, transcription,
   improvisation) build on this.</p>
 
+  <h3>Layout</h3>
+
+  <p>From top to bottom, Level 1 is laid out like this:</p>
+
+  <ul>
+    <li>A <strong>MODE</strong> row — Melodic vs. Harmonic.</li>
+    <li>An <strong>INTERVAL DIRECTION</strong> row — Ascending / Descending /
+    Mixed (only used in melodic mode).</li>
+    <li>An italic green ↓ caption pointing at the next section, especially
+    helpful on your first visit.</li>
+    <li>The <strong>Reference</strong> panel — closed by default, click to
+    open. Lets you hear any interval on demand without being quizzed. Use
+    it for learning sounds before you test yourself on them.</li>
+    <li>The quiz itself, under the heading <strong>Guess The Interval</strong>:
+    the green Play button, the answer buttons, the score.</li>
+    <li>An <strong>Interval Quiz Choices</strong> panel at the bottom — opens
+    to let you toggle which intervals appear in the quiz.</li>
+  </ul>
+
   <h3>The loop</h3>
 
   <ol>
@@ -534,7 +571,7 @@
 
   <h3>The two playback modes</h3>
 
-  <p>At the top of Level 1, you'll see two tabs:</p>
+  <p>Selected from the MODE row at the top:</p>
 
   <ul>
     <li><strong>Melodic</strong> — the two notes play one after the other
@@ -549,7 +586,7 @@
 
   <h3>Direction (melodic only)</h3>
 
-  <p>When in melodic mode, you can choose:</p>
+  <p>From the INTERVAL DIRECTION row, when in melodic mode:</p>
 
   <ul>
     <li><strong>Ascending</strong> — second note is higher than the first</li>
@@ -561,11 +598,12 @@
   practicing both. Mixed is the realistic test once you're confident in
   each separately.</p>
 
-  <h3>Settings: Interval Pool</h3>
+  <h3>Settings: Interval Quiz Choices</h3>
 
-  <p>At the bottom of Level 1, there's a row of small buttons (called
-  "chips" in the app) — one for each interval. Toggle them on or off to
-  control which intervals appear in the quiz.</p>
+  <p>At the bottom of Level 1, there's a panel called "Interval Quiz
+  Choices." Open it to see a row of small buttons (called "chips" in
+  the app) — one for each interval. Toggle them on or off to control
+  which intervals appear in the quiz.</p>
 
   <p><strong>Recommended starting pool:</strong> just Perfect 5th, Major
   3rd, Minor 3rd, and Octave. These four are the most distinct and the
@@ -575,34 +613,30 @@
 
   <h3>The Reference panel</h3>
 
-  <p>Above the settings, you'll find a panel labeled "Reference · hear
-  any interval." Click any interval here to hear it. This is for
-  <em>learning</em> the sound of an interval, separate from the quiz.</p>
+  <p>This panel sits <em>above</em> the quiz, with a green ↓ caption
+  drawing attention to it on first visit. Open it and click any interval
+  to hear it. The Reference is for <em>learning</em> the sound of an
+  interval, separate from the quiz — no scoring, no time pressure.</p>
 
-  <p>The Reference panel has three controls:</p>
+  <p>The Reference panel has two main controls:</p>
 
   <ul>
-    <li><strong>Root: Random or Fixed.</strong> Random plays each
-    interval from a different starting note. Fixed lets you pick the
-    starting note (C, C♯, D, etc.) so you can compare intervals from
-    the same root. Try Fixed = C, then click Major 3rd, then Perfect
-    4th, then Tritone — you'll hear how each interval relates to the
-    same starting point.</li>
+    <li><strong>Root: Fixed or Random.</strong> Fixed (the default) gives
+    you a chooser to pick the starting note (C, C♯, D, etc.) — C4 is
+    selected to start. Random plays each interval from a different
+    starting note. Try Fixed = C, then click Major 3rd, then Perfect 4th,
+    then Tritone — you'll hear how each interval relates to the same
+    starting point. Switch to Random when you want variety.</li>
     <li><strong>Spacing slider.</strong> Controls the time between the
     two notes in melodic playback. Default is 1.5 seconds. Slower (try
     3+ seconds) gives you time to internalize the first note before the
     second arrives.</li>
   </ul>
 
-  <h4>Keyboard shortcuts (Level 1)</h4>
-  <div class="shortcut-list">
-    <ul>
-      <li><span class="key">Space</span><span class="desc">Play</span></li>
-      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
-      <li><span class="key">S</span><span class="desc">Skip</span></li>
-      <li><span class="key">1, 2, 3…</span><span class="desc">Pick the Nth visible answer button</span></li>
-    </ul>
-  </div>
+  <h4>Keyboard shortcuts on Level 1</h4>
+  <p>Space (Play), R (Repeat Last), S (Skip), 1–9 (pick the Nth answer).
+  See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
+  below for all levels in one place.</p>
 
   <h2 id="level-2">Level 2 · Triads</h2>
 
@@ -611,6 +645,23 @@
   <p>Recognizing the <em>quality</em> of a triad (major / minor /
   diminished / augmented) and which <em>inversion</em> it's in. This is
   the foundation for hearing chord progressions in real music.</p>
+
+  <h3>Layout</h3>
+
+  <p>Same general shape as Level 1, with chord-specific labels:</p>
+
+  <ul>
+    <li><strong>MODE</strong> row — Blocked vs. Arpeggiated.</li>
+    <li><strong>ARPEGGIO DIRECTION</strong> row — Ascending / Descending /
+    Mixed (only used in arpeggiated mode).</li>
+    <li>The green ↓ "New here?" caption.</li>
+    <li>The <strong>Reference</strong> panel — opens to let you hear
+    any triad on demand.</li>
+    <li>The quiz, under the heading <strong>Guess The Triad</strong>:
+    Play button, Chord Quality row, Chord Inversion row, Submit button,
+    score.</li>
+    <li><strong>Triad Quiz Choices</strong> panel at the bottom.</li>
+  </ul>
 
   <h3>The loop</h3>
 
@@ -649,10 +700,10 @@
   <p>Same options as Level 1 — Ascending, Descending, Mixed. In blocked
   mode, direction is meaningless and the controls are dimmed.</p>
 
-  <h3>The Triad Focus panel</h3>
+  <h3>The Triad Quiz Choices panel</h3>
 
-  <p>Below the score, you'll find a panel called "Triad Focus" with two
-  sets of toggleable chips:</p>
+  <p>At the bottom of Level 2, this panel (formerly called "Triad
+  Focus") has two sets of toggleable chips:</p>
 
   <ul>
     <li><strong>Chord quality:</strong> Major, Minor, Diminished,
@@ -669,19 +720,16 @@
 
   <h3>The Reference panel</h3>
 
-  <p>Same idea as Level 1, but with one button per <em>combination</em>
-  of quality and inversion (so 6 buttons with just major/minor, 12 if
-  all four qualities are on). Click any to hear that specific voicing.</p>
+  <p>Same idea as Level 1's Reference, sitting <em>above</em> the quiz,
+  but with one button per <em>combination</em> of quality and inversion
+  (so 6 buttons with just major/minor, 12 if all four qualities are on).
+  Click any to hear that specific voicing. The same Fixed/Random root
+  control is here, with Fixed at C4 by default.</p>
 
-  <h4>Keyboard shortcuts (Level 2)</h4>
-  <div class="shortcut-list">
-    <ul>
-      <li><span class="key">Space</span><span class="desc">Play</span></li>
-      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
-      <li><span class="key">S</span><span class="desc">Skip</span></li>
-      <li><span class="key">Enter</span><span class="desc">Submit Answer</span></li>
-    </ul>
-  </div>
+  <h4>Keyboard shortcuts on Level 2</h4>
+  <p>Space (Play), R (Repeat Last), S (Skip), Enter (Submit Answer).
+  See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
+  below for all levels in one place.</p>
 
   <h2 id="level-3">Level 3 · Sing-First</h2>
 
@@ -692,6 +740,27 @@
   musicians (singers especially, but also instrumentalists) develop
   deep internalization of musical sounds. If you can sing it, you really
   know it.</p>
+
+  <h3>Layout</h3>
+
+  <p>Level 3 has a different shape from Levels 1 and 2 because the
+  workflow is different — there's no recognition quiz, just structured
+  singing practice. From top to bottom:</p>
+
+  <ul>
+    <li>A <strong>MODE</strong> row — Intervals vs. Triads. (No direction
+    control on Level 3 — singing direction doesn't really apply.)</li>
+    <li>The practice area, under the heading <strong>Practice</strong>:
+    target display, countdown, Play Root and rating buttons.</li>
+    <li>A <strong>Target</strong> picker (open by default) — pick what
+    interval or triad you're working on.</li>
+    <li>A <strong>Practice settings</strong> panel — voice range, wait
+    timer, continuous-practice toggle.</li>
+  </ul>
+
+  <p>There's no Reference panel on Level 3 — the Target picker plays a
+  similar role, but it's required (you can't practice without picking
+  something) rather than exploratory.</p>
 
   <h3>The loop</h3>
 
@@ -768,8 +837,45 @@
     work.</li>
   </ul>
 
-  <h4>Keyboard shortcuts (Level 3)</h4>
+  <h4>Keyboard shortcuts on Level 3</h4>
+  <p>Space (Play Root), T (Play Target Now), G (Got It), M (Missed It).
+  See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
+  below for all levels in one place.</p>
+
+  <h2 id="shortcuts">Keyboard shortcuts</h2>
+
+  <p>Inside the app, there's a <strong>Keyboard shortcuts</strong>
+  disclosure between the title and the level tabs at the top of the
+  page. Click it to expand. Its contents update automatically when you
+  switch levels — so you only ever see the shortcuts that apply right
+  now. (In earlier versions, each level had its own keyboard-shortcuts
+  panel; v0.9.0 consolidates them into one.)</p>
+
+  <p>For reference, here are the shortcut sets for the three documented
+  levels (Level 4's section is coming in a future update):</p>
+
   <div class="shortcut-list">
+    <h4>Level 1 · Intervals</h4>
+    <ul>
+      <li><span class="key">Space</span><span class="desc">Play / next question</span></li>
+      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
+      <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">1, 2, 3…</span><span class="desc">Pick the Nth visible answer button</span></li>
+    </ul>
+  </div>
+
+  <div class="shortcut-list">
+    <h4>Level 2 · Triads</h4>
+    <ul>
+      <li><span class="key">Space</span><span class="desc">Play / next question</span></li>
+      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
+      <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">Enter</span><span class="desc">Submit Answer</span></li>
+    </ul>
+  </div>
+
+  <div class="shortcut-list">
+    <h4>Level 3 · Sing-First</h4>
     <ul>
       <li><span class="key">Space</span><span class="desc">Play Root</span></li>
       <li><span class="key">T</span><span class="desc">Play Target Now (skip the wait)</span></li>
@@ -777,6 +883,10 @@
       <li><span class="key">M</span><span class="desc">Missed It</span></li>
     </ul>
   </div>
+
+  <p>Screen reader users — see the <a href="#accessibility">Accessibility features</a>
+  section below for important notes about putting your screen reader
+  into focus mode before using these shortcuts.</p>
 
   <h2 id="tips">Tips for effective practice</h2>
 
@@ -809,7 +919,8 @@
     element can be reached with Tab. A visible brass outline shows
     what's focused.</li>
     <li><strong>Keyboard shortcuts</strong> for the most common actions
-    in each level (see the level sections above).</li>
+    on each level (see the <a href="#shortcuts">Keyboard shortcuts</a>
+    section above).</li>
     <li><strong>Screen reader support.</strong> All controls have
     descriptive labels. Feedback announcements (correct, wrong, the
     chord that was played) are announced via ARIA live regions
@@ -848,9 +959,10 @@
   <p>When you're done practicing, switch back to your normal browse
   mode to navigate the rest of the web.</p>
 
-  <p>A reminder of this is also available inside the app — each level
-  panel has a "Keyboard shortcuts" disclosure near the top that lists
-  the per-level shortcuts and includes a brief screen-reader note.</p>
+  <p>A reminder of this is also available inside the app — there's a
+  "Keyboard shortcuts" disclosure at the top of the page (between the
+  title and the level tabs) that lists the shortcuts for whichever
+  level you're currently on, and includes a brief screen-reader note.</p>
 
   <p>If you find an accessibility issue, please report it — these
   features have been designed thoughtfully but real-world testing

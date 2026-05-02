@@ -21,6 +21,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.9.1] — 2026-05-02
+
+Patch release: documentation and housekeeping. No app code changes.
+
+### Changed — User Manual
+
+- Manual updated to reflect the v0.9.0 UX redesign:
+  - Quick-start now opens with the Reference panel as step 3, before
+    pressing Play. Mirrors the in-app onboarding hint.
+  - Each level section gains a "Layout" subsection describing the
+    MODE and DIRECTION labels, the Reference-above-quiz ordering, and
+    the renamed stage headings ("Guess The Interval" / "Guess The
+    Triad" / "Practice").
+  - Settings panel descriptions use the new names ("Interval Quiz
+    Choices," "Triad Quiz Choices") instead of "Interval Pool" and
+    "Triad Focus."
+  - Reference panel description updated for the new Fixed-default-at-C4
+    behavior.
+  - Play button described as green throughout (was "brass-colored").
+- New consolidated **Keyboard shortcuts** section between Level 3 and
+  Tips. The four per-level shortcut blocks at the bottom of each level
+  section now point to this consolidated section instead of repeating
+  the same lists. Reflects the in-app consolidation from v0.9.0.
+- Accessibility section updated: shortcut references no longer say
+  "see the level sections above"; the in-app reminder paragraph now
+  describes the single global disclosure instead of four per-level
+  ones.
+- Level 4 disclaimer expanded slightly: notes that Level 4 follows the
+  same v0.9.0 layout pattern as Levels 1 and 2 even though its full
+  documentation (including 7th-chord theory primer) is still pending
+  for a future release.
+- Top comment in USER-MANUAL.html now carries a versioned/dated header
+  line, matching the convention used in ear-trainer.html.
+- "Last updated April 2026" stamp in the topbar bumped to May 2026.
+
+### Changed — Repo housekeeping (committed in earlier housekeeping
+commit, captured here for completeness)
+
+- Retired stale documentation to a local archive (kept on the author's
+  machine in `1. OLD DNU/`, no longer tracked by git):
+  `NOTES.md`, `TODO.md`, `TESTING.md`, `USER-MANUAL.md`,
+  `Ear Training User Notes.docx`, `USER-MANUALv1.pdf`, and the old
+  experiment file `seventh-chord-test-harness.html`.
+- Walked back the v0.8.4 commitment to keep `USER-MANUAL.md` in the
+  repo for "historical reference." The retired copy is preserved in
+  the local archive; the canonical documentation is now exclusively
+  `USER-MANUAL.html` going forward.
+- `Releases/` folder added to `.gitignore` so the author's local
+  versioned-archive of release builds doesn't accidentally end up in
+  the repo on a future `git add` command.
+
+### Fixed — release tooling
+
+- `release.sh` final "Done" print no longer crashes with `unbound
+  variable: GRN?` when running under `set -u`. Wrapped the variable
+  references in braces (`${GRN}` instead of `$GRN`) so bash correctly
+  identifies the variable name boundary against the multi-byte ✓
+  glyph that follows. Cosmetic-only bug — never affected the actual
+  release operations, which complete before the failing line runs.
+- Marked `release.sh` executable (`chmod +x`) so the executable bit
+  is recorded in git and survives clones to other machines.
+
+### Files touched
+
+- `USER-MANUAL.html` (regenerated)
+- `CHANGELOG.md` (this entry)
+- `release.sh` (one-line bug fix)
+
+### Notes
+
+This is the first patch release using the new `release.sh` workflow
+end-to-end on a release that began with a clean working tree (rather
+than the messy state v0.9.0 was tagged from). Should be the smoothest
+release-script run yet.
+
+---
+
 ## [0.9.0] — 2026-05-01
 
 Minor release: UX redesign aimed at first-run discovery. Earlier real-
