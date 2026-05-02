@@ -221,6 +221,6 @@ git push origin "$TAG"
 ok "pushed tag $TAG to origin"
 
 step "Done"
-say  "  $GRN✓$RST Released $TAG"
+say  "  ${GRN}✓${RST} Released ${TAG}"
 say  "  ${DIM}GitHub Pages will rebuild within a minute or two.${RST}"
 say  "  ${DIM}Check: https://filmnoises.github.io/Ear-Training/${RST}"
