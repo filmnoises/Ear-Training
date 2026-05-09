@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+- Echo-the-pick flow on quiz answer clicks (deferred to v0.10.1).
+  Plays the user's chosen interval right after they click an answer
+  so they hear what they picked, then on a wrong answer auto-replays
+  the original question. Ships in its own focused release after
+  v0.10.0 has stabilized in tester hands.
 - Extended chords (Levels 5+): 9th, 11th, 13th — deserve their own
   design conversation around voicing range and pedagogical sequencing.
+- Sus2 / Sus4 in the Level 2 triad quiz — separate release alongside
+  the Level 4 manual catch-up.
 - Save settings to localStorage so they persist across sessions.
 - Continued mobile-friendly layout review.
 - Reference manual (separate from getting-started guide).
@@ -18,6 +25,167 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   music theory primer, v0.7.2 Tritone label note, v0.8.1 audio banner
   documentation. Was deferred from v0.8.2 to its own dedicated session
   to do the theory writeups carefully.
+- Lower-octave option for Levels 1 and 2 — register picker similar
+  to Level 3's Voice control. Useful for bass-instrument players.
+  Needs design conversation before building.
+
+---
+
+## [0.10.0] — 2026-05-09
+
+Minor release. Three improvements aimed at audio quality and learning
+UX, plus a small readability tweak.
+
+### Changed — audio quality
+
+- **Salamander piano sample density tripled.** v0.9.x loaded only
+  11 source samples (A and C across octaves 1–6); v0.10.0 loads 30
+  samples covering A / C / D♯ / F♯ across octaves 0–8, matching the
+  recording grid Alexander Holm originally used (every minor third
+  from the lowest A). Most notes are now within a half-step of a
+  real source sample instead of being pitch-shifted by up to a major
+  sixth.
+- **Why this matters:** real-user feedback in May 2026 from a USC
+  concert pianist and piano teacher noted the old 11-sample setup
+  produced audible pitch-shift artifacts that trained ears could
+  pick up. Casual listeners typically can't, but the goal of an
+  ear-training app is *training ears* — so getting the timbre right
+  matters more here than in most apps.
+- **Tradeoff:** initial page load takes roughly 3× longer (still
+  well under 10 seconds on broadband; possibly more on slow mobile).
+  The "Loading piano samples…" banner already exists for this case
+  and now spends a bit more time on screen during first load.
+
+### Added — attribution credits
+
+- Small credits footer at the bottom of the app:
+  - Salamander Grand Piano V3 by Alexander Holm — CC-BY 3.0 (links
+    to license)
+  - Tone.js by Yotam Mann — MIT (links to license)
+- CC-BY 3.0 *requires* visible attribution; the v0.9.x app did not
+  have it (a real licensing oversight, addressed in v0.10.0). The
+  MIT license for Tone.js doesn't strictly require visible credit
+  but it's good manners.
+- Footer styled minimally so it doesn't compete with the active
+  controls; uses JetBrains Mono at 11px, ink-dim color, divider
+  line above. Hidden in print.
+- More detailed attribution lives in the User Manual (also updated
+  in this release).
+
+### Added — Reveal Answer button
+
+- New button in the Play row on Levels 1, 2, and 4: "Reveal Answer"
+  (keyboard shortcut **A**). Always visible alongside Play, Repeat
+  Last, and Skip.
+- Behavior:
+  - Plays the correct interval/chord from the question's root.
+  - Flashes the correct answer button(s) green so the user has a
+    visual anchor for the answer name alongside the audio.
+  - Counts as a wrong answer in the score: total +1, correct
+    unchanged, streak resets. Pedagogically honest — you don't
+    really get a question right by revealing.
+  - Auto-advances to the next question after a brief pause
+    (matching the correct-answer behavior).
+- **Why:** tester feedback (May 2026) noted that the "must get it
+  right to advance" rule lacked an honorable exit. After a few wrong
+  guesses, users were getting frustrated rather than learning. The
+  Reveal button preserves dignity while preserving the score's
+  honesty: the user opts to learn from the question rather than
+  brute-forcing past it.
+- The Skip button remains for the different intent of "I don't want
+  to engage with this question at all" (no score impact, just move
+  on).
+
+### Changed — readability
+
+- Answer-button label text bumped from 16px to 18px (Fraunces serif).
+- Semitone subtext under each label bumped from 11px to 12px
+  (JetBrains Mono).
+- Padding holds at 16px × 12px so layout density doesn't shift
+  noticeably; just slightly larger lettering for tester comfort.
+
+### Updated — keyboard shortcuts
+
+- New shortcut **A** = Reveal Answer (Levels 1, 2, 4 only — Level 3
+  doesn't have a quiz to reveal).
+- Added to `SHORTCUT_SETS` table so the global shortcuts disclosure
+  shows it correctly when those levels are active.
+
+### Updated — User Manual
+
+- New "Credits and licensing" section with full attribution text,
+  links to license deeds, and a brief explanation of why the audio
+  is what it is.
+- Reveal Answer button described in each level's section as part of
+  the play-row controls.
+- Keyboard Shortcuts section updated to include the new **A** entry.
+
+### Files touched
+
+- `ear-trainer.html` (regenerated; mirror to `index.html`)
+- `CHANGELOG.md` (this entry)
+- `USER-MANUAL.html` (credits section + Reveal Answer + shortcuts)
+
+### What to test in v0.10.0
+
+Bullet checklist for testers — copy into your tracker and check off as
+each is verified.
+
+**Audio quality**
+- [ ] Initial load completes successfully (banner clears after a few
+  seconds).
+- [ ] Press Play on Level 1 — interval plays cleanly with no obvious
+  artifacts.
+- [ ] In Reference panel, click intervals from Fixed C4 root, then
+  switch to Random root — both sound natural.
+- [ ] Try at least one note from each end of the range (low, mid,
+  high) by clicking different intervals. Trained ears should listen
+  for whether the pitch-shift artifacts of v0.9.x are reduced or gone.
+
+**Reveal Answer button — Level 1**
+- [ ] After pressing Play and hearing an interval, "Reveal Answer"
+  button is enabled.
+- [ ] Clicking it: plays the correct interval, the correct answer
+  button flashes green, feedback says "Revealed. That was a [name]."
+- [ ] Score: total goes up by 1, correct unchanged, streak goes to 0.
+- [ ] Auto-advances to a new question after about 1.8 seconds.
+- [ ] Keyboard shortcut **A** works the same way.
+
+**Reveal Answer button — Level 2 (triads)**
+- [ ] Reveal Answer enabled after pressing Play.
+- [ ] Plays the correct triad; both Quality and Inversion buttons
+  flash green for the correct answer.
+- [ ] Feedback says "Revealed. That was a [Quality] [inversion]."
+- [ ] Score: total +1, correct unchanged, streak 0.
+- [ ] Auto-advances after 2 seconds.
+
+**Reveal Answer button — Level 4 (7th chords)**
+- [ ] Same checks as Level 2 but for 7th chords.
+
+**Larger answer text**
+- [ ] Answer buttons on Level 1 are visibly easier to read than v0.9.1.
+- [ ] Layout doesn't break or feel cramped.
+
+**Credits footer**
+- [ ] Visible at bottom of every level.
+- [ ] Both links open in new tabs (Salamander archive and CC-BY 3.0
+  license; Tone.js home and MIT license).
+- [ ] Doesn't show when printing (open print preview to confirm).
+
+**Keyboard shortcuts disclosure**
+- [ ] Click "Keyboard shortcuts" at top of page on Level 1 — list
+  includes the new **A · Reveal Answer** entry.
+- [ ] Switch to Level 3 — list does NOT include **A** (Level 3
+  has no Reveal Answer; that's correct).
+- [ ] Switch to Level 4 — list includes **A** again.
+
+**Regression checks (v0.9.x features still working)**
+- [ ] Level 1 Reference panel default is Fixed C4 with chooser visible.
+- [ ] MODE and INTERVAL DIRECTION labels still visible on Level 1.
+- [ ] Stage heading still says "Guess The Interval" / "Guess The
+  Triad" / "Practice" / "Guess The 7th Chord."
+- [ ] Play button still green.
+- [ ] User Manual link in top-right still works.
 
 ---
 

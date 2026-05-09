@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer — User Manual · v0.9.0 · 2026-05-02
+  Ear Trainer — User Manual · v0.10.0 · 2026-05-09
   Standalone documentation page. Light docs aesthetic, print-friendly.
   Source of truth lives in this file directly (not regenerated from markdown).
   USER-MANUAL.md was retired to a local archive in v0.9.1's repo cleanup;
   edit this file when content changes.
 
-  v0.9.0 manual update covers the in-app UX redesign: explicit MODE and
-  DIRECTION labels, Reference panel moved above the quiz on Levels 1/2,
-  green Play button (was brass), renamed stage headings ("Guess The X"),
-  renamed settings panels ("X Quiz Choices"), and the consolidation of
-  per-level keyboard shortcuts into one global disclosure at the top.
+  v0.10.0 manual updates: new "Credits and licensing" section
+  acknowledging Salamander Grand Piano (CC-BY 3.0) and Tone.js (MIT);
+  Reveal Answer button described in each level section; new keyboard
+  shortcut A added to the Keyboard Shortcuts section.
 -->
 <html lang="en">
 <head>
@@ -392,6 +391,7 @@
       <li><a href="#shortcuts">Keyboard shortcuts</a></li>
       <li><a href="#tips">Tips for effective practice</a></li>
       <li><a href="#accessibility">Accessibility features</a></li>
+      <li><a href="#credits">Credits and licensing</a></li>
     </ul>
   </nav>
 
@@ -567,6 +567,11 @@
     what to listen for.</li>
     <li><strong>Skip →</strong> generates a new question without grading
     the current one.</li>
+    <li><strong>Reveal Answer</strong> plays the correct interval and
+    flashes its name green. Use this when you've genuinely tried and
+    just can't get it — better to learn what it was than be stuck.
+    It counts as a wrong answer in the score (since you didn't really
+    get it right by revealing). New in v0.10.0.</li>
   </ol>
 
   <h3>The two playback modes</h3>
@@ -634,7 +639,7 @@
   </ul>
 
   <h4>Keyboard shortcuts on Level 1</h4>
-  <p>Space (Play), R (Repeat Last), S (Skip), 1–9 (pick the Nth answer).
+  <p>Space (Play), R (Repeat Last), S (Skip), A (Reveal Answer), 1–9 (pick the Nth answer).
   See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
   below for all levels in one place.</p>
 
@@ -677,7 +682,10 @@
   </ol>
 
   <p>You can change your picks before submitting.
-  <strong>Clear Picks</strong> resets both selections.</p>
+  <strong>Clear Picks</strong> resets both selections.
+  <strong>Reveal Answer</strong> (new in v0.10.0) plays the correct
+  triad and highlights both axes — counts as a wrong answer in your
+  score, but lets you learn from a question that's stumping you.</p>
 
   <h3>The two playback modes</h3>
 
@@ -727,7 +735,7 @@
   control is here, with Fixed at C4 by default.</p>
 
   <h4>Keyboard shortcuts on Level 2</h4>
-  <p>Space (Play), R (Repeat Last), S (Skip), Enter (Submit Answer).
+  <p>Space (Play), R (Repeat Last), S (Skip), A (Reveal Answer), Enter (Submit Answer).
   See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
   below for all levels in one place.</p>
 
@@ -860,6 +868,7 @@
       <li><span class="key">Space</span><span class="desc">Play / next question</span></li>
       <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
       <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">A</span><span class="desc">Reveal Answer (new in v0.10.0)</span></li>
       <li><span class="key">1, 2, 3…</span><span class="desc">Pick the Nth visible answer button</span></li>
     </ul>
   </div>
@@ -870,6 +879,7 @@
       <li><span class="key">Space</span><span class="desc">Play / next question</span></li>
       <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
       <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">A</span><span class="desc">Reveal Answer (new in v0.10.0)</span></li>
       <li><span class="key">Enter</span><span class="desc">Submit Answer</span></li>
     </ul>
   </div>
@@ -967,6 +977,56 @@
   <p>If you find an accessibility issue, please report it — these
   features have been designed thoughtfully but real-world testing
   always finds gaps.</p>
+
+  <h2 id="credits">Credits and licensing</h2>
+
+  <p>This app builds on two pieces of free, openly-licensed work
+  by other people. v0.10.0 brings their attribution out of the
+  source code and into the open as it should be.</p>
+
+  <h3>Salamander Grand Piano V3 · Alexander Holm</h3>
+
+  <p>The piano sounds you hear are samples from the
+  <a href="https://archive.org/details/SalamanderGrandPianoV3"
+     target="_blank" rel="noopener noreferrer">Salamander Grand Piano V3</a>
+  by Alexander Holm — recordings of a Yamaha C5 grand piano made
+  with two AKG C414 microphones positioned about 12cm above the
+  strings. The library was originally sampled at every minor third
+  from the lowest A, in 16 velocity layers, and then made freely
+  available under
+  <a href="https://creativecommons.org/licenses/by/3.0/"
+     target="_blank" rel="noopener noreferrer">Creative Commons
+  Attribution 3.0 (CC BY 3.0)</a>.</p>
+
+  <p>The version this app uses is hosted by the Tone.js project
+  in MP3 form for fast browser loading. From v0.10.0, the app
+  loads 30 source samples (every minor third from A0 to C8),
+  matching the recording grid. Earlier versions loaded only 11
+  samples, which produced subtle pitch-shift artifacts on notes
+  far from a sampled root — feedback from a concert pianist
+  prompted the upgrade.</p>
+
+  <h3>Tone.js · Yotam Mann</h3>
+
+  <p><a href="https://tonejs.github.io/"
+        target="_blank" rel="noopener noreferrer">Tone.js</a>
+  is a Web Audio framework created by Yotam Mann that handles
+  loading the piano samples, scheduling notes, managing the audio
+  context across browsers, and a great deal of audio plumbing this
+  app would otherwise have to write from scratch. It's released
+  under the <a href="https://opensource.org/licenses/MIT"
+                target="_blank" rel="noopener noreferrer">MIT
+  License</a>, which doesn't strictly require visible attribution
+  but it's good manners to give credit where it's due.</p>
+
+  <h3>About this app</h3>
+
+  <p>The app itself is by Rick at PostHaste Media — a small,
+  handmade ear training tool for the curious. The code is open and
+  lives at
+  <a href="https://github.com/filmnoises/Ear-Training"
+     target="_blank" rel="noopener noreferrer">github.com/filmnoises/Ear-Training</a>.
+  Issues and suggestions welcome there.</p>
 
   <hr>
 

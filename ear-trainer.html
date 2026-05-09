@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <!--
- Ear Trainer · v0.9.1 · 2026-05-02
-  Patch release. App code unchanged from v0.9.0; this release ships
-  documentation updates (USER-MANUAL.html now reflects the v0.9.0
-  UX redesign) plus repo housekeeping and a release.sh bug fix.
-  See CHANGELOG.md section [0.9.1] for full notes.
+  Ear Trainer · v0.10.0 · 2026-05-09
+  Minor release. Three improvements aimed at audio quality and
+  learning UX:
+  (1) Salamander piano sample density tripled — every minor third
+      across the keyboard instead of every major third / major sixth.
+      Notably reduces pitch-shift artifacts that trained pianists
+      were hearing in v0.9.x.
+  (2) Attribution surfaced for the audio assets used: Salamander
+      Grand Piano V3 by Alexander Holm (CC-BY 3.0) and Tone.js by
+      Yotam Mann (MIT).
+  (3) Reveal Answer button on Levels 1, 2, and 4 — an "honorable
+      exit" for users who want to learn from a question they can't
+      get rather than be locked into trying again. Counts as a wrong
+      answer in the score; plays the correct interval/chord; flashes
+      the correct button(s) green; auto-advances.
+  Plus larger answer-button text for readability.
+  See CHANGELOG.md section [0.10.0] for full notes.
 -->
 <html lang="en">
 <head>
@@ -296,14 +308,18 @@
     display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px; margin-bottom: 24px;
   }
+  /* v0.10.0: bumped font-size 16px → 18px and the semitones subtext
+     11px → 12px for readability. Tester feedback indicated the
+     answer labels were a touch small at typical viewing distance.
+     Padding holds at 16px 12px so layout density doesn't shift much. */
   .answers button {
     padding: 16px 12px; font-family: 'Fraunces', serif;
-    font-size: 16px; letter-spacing: 0; text-transform: none; text-align: left;
+    font-size: 18px; letter-spacing: 0; text-transform: none; text-align: left;
     position: relative;
   }
   .answers button .semitones {
     display: block; font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--ink-dim);
+    font-size: 12px; color: var(--ink-dim);
     margin-top: 4px; letter-spacing: 0.1em;
   }
   .answers button.correct {
@@ -683,6 +699,39 @@
     border-color: var(--accent);
   }
 
+  /* v0.10.0: Credits footer.
+     CC-BY 3.0 requires attribution for the Salamander Grand Piano
+     samples. Tone.js (MIT) doesn't strictly require visible credit
+     but it's good manners. Sits below the main content, low-key
+     visual weight — should not compete with the active controls.
+     Detailed credits live in the User Manual. */
+  .credits {
+    margin-top: 48px;
+    padding: 18px 0 24px;
+    border-top: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--ink-dim);
+    text-align: center;
+  }
+  .credits a {
+    color: var(--ink-dim);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 3px;
+  }
+  .credits a:hover, .credits a:focus-visible {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+  .credits .credits-line + .credits-line {
+    margin-top: 4px;
+  }
+  @media print {
+    .credits { display: none; }
+  }
+
   /* === v0.8.1: prominent "audio not ready" banner ===
      Higher visual weight than .loading-banner because real users
      were experiencing silent failures on iOS without knowing why.
@@ -998,6 +1047,14 @@
           <button id="l1-skipBtn" disabled aria-keyshortcuts="S">
             Skip →<span class="kbd" aria-hidden="true">S</span>
           </button>
+          <!-- v0.10.0: "Honorable exit" button. Plays the correct answer,
+               flashes the correct button green, counts as a wrong answer,
+               auto-advances. Always visible alongside Skip. -->
+          <button id="l1-revealBtn" disabled
+                  aria-label="Reveal the correct answer and play it"
+                  aria-keyshortcuts="A">
+            Reveal Answer<span class="kbd" aria-hidden="true">A</span>
+          </button>
         </div>
       </section>
 
@@ -1107,6 +1164,12 @@
           </button>
           <button id="l2-skipBtn" disabled aria-keyshortcuts="S">
             Skip →<span class="kbd" aria-hidden="true">S</span>
+          </button>
+          <!-- v0.10.0: see Level 1 for the rationale. -->
+          <button id="l2-revealBtn" disabled
+                  aria-label="Reveal the correct answer and play it"
+                  aria-keyshortcuts="A">
+            Reveal Answer<span class="kbd" aria-hidden="true">A</span>
           </button>
         </div>
       </section>
@@ -1373,6 +1436,12 @@
           <button id="l4-skipBtn" disabled aria-keyshortcuts="S">
             Skip →<span class="kbd" aria-hidden="true">S</span>
           </button>
+          <!-- v0.10.0: see Level 1 for the rationale. -->
+          <button id="l4-revealBtn" disabled
+                  aria-label="Reveal the correct answer and play it"
+                  aria-keyshortcuts="A">
+            Reveal Answer<span class="kbd" aria-hidden="true">A</span>
+          </button>
         </div>
       </section>
 
@@ -1422,14 +1491,39 @@
 
   </main>
 
+  <!-- v0.10.0: Credits footer. CC-BY 3.0 requires attribution for
+       Salamander Grand Piano. Detailed credits and full license text
+       live in the User Manual. -->
+  <footer class="credits" role="contentinfo" aria-label="Credits and attributions">
+    <div class="credits-line">
+      Piano sounds: <a href="https://archive.org/details/SalamanderGrandPianoV3"
+                       target="_blank" rel="noopener noreferrer">Salamander Grand Piano V3</a>
+      by Alexander Holm
+      &middot;
+      <a href="https://creativecommons.org/licenses/by/3.0/"
+         target="_blank" rel="noopener noreferrer">CC&nbsp;BY&nbsp;3.0</a>
+    </div>
+    <div class="credits-line">
+      Audio engine: <a href="https://tonejs.github.io/"
+                      target="_blank" rel="noopener noreferrer">Tone.js</a>
+      by Yotam Mann
+      &middot;
+      <a href="https://opensource.org/licenses/MIT"
+         target="_blank" rel="noopener noreferrer">MIT</a>
+    </div>
+  </footer>
+
 </div>
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.9.1
-   Patch release. JavaScript unchanged from v0.9.0; this release
-   contains documentation and tooling updates only. See HTML
-   comment at top of file and CHANGELOG.md for the full story.
+   EAR TRAINER v0.10.0
+   Minor release. Code changes: expanded Salamander sample list
+   (11 → 30 URLs), new revealAnswer() functions and buttons on
+   Levels 1, 2, and 4 (counts as wrong, plays correct answer,
+   auto-advances), and supporting CSS for larger answer-button
+   text. See HTML comment at top of file and CHANGELOG.md for
+   the full story.
    ============================================================ */
 
 const INTERVALS = [
@@ -1728,10 +1822,26 @@ setTimeout(() => {
 
 const piano = new Tone.Sampler({
   urls: {
-    A1: 'A1.mp3',  A2: 'A2.mp3',  A3: 'A3.mp3',
-    A4: 'A4.mp3',  A5: 'A5.mp3',  A6: 'A6.mp3',
-    C2: 'C2.mp3',  C3: 'C3.mp3',  C4: 'C4.mp3',
-    C5: 'C5.mp3',  C6: 'C6.mp3',
+    /* v0.10.0: expanded from 11 samples to 30. The Salamander Grand
+       Piano was originally recorded sampling every minor third from
+       the lowest A; v0.9.x was loading only A and C from each octave,
+       so notes far from a sample were pitch-shifted by up to a
+       major sixth. This added audible artifacts that trained pianists
+       (one tester is a USC piano teacher) immediately noticed. The
+       expanded list covers A / C / D♯ / F♯ across octaves 0–8, which
+       matches the original recording grid. Most notes are now within
+       a half-step of a real sample. Tradeoff: the initial load takes
+       roughly 3× longer (still under 10s on broadband). The loading
+       banner already exists for this case. */
+    A0:    'A0.mp3',
+    C1:    'C1.mp3',  'D#1': 'Ds1.mp3',  'F#1': 'Fs1.mp3',  A1: 'A1.mp3',
+    C2:    'C2.mp3',  'D#2': 'Ds2.mp3',  'F#2': 'Fs2.mp3',  A2: 'A2.mp3',
+    C3:    'C3.mp3',  'D#3': 'Ds3.mp3',  'F#3': 'Fs3.mp3',  A3: 'A3.mp3',
+    C4:    'C4.mp3',  'D#4': 'Ds4.mp3',  'F#4': 'Fs4.mp3',  A4: 'A4.mp3',
+    C5:    'C5.mp3',  'D#5': 'Ds5.mp3',  'F#5': 'Fs5.mp3',  A5: 'A5.mp3',
+    C6:    'C6.mp3',  'D#6': 'Ds6.mp3',  'F#6': 'Fs6.mp3',  A6: 'A6.mp3',
+    C7:    'C7.mp3',  'D#7': 'Ds7.mp3',  'F#7': 'Fs7.mp3',  A7: 'A7.mp3',
+    C8:    'C8.mp3',
   },
   release: 1,
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
@@ -1798,6 +1908,7 @@ function l1_newQuestion() {
   document.getElementById('l1-feedback').className = 'feedback';
   document.getElementById('l1-replayBtn').disabled = false;
   document.getElementById('l1-skipBtn').disabled = false;
+  document.getElementById('l1-revealBtn').disabled = false;
   l1_playSequence(s.current);
   s.lastQuestion = s.current;
 }
@@ -1865,6 +1976,36 @@ function l1_handleAnswer(semitones) {
   });
   l1_renderStats();
   if (correct) s.autoAdvanceTimer = setTimeout(() => l1_newQuestion(), 1200);
+}
+
+/* v0.10.0: Reveal Answer.
+   "Honorable exit" — user wants to learn from a question they can't
+   get rather than be locked into trying again. Pedagogically this
+   counts as wrong (you didn't really get it right by revealing), so
+   total +1, correct unchanged, streak resets. The correct interval
+   plays from the original question's root + direction, the correct
+   button flashes green, and we auto-advance after a beat (matching
+   the correct-answer behavior — Decision B1 from the v0.10.0 spec). */
+function l1_revealAnswer() {
+  const s = state.l1;
+  if (s.answered || !s.current) return;
+  s.answered = true; s.total++;
+  s.streak = 0;
+  const fb = document.getElementById('l1-feedback');
+  fb.textContent = `Revealed. That was a ${s.current.interval.name}.`;
+  fb.className = 'feedback';
+  /* Highlight the correct button green so the user has a visual
+     anchor for the answer in addition to the audio. No "wrong"
+     button to flag because the user didn't pick anything. */
+  document.querySelectorAll('#l1-answers button').forEach(b => {
+    const val = Number(b.dataset.semitones);
+    if (val === s.current.interval.semitones) b.classList.add('correct');
+  });
+  /* Replay the question so the user hears the correct answer
+     associated with the name they just saw. */
+  l1_playSequence(s.current);
+  l1_renderStats();
+  s.autoAdvanceTimer = setTimeout(() => l1_newQuestion(), 1800);
 }
 
 function l1_renderAnswers() {
@@ -1984,6 +2125,7 @@ document.querySelectorAll('#level-1-panel [role="tab"].mode-tab').forEach(tab =>
     l1_invalidateCurrent();
     document.getElementById('l1-replayBtn').disabled = true;
     document.getElementById('l1-skipBtn').disabled = true;
+    document.getElementById('l1-revealBtn').disabled = true;
     l1_renderAnswers(); l1_renderDirectionBar(); l1_renderIntervalPool();
     updateHeader(); l1_updateReferenceControls();
   };
@@ -1998,6 +2140,7 @@ document.getElementById('l1-replayBtn').onclick = () => {
   if (state.l1.lastQuestion) l1_playSequence(state.l1.lastQuestion);
 };
 document.getElementById('l1-skipBtn').onclick = () => l1_newQuestion();
+document.getElementById('l1-revealBtn').onclick = () => l1_revealAnswer();
 document.getElementById('l1-rootRandomBtn').onclick = () => { state.l1.refRootMode = 'random'; l1_updateReferenceControls(); };
 document.getElementById('l1-rootFixedBtn').onclick = () => { state.l1.refRootMode = 'fixed'; l1_updateReferenceControls(); };
 document.getElementById('l1-tempoSlider').addEventListener('input', () => {
@@ -2048,6 +2191,7 @@ function l2_newQuestion() {
   document.getElementById('l2-feedback').className = 'feedback';
   document.getElementById('l2-replayBtn').disabled = false;
   document.getElementById('l2-skipBtn').disabled = false;
+  document.getElementById('l2-revealBtn').disabled = false;
   l2_playTriad(s.current);
   s.lastQuestion = s.current;
 }
@@ -2142,6 +2286,36 @@ function l2_submitAnswer() {
   }
   l2_renderQualityAnswers(); l2_renderInversionAnswers(); l2_updateSubmitButton(); l2_renderStats();
   if (allCorrect) s.autoAdvanceTimer = setTimeout(() => l2_newQuestion(), 1400);
+}
+
+/* v0.10.0: Reveal Answer for Level 2.
+   See l1_revealAnswer for the design rationale. Counts as wrong;
+   plays the correct triad; flashes the correct quality and
+   inversion buttons green so the user has both axes visually
+   pinned alongside the audio. Auto-advances after a beat.
+   Note: in v0.9.x and earlier the renderQualityAnswers /
+   renderInversionAnswers functions only added .correct/.wrong
+   classes when a user-selected answer existed. We pre-set
+   selectedQuality/selectedInversion to the correct values so
+   the existing render logic naturally highlights them green;
+   no additional special-case branch needed. */
+function l2_revealAnswer() {
+  const s = state.l2;
+  if (s.answered || !s.current) return;
+  s.answered = true; s.total++;
+  s.streak = 0;
+  /* Pre-set the picks to the correct answer so the existing
+     render logic flags both axis buttons green. */
+  s.selectedQuality = s.current.qualityKey;
+  s.selectedInversion = s.current.inversionKey;
+  const quality = TRIAD_QUALITIES.find(q => q.key === s.current.qualityKey);
+  const inversion = INVERSIONS.find(i => i.key === s.current.inversionKey);
+  const fb = document.getElementById('l2-feedback');
+  fb.textContent = `Revealed. That was a ${quality.name} ${inversion.name.toLowerCase()}.`;
+  fb.className = 'feedback';
+  l2_playTriad(s.current);
+  l2_renderQualityAnswers(); l2_renderInversionAnswers(); l2_updateSubmitButton(); l2_renderStats();
+  s.autoAdvanceTimer = setTimeout(() => l2_newQuestion(), 2000);
 }
 
 function l2_renderQualityAnswers() {
@@ -2310,6 +2484,7 @@ document.querySelectorAll('#level-2-panel [role="tab"].mode-tab').forEach(tab =>
     l2_invalidateCurrent();
     document.getElementById('l2-replayBtn').disabled = true;
     document.getElementById('l2-skipBtn').disabled = true;
+    document.getElementById('l2-revealBtn').disabled = true;
     l2_renderDirectionBar(); updateHeader(); l2_updateReferenceControls();
   };
 });
@@ -2321,6 +2496,7 @@ document.getElementById('l2-playBtn').onclick = async () => {
 };
 document.getElementById('l2-replayBtn').onclick = () => { if (state.l2.lastQuestion) l2_playTriad(state.l2.lastQuestion); };
 document.getElementById('l2-skipBtn').onclick = () => l2_newQuestion();
+document.getElementById('l2-revealBtn').onclick = () => l2_revealAnswer();
 document.getElementById('l2-submitBtn').onclick = l2_submitAnswer;
 document.getElementById('l2-clearBtn').onclick = l2_clearPicks;
 document.getElementById('l2-rootRandomBtn').onclick = () => { state.l2.refRootMode = 'random'; l2_updateReferenceControls(); };
@@ -2668,6 +2844,7 @@ function l4_newQuestion() {
   document.getElementById('l4-feedback').className = 'feedback';
   document.getElementById('l4-replayBtn').disabled = false;
   document.getElementById('l4-skipBtn').disabled = false;
+  document.getElementById('l4-revealBtn').disabled = false;
   l4_playChord(s.current);
   s.lastQuestion = s.current;
 }
@@ -2765,6 +2942,26 @@ function l4_submitAnswer() {
   }
   l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_updateSubmitButton(); l4_renderStats();
   if (allCorrect) s.autoAdvanceTimer = setTimeout(() => l4_newQuestion(), 1400);
+}
+
+/* v0.10.0: Reveal Answer for Level 4. Parallel to l2_revealAnswer.
+   Counts as wrong; plays the correct 7th chord; flashes correct
+   quality and inversion buttons green; auto-advances. */
+function l4_revealAnswer() {
+  const s = state.l4;
+  if (s.answered || !s.current) return;
+  s.answered = true; s.total++;
+  s.streak = 0;
+  s.selectedQuality = s.current.qualityKey;
+  s.selectedInversion = s.current.inversionKey;
+  const quality = SEVENTH_QUALITIES.find(q => q.key === s.current.qualityKey);
+  const inversion = SEVENTH_INVERSIONS.find(i => i.key === s.current.inversionKey);
+  const fb = document.getElementById('l4-feedback');
+  fb.textContent = `Revealed. That was a ${quality.name} ${inversion.name.toLowerCase()}.`;
+  fb.className = 'feedback';
+  l4_playChord(s.current);
+  l4_renderQualityAnswers(); l4_renderInversionAnswers(); l4_updateSubmitButton(); l4_renderStats();
+  s.autoAdvanceTimer = setTimeout(() => l4_newQuestion(), 2000);
 }
 
 function l4_renderQualityAnswers() {
@@ -2963,6 +3160,7 @@ document.querySelectorAll('#level-4-panel [role="tab"].mode-tab').forEach(tab =>
     l4_invalidateCurrent();
     document.getElementById('l4-replayBtn').disabled = true;
     document.getElementById('l4-skipBtn').disabled = true;
+    document.getElementById('l4-revealBtn').disabled = true;
     l4_renderDirectionBar(); updateHeader(); l4_updateReferenceControls();
   };
 });
@@ -2974,6 +3172,7 @@ document.getElementById('l4-playBtn').onclick = async () => {
 };
 document.getElementById('l4-replayBtn').onclick = () => { if (state.l4.lastQuestion) l4_playChord(state.l4.lastQuestion); };
 document.getElementById('l4-skipBtn').onclick = () => l4_newQuestion();
+document.getElementById('l4-revealBtn').onclick = () => l4_revealAnswer();
 document.getElementById('l4-submitBtn').onclick = l4_submitAnswer;
 document.getElementById('l4-clearBtn').onclick = l4_clearPicks;
 document.getElementById('l4-rootRandomBtn').onclick = () => { state.l4.refRootMode = 'random'; l4_updateReferenceControls(); };
@@ -3000,12 +3199,14 @@ const SHORTCUT_SETS = {
     ['Space', 'Play / next question'],
     ['R',     'Repeat last'],
     ['S',     'Skip'],
+    ['A',     'Reveal Answer'],
     ['1–9',   'Pick the Nth visible answer'],
   ],
   2: [
     ['Space', 'Play / next question'],
     ['R',     'Repeat last'],
     ['S',     'Skip'],
+    ['A',     'Reveal Answer'],
     ['Enter', 'Submit answer'],
   ],
   3: [
@@ -3018,6 +3219,7 @@ const SHORTCUT_SETS = {
     ['Space', 'Play / next question'],
     ['R',     'Repeat last'],
     ['S',     'Skip'],
+    ['A',     'Reveal Answer'],
     ['Enter', 'Submit answer'],
   ],
 };
@@ -3145,6 +3347,11 @@ document.addEventListener('keydown', (e) => {
   } else if (key === 's') {
     e.preventDefault();
     const b = document.getElementById(`${prefix}-skipBtn`);
+    if (!b.disabled) b.click();
+  } else if (key === 'a') {
+    /* v0.10.0: 'A' triggers Reveal Answer on L1, L2, L4. */
+    e.preventDefault();
+    const b = document.getElementById(`${prefix}-revealBtn`);
     if (!b.disabled) b.click();
   } else if (key === 'enter' && (level === 2 || level === 4)) {
     e.preventDefault();
