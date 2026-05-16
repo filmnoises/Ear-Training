@@ -1,22 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer · v0.10.0 · 2026-05-09
-  Minor release. Three improvements aimed at audio quality and
-  learning UX:
-  (1) Salamander piano sample density tripled — every minor third
-      across the keyboard instead of every major third / major sixth.
-      Notably reduces pitch-shift artifacts that trained pianists
-      were hearing in v0.9.x.
-  (2) Attribution surfaced for the audio assets used: Salamander
-      Grand Piano V3 by Alexander Holm (CC-BY 3.0) and Tone.js by
-      Yotam Mann (MIT).
-  (3) Reveal Answer button on Levels 1, 2, and 4 — an "honorable
-      exit" for users who want to learn from a question they can't
-      get rather than be locked into trying again. Counts as a wrong
-      answer in the score; plays the correct interval/chord; flashes
-      the correct button(s) green; auto-advances.
-  Plus larger answer-button text for readability.
-  See CHANGELOG.md section [0.10.0] for full notes.
+  Ear Trainer · v0.10.2 · 2026-05-16
+  Patch release. App code unchanged from v0.10.0; this release ships
+  User Manual updates (per-section theory primers, full Level 4 section,
+  Tritone naming trivia, iOS audio banner documentation). See
+  CHANGELOG.md section [0.10.2] for full notes.
 -->
 <html lang="en">
 <head>
@@ -1517,13 +1505,10 @@
 
 <script>
 /* ============================================================
-   EAR TRAINER v0.10.0
-   Minor release. Code changes: expanded Salamander sample list
-   (11 → 30 URLs), new revealAnswer() functions and buttons on
-   Levels 1, 2, and 4 (counts as wrong, plays correct answer,
-   auto-advances), and supporting CSS for larger answer-button
-   text. See HTML comment at top of file and CHANGELOG.md for
-   the full story.
+   EAR TRAINER v0.10.2
+   Patch release. JavaScript unchanged from v0.10.0; this release
+   contains documentation updates only. See HTML comment at top
+   of file and CHANGELOG.md for the full story.
    ============================================================ */
 
 const INTERVALS = [
