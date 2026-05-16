@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <!--
-  Ear Trainer — User Manual · v0.10.0 · 2026-05-09
+  Ear Trainer — User Manual · v0.10.2 · 2026-05-16
   Standalone documentation page. Light docs aesthetic, print-friendly.
   Source of truth lives in this file directly (not regenerated from markdown).
   USER-MANUAL.md was retired to a local archive in v0.9.1's repo cleanup;
   edit this file when content changes.
 
-  v0.10.0 manual updates: new "Credits and licensing" section
-  acknowledging Salamander Grand Piano (CC-BY 3.0) and Tone.js (MIT);
-  Reveal Answer button described in each level section; new keyboard
-  shortcut A added to the Keyboard Shortcuts section.
+  v0.10.2 manual updates: per-section theory primers. The single
+  combined "A little music theory you'll want to know" section is
+  split into three sibling primers — one for intervals (which now
+  also documents Tritone naming trivia), one for triads (with
+  inversions), and one for sevenths (with all five 7th-chord
+  qualities written in a Sound / Why structure plus a notation-
+  conventions footnote). New Level 4 section in the same shape as
+  L1/L2/L3, with a Reveal Answer description and shortcut pointer.
+  The temporary Level 4 disclaimer note has been retired. Small
+  troubleshooting note added about the iOS audio banner.
 -->
 <html lang="en">
 <head>
@@ -358,18 +364,6 @@
   <h1>Ear Trainer</h1>
   <div class="subtitle">Getting Started</div>
 
-  <div class="note">
-    <p><strong>Note:</strong> This guide currently documents Levels 1–3.
-    Level 4 (7th chords) shipped in version 0.8.0 and will be added to
-    this guide in a future update — including a music theory primer
-    on 7th chords. The in-app interface has tooltips and labels that
-    should let you find your way around Level 4 in the meantime, and
-    its layout follows the same pattern described for Levels 1 and 2
-    (MODE row, ARPEGGIO DIRECTION row, Reference panel above the quiz,
-    "Guess The 7th Chord" stage, and a "7th Chord Quiz Choices" panel
-    at the bottom).</p>
-  </div>
-
   <p>Welcome. This is a small app for training your musical ear: hearing
   the distance between two notes, the quality of a chord, and (eventually)
   producing those sounds with your own voice. It runs in your web browser,
@@ -383,11 +377,14 @@
     <h4>Contents</h4>
     <ul>
       <li><a href="#quick-start">Quick start (60 seconds)</a></li>
-      <li><a href="#three-levels">The three levels at a glance</a></li>
-      <li><a href="#theory">A little music theory you'll want to know</a></li>
+      <li><a href="#four-levels">The four levels at a glance</a></li>
+      <li><a href="#theory-intervals">A little music theory you'll want to know about intervals</a></li>
       <li><a href="#level-1">Level 1 · Intervals</a></li>
+      <li><a href="#theory-triads">A little music theory you'll want to know about triads</a></li>
       <li><a href="#level-2">Level 2 · Triads</a></li>
       <li><a href="#level-3">Level 3 · Sing-First</a></li>
+      <li><a href="#theory-sevenths">A little music theory you'll want to know about sevenths</a></li>
+      <li><a href="#level-4">Level 4 · 7th Chords</a></li>
       <li><a href="#shortcuts">Keyboard shortcuts</a></li>
       <li><a href="#tips">Tips for effective practice</a></li>
       <li><a href="#accessibility">Accessibility features</a></li>
@@ -420,9 +417,29 @@
 
   <p>That's the basic loop. The rest of this guide explains everything else.</p>
 
-  <h2 id="three-levels">The three levels at a glance</h2>
+  <h3>If you see a "Tap any button to start audio" banner</h3>
 
-  <p>The app is organized into three levels, shown as tabs across the top:</p>
+  <p>On iPhones, iPads, and some Mac browsers, the audio system stays
+  asleep until you interact with the page. If you press Play before the
+  app has been "woken up," nothing seems to happen — no sound, no
+  feedback. To prevent that confusion, the app shows a prominent banner
+  if it detects that the audio isn't ready: <em>"Tap any button to start
+  audio."</em></p>
+
+  <p>If you see it: just tap or click anywhere on the page (a level
+  tab, the Play button, the Reference panel — anything counts). The
+  banner disappears and audio works normally from then on. This only
+  happens once per session, not before every question.</p>
+
+  <p>This is not a bug. It's how Apple's audio rules work — browsers
+  must wait for explicit user interaction before allowing audio
+  playback, to prevent autoplaying ads and other annoyances. The banner
+  is there to tell you what to do rather than leaving you wondering
+  why Play didn't work.</p>
+
+  <h2 id="four-levels">The four levels at a glance</h2>
+
+  <p>The app is organized into four levels, shown as tabs across the top:</p>
 
   <ul>
     <li><strong>Level 1 · Intervals</strong> — recognizing two-note
@@ -431,20 +448,23 @@
     (and their inversions) by ear</li>
     <li><strong>Level 3 · Sing-First</strong> — practicing by
     <em>producing</em> notes with your voice, then verifying with the app</li>
+    <li><strong>Level 4 · 7th Chords</strong> — recognizing four-note
+    chords (and their inversions) by ear, the harmonic vocabulary of
+    jazz, R&amp;B, and most modern pop</li>
   </ul>
 
   <p>You can move between levels freely. They each have their own score,
   so working in Level 2 doesn't affect your Level 1 progress, and vice
   versa. There's no "unlocking" — visit any level whenever you want.</p>
 
-  <p>The intended progression is roughly Level 1 → Level 2 → Level 3,
-  but many musicians benefit from doing all three in any session. Use
-  what serves you.</p>
+  <p>The intended progression is roughly Level 1 → Level 2 → Level 3 →
+  Level 4, but many musicians benefit from doing all of them in any
+  session. Use what serves you.</p>
 
-  <h2 id="theory">A little music theory you'll want to know</h2>
+  <h2 id="theory-intervals">A little music theory you'll want to know about intervals</h2>
 
-  <p>If you're new to formal music theory, three concepts will get you
-  90% of the way through this app. If you already know these, skip ahead.</p>
+  <p>If you're new to formal music theory, two concepts will get you
+  through Level 1. If you already know these, skip ahead to Level 1.</p>
 
   <h3>Pitch and notes</h3>
 
@@ -494,38 +514,33 @@
 
   <p>Hearing which interval is which is what Level 1 trains.</p>
 
-  <h3>Triads</h3>
+  <h3>Some other ways you might see these notated</h3>
 
-  <p>A <strong>triad</strong> is a three-note chord built by stacking
-  two intervals above a root note. The four common qualities:</p>
-
-  <ul>
-    <li><strong>Major triad</strong> — bright, "happy" sound. Root + 4
-    half steps + 3 half steps.</li>
-    <li><strong>Minor triad</strong> — darker, "sad" sound. Root + 3
-    half steps + 4 half steps.</li>
-    <li><strong>Diminished triad</strong> — tense, unresolved. Root + 3 + 3.</li>
-    <li><strong>Augmented triad</strong> — dreamlike, suspended. Root + 4 + 4.</li>
-  </ul>
-
-  <h3>Inversions</h3>
-
-  <p>The same three notes of a triad can be arranged with any of them
-  on the bottom. Take a C major triad — C, E, G. The three arrangements:</p>
+  <p>The names above are the conventions this app uses. In real-world
+  sheet music, lead sheets, and theory textbooks, you'll occasionally
+  see the same intervals labeled differently. The Tritone in particular
+  has a long history of being called many things:</p>
 
   <ul>
-    <li><strong>Root position</strong> — C is on the bottom: C-E-G.</li>
-    <li><strong>1st inversion</strong> — E (the third) is on the bottom: E-G-C.</li>
-    <li><strong>2nd inversion</strong> — G (the fifth) is on the bottom: G-C-E.</li>
+    <li><strong>Tritone</strong> is also called the <strong>Augmented
+    4th</strong> (when you reach it by sharpening a Perfect 4th) or the
+    <strong>Diminished 5th</strong> (when you reach it by flattening a
+    Perfect 5th). They sound identical — same six half steps — but
+    composers and theorists pick the spelling that fits the key they're
+    in. Jazz musicians often shorten these to "♭5" (flat five) or "♯4"
+    (sharp four).</li>
+    <li>You may also hear the Tritone called the <strong>Devil's
+    Interval</strong> or <strong>diabolus in musica</strong>. The
+    nickname comes from medieval music theory, where its restless,
+    unresolved sound was considered so unsettling that it was avoided in
+    sacred composition. It's safe to use now.</li>
+    <li>Some textbooks use the term <strong>"second"</strong> generally
+    to mean any 2-note distance (and similarly for thirds, fourths,
+    etc.) and rely on "major / minor / perfect / augmented / diminished"
+    qualifiers to specify which one. The names this app uses
+    ("Minor 2nd," "Perfect 4th," etc.) are this same convention,
+    written out fully.</li>
   </ul>
-
-  <p>It's still the "same chord," but each inversion has a different
-  sound character. Hearing which inversion is being played is part of
-  what Level 2 trains. (Triads only have three inversions. Four-note
-  chords like sevenths add a fourth inversion — but those aren't in
-  the app yet.)</p>
-
-  <p>That's the whole theory baseline. Onward.</p>
 
   <h2 id="level-1">Level 1 · Intervals</h2>
 
@@ -642,6 +657,64 @@
   <p>Space (Play), R (Repeat Last), S (Skip), A (Reveal Answer), 1–9 (pick the Nth answer).
   See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
   below for all levels in one place.</p>
+
+  <h2 id="theory-triads">A little music theory you'll want to know about triads</h2>
+
+  <p>Before Level 2 quizzes you on triads, here's what they actually
+  <em>are</em> — and how the four qualities differ in sound.</p>
+
+  <h3>What's a triad?</h3>
+
+  <p>A <strong>triad</strong> is a three-note chord built by stacking
+  two intervals above a root note. Almost all "chords" in popular music
+  start life as triads — even when extra notes get layered on later,
+  the triad is the foundation.</p>
+
+  <p>The four triad qualities the app quizzes you on:</p>
+
+  <ul>
+    <li><strong>Major triad</strong> — bright, "happy" sound. Root + 4
+    half steps + 3 half steps. (Think: the chord at the end of every
+    Disney movie.)</li>
+    <li><strong>Minor triad</strong> — darker, "sad" sound. Root + 3
+    half steps + 4 half steps. (Think: most film scores when something
+    serious is happening.)</li>
+    <li><strong>Diminished triad</strong> — tense, unresolved. Root + 3
+    half steps + 3 half steps. Wants to <em>move somewhere</em>.</li>
+    <li><strong>Augmented triad</strong> — dreamlike, suspended,
+    slightly unstable. Root + 4 half steps + 4 half steps. (Think: the
+    middle of "Oh! Darling" by the Beatles.)</li>
+  </ul>
+
+  <h3>Inversions</h3>
+
+  <p>The same three notes of a triad can be arranged with any of them
+  on the bottom. Take a C major triad — C, E, G. The three arrangements:</p>
+
+  <ul>
+    <li><strong>Root position</strong> — C is on the bottom: C-E-G.</li>
+    <li><strong>1st inversion</strong> — E (the third) is on the bottom: E-G-C.</li>
+    <li><strong>2nd inversion</strong> — G (the fifth) is on the bottom: G-C-E.</li>
+  </ul>
+
+  <p>It's still the "same chord" — but each inversion has a different
+  sound character. Inversions are how composers create smooth voice
+  leading between chords, and how bassists make a progression feel
+  like it's <em>moving</em> rather than jumping. Hearing which inversion
+  is being played is part of what Level 2 trains.</p>
+
+  <h3>Some other ways you might see these notated</h3>
+
+  <ul>
+    <li><strong>Diminished triad</strong> is sometimes written with a
+    small circle: C° or Cdim.</li>
+    <li><strong>Augmented triad</strong> is sometimes written with a
+    plus sign: C+ or Caug.</li>
+    <li>Inversions are sometimes written as <strong>slash chords</strong>
+    — "C/E" means a C major chord with E in the bass (first inversion).
+    "C/G" means C major with G in the bass (second inversion). This is
+    the convention you'll see most often in pop and jazz lead sheets.</li>
+  </ul>
 
   <h2 id="level-2">Level 2 · Triads</h2>
 
@@ -850,6 +923,205 @@
   See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
   below for all levels in one place.</p>
 
+  <h2 id="theory-sevenths">A little music theory you'll want to know about sevenths</h2>
+
+  <p>A <strong>seventh chord</strong> is a four-note chord — a triad
+  plus one more note stacked on top, a 7th above the root. That fourth
+  note transforms the chord's character, adding color and tension to
+  the simpler triad underneath. Seventh chords are the harmonic
+  vocabulary of jazz, R&amp;B, gospel, modern pop, and almost any music
+  that wants to sound more sophisticated than three chords and a
+  campfire.</p>
+
+  <p>The five seventh-chord qualities Level 4 quizzes you on, each with
+  its own emotional flavor:</p>
+
+  <h3>Major 7th (maj7) 🌅</h3>
+  <p><strong>Formula:</strong> Major Triad + Major 7th</p>
+  <ul>
+    <li><strong>Sound:</strong> Dreamy, nostalgic, or peaceful.</li>
+    <li><strong>🔍 Why:</strong> It contains a happy major triad, but
+    the top note creates a sharp, sweet bite against the root note.</li>
+  </ul>
+
+  <h3>Minor 7th (min7) 🌙</h3>
+  <p><strong>Formula:</strong> Minor Triad + Minor 7th</p>
+  <ul>
+    <li><strong>Sound:</strong> Mellow, moody, or cozy.</li>
+    <li><strong>🔍 Why:</strong> It is made entirely of soft, relaxed
+    intervals. There are no harsh edges, making it sound smooth and
+    stable.</li>
+  </ul>
+
+  <h3>Dominant 7th (7) ⚡</h3>
+  <p><strong>Formula:</strong> Major Triad + Minor 7th</p>
+  <ul>
+    <li><strong>Sound:</strong> Bluesy, tense, or full of energy.</li>
+    <li><strong>🔍 Why:</strong> It mixes a happy major triad with an
+    edgy minor 7th. This combination creates a unique friction that
+    makes the ear want a resolution.</li>
+  </ul>
+
+  <h3>Half-Diminished 7th (m7♭5 or ø7) 🎭</h3>
+  <p><strong>Formula:</strong> Diminished Triad + Minor 7th</p>
+  <ul>
+    <li><strong>Sound:</strong> Mysterious, tragic, or suspenseful.</li>
+    <li><strong>🔍 Why:</strong> It starts with a tense, shrunk-down
+    diminished triad, but the wider interval on top stretches the
+    sound out, making it feel like it's searching for a home.</li>
+  </ul>
+
+  <h3>Fully Diminished 7th (dim7 or °7) 👻</h3>
+  <p><strong>Formula:</strong> Diminished Triad + Diminished 7th</p>
+  <ul>
+    <li><strong>Sound:</strong> Spooky, dramatic, or shocked. Think of
+    a classic cartoon villain or a haunted house.</li>
+    <li><strong>🔍 Why:</strong> Every single note inside this chord
+    is stacked exactly the same distance apart (minor 3rds). Because
+    it is perfectly symmetrical, it has no clear anchor point, which
+    makes it sound completely unsettled.</li>
+  </ul>
+
+  <h3>Some other ways you might see these notated</h3>
+
+  <p>The notations above are the conventions this app uses. In real
+  sheet music, lead sheets, and theory books, you'll see other shorthand:</p>
+
+  <ul>
+    <li><strong>Major 7th:</strong> also written Cmaj7, CM7, or with
+    a triangle Δ — like CΔ7 or just CΔ.</li>
+    <li><strong>Minor 7th:</strong> also written Cm7, Cmi7, or C-7
+    (with a small dash before the 7).</li>
+    <li><strong>Dominant 7th:</strong> just "C7" with no qualifier — by
+    convention, an unadorned "7" always means dominant.</li>
+    <li><strong>Half-Diminished 7th:</strong> also written Cm7♭5 (the
+    most common in pop and jazz lead sheets) or Cø7 (with a circle and
+    slash, the classical music convention).</li>
+    <li><strong>Fully Diminished 7th:</strong> Cdim7 or C°7 (with a small
+    circle, no slash).</li>
+  </ul>
+
+  <p>You'll get used to the alternate notations the more sheet music
+  you read. The chord itself is the same regardless of how it's spelled.</p>
+
+  <h3>Inversions of 7th chords</h3>
+
+  <p>Like triads, seventh chords can be played in inversions — with any
+  of the four notes on the bottom instead of the root. A four-note chord
+  has four positions:</p>
+
+  <ul>
+    <li><strong>Root position</strong> — the root is on the bottom.</li>
+    <li><strong>1st inversion</strong> — the 3rd is on the bottom.</li>
+    <li><strong>2nd inversion</strong> — the 5th is on the bottom.</li>
+    <li><strong>3rd inversion</strong> — the 7th is on the bottom.</li>
+  </ul>
+
+  <p>The third inversion (7th on the bottom) gives a particularly
+  unstable, restless sound — the chord is basically standing on its
+  head. Hearing which inversion is being played is part of what Level 4
+  trains.</p>
+
+  <h2 id="level-4">Level 4 · 7th Chords</h2>
+
+  <h3>What it teaches</h3>
+
+  <p>Recognizing the quality of a seventh chord (major 7, minor 7,
+  dominant 7, half-diminished, fully diminished) and which inversion
+  it's in. Seventh chords are the harmonic foundation of jazz, R&amp;B,
+  most modern pop, and a huge amount of classical music. If you can
+  hear sevenths, you can hear almost everything that's happening
+  harmonically in real music.</p>
+
+  <h3>Layout</h3>
+
+  <p>Same general shape as Level 2, with seventh-specific labels:</p>
+
+  <ul>
+    <li><strong>MODE</strong> row — Blocked vs. Arpeggiated.</li>
+    <li><strong>ARPEGGIO DIRECTION</strong> row — Ascending / Descending /
+    Mixed (only used in arpeggiated mode).</li>
+    <li>The green ↓ "New here?" caption.</li>
+    <li>The <strong>Reference</strong> panel — opens to let you hear
+    any seventh chord on demand.</li>
+    <li>The quiz, under the heading <strong>Guess The 7th Chord</strong>:
+    Play button, Chord Quality row, Chord Inversion row, Submit button,
+    score.</li>
+    <li><strong>7th Chord Quiz Choices</strong> panel at the bottom —
+    where you choose which qualities, inversions, and voicings appear
+    in the quiz.</li>
+  </ul>
+
+  <h3>The loop</h3>
+
+  <ol>
+    <li>Press <strong>▶ Play</strong>. Four notes play (either at once
+    or in sequence).</li>
+    <li>Pick a chord quality from the <strong>Chord Quality</strong> row.</li>
+    <li>Pick an inversion from the <strong>Chord Inversion</strong> row.</li>
+    <li>Click <strong>Submit Answer</strong> (or press Enter).</li>
+    <li>The app tells you if you got it right. If you got <em>part</em>
+    of it right (quality but not inversion, or vice versa), it'll tell
+    you which.</li>
+  </ol>
+
+  <p>You can change your picks before submitting.
+  <strong>Clear Picks</strong> resets both selections.
+  <strong>Reveal Answer</strong> plays the correct seventh chord and
+  highlights both axes — counts as a wrong answer in your score, but
+  lets you learn from a question that's stumping you.</p>
+
+  <h3>The two playback modes</h3>
+
+  <ul>
+    <li><strong>Blocked</strong> — all four notes at the same time, like
+    a held chord. This is how you usually encounter seventh chords in
+    a piano comping context or a horn section sustain.</li>
+    <li><strong>Arpeggiated</strong> — the notes play one at a time,
+    in order. Makes inversions easier to identify because you can
+    clearly hear the bottom note. Slower to listen to than triads,
+    since there's one more note to wait for.</li>
+  </ul>
+
+  <p>Most people find arpeggiated easier for inversions and blocked
+  easier for quality. Use whichever serves what you're practicing.</p>
+
+  <h3>Direction (arpeggiated only)</h3>
+
+  <p>Same options as Levels 1 and 2 — Ascending, Descending, Mixed.
+  In blocked mode, the direction controls are dimmed.</p>
+
+  <h3>The 7th Chord Quiz Choices panel</h3>
+
+  <p>At the bottom of Level 4, this panel has three sets of toggleable
+  controls:</p>
+
+  <ul>
+    <li><strong>Chord quality:</strong> Major 7, Minor 7, Dominant 7,
+    Half-Diminished, Fully Diminished. The default starting pool is
+    Major 7 vs. Dominant 7 — the two most common in pop and jazz. Add
+    the others as your ear builds.</li>
+    <li><strong>Chord inversion:</strong> Root, 1st, 2nd, 3rd. The
+    default pool is Root and 1st only — broaden when ready.</li>
+    <li><strong>Voicing:</strong> Tight (closed) or Open (a drop-2
+    voicing where the second-from-top note drops down an octave). Open
+    voicings sound noticeably wider and are how seventh chords are
+    typically voiced in jazz piano comping. Tight is closer to how a
+    horn section might play them.</li>
+  </ul>
+
+  <h3>The Reference panel</h3>
+
+  <p>Same idea as Levels 1 and 2's Reference, sitting <em>above</em>
+  the quiz. One button per combination of quality and inversion, in
+  the currently-selected voicing. Click any to hear that specific chord.
+  Fixed/Random root works the same way, with Fixed at C4 by default.</p>
+
+  <h4>Keyboard shortcuts on Level 4</h4>
+  <p>Space (Play), R (Repeat Last), S (Skip), A (Reveal Answer), Enter (Submit Answer).
+  See the consolidated <a href="#shortcuts">Keyboard shortcuts</a> section
+  below for all levels in one place.</p>
+
   <h2 id="shortcuts">Keyboard shortcuts</h2>
 
   <p>Inside the app, there's a <strong>Keyboard shortcuts</strong>
@@ -859,8 +1131,7 @@
   now. (In earlier versions, each level had its own keyboard-shortcuts
   panel; v0.9.0 consolidates them into one.)</p>
 
-  <p>For reference, here are the shortcut sets for the three documented
-  levels (Level 4's section is coming in a future update):</p>
+  <p>For reference, here are the shortcut sets for all four levels:</p>
 
   <div class="shortcut-list">
     <h4>Level 1 · Intervals</h4>
@@ -891,6 +1162,17 @@
       <li><span class="key">T</span><span class="desc">Play Target Now (skip the wait)</span></li>
       <li><span class="key">G</span><span class="desc">Got It</span></li>
       <li><span class="key">M</span><span class="desc">Missed It</span></li>
+    </ul>
+  </div>
+
+  <div class="shortcut-list">
+    <h4>Level 4 · 7th Chords</h4>
+    <ul>
+      <li><span class="key">Space</span><span class="desc">Play / next question</span></li>
+      <li><span class="key">R</span><span class="desc">Repeat Last</span></li>
+      <li><span class="key">S</span><span class="desc">Skip</span></li>
+      <li><span class="key">A</span><span class="desc">Reveal Answer (new in v0.10.0)</span></li>
+      <li><span class="key">Enter</span><span class="desc">Submit Answer</span></li>
     </ul>
   </div>
 

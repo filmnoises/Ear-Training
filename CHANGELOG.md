@@ -9,25 +9,168 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Echo-the-pick flow on quiz answer clicks (deferred to v0.10.1).
-  Plays the user's chosen interval right after they click an answer
-  so they hear what they picked, then on a wrong answer auto-replays
-  the original question. Ships in its own focused release after
-  v0.10.0 has stabilized in tester hands.
+- Songs addendum to the User Manual: a curated playlist showing
+  iconic uses of each interval and seventh-chord quality across
+  multiple decades and genres. Promised in the v0.10.2 sevenths
+  primer; deferred to its own focused session because thoughtful
+  song curation deserves time, not a rush job at the end of an
+  unrelated release.
 - Extended chords (Levels 5+): 9th, 11th, 13th — deserve their own
   design conversation around voicing range and pedagogical sequencing.
 - Sus2 / Sus4 in the Level 2 triad quiz — separate release alongside
-  the Level 4 manual catch-up.
+  documentation that explains how sus chords differ from triads.
 - Save settings to localStorage so they persist across sessions.
 - Continued mobile-friendly layout review.
 - Reference manual (separate from getting-started guide).
-- Full User Manual catch-up: Level 4 (7th chords) section, 7th-chord
-  music theory primer, v0.7.2 Tritone label note, v0.8.1 audio banner
-  documentation. Was deferred from v0.8.2 to its own dedicated session
-  to do the theory writeups carefully.
 - Lower-octave option for Levels 1 and 2 — register picker similar
   to Level 3's Voice control. Useful for bass-instrument players.
   Needs design conversation before building.
+- Music-reading companion app, with cross-mode integration once
+  both apps are working. Early-stage idea, no implementation yet.
+
+---
+
+## [0.10.2] — 2026-05-16
+
+Patch release. Documentation-only. No app code changes; `ear-trainer.html`
+and `index.html` are byte-identical to v0.10.0.
+
+### Changed — User Manual structure
+
+- The single combined **"A little music theory you'll want to know"**
+  section is split into three separate sibling primers, each placed
+  immediately before the level it supports:
+  - **"...about intervals"** — sits before Level 1.
+  - **"...about triads"** — sits before Level 2.
+  - **"...about sevenths"** — sits before Level 4 (new).
+- The pattern scales: when extended chords arrive in a future release,
+  Level 5 will get its own "...about extended chords" primer in the
+  same shape.
+
+### Added — sevenths theory primer
+
+- Full music-theory writeup of all five 7th-chord qualities that
+  Level 4 quizzes on: **Major 7th, Minor 7th, Dominant 7th,
+  Half-Diminished 7th, Fully Diminished 7th**.
+- Each entry uses a consistent Sound / Formula / Why structure with
+  a descriptive emoji marker, giving the learner an immediate
+  auditory hook ("dreamy, nostalgic" for Maj7; "spooky, cartoon
+  villain" for fully diminished) before the formula explanation.
+- Closing footnote covers alternate notations the student will
+  encounter in real sheet music: Cmaj7 / CM7 / CΔ7; Cm7 / C-7;
+  C7; Cm7♭5 / Cø7; Cdim7 / C°7.
+- Final subsection covers inversions of 7th chords (four positions
+  instead of three for triads — the 3rd inversion puts the 7th on
+  the bottom).
+
+### Added — Level 4 manual section
+
+- Full Level 4 documentation in the same shape as Levels 1, 2, and 3:
+  What it teaches, Layout, The loop, The two playback modes,
+  Direction (arpeggiated only), 7th Chord Quiz Choices panel
+  description (including the new-to-Level-4 Voicing axis: tight vs.
+  open / drop-2), Reference panel description, keyboard shortcuts
+  pointer.
+- The temporary "Level 4 not yet documented" disclaimer note at the
+  top of the manual is retired.
+
+### Added — Tritone naming trivia
+
+- New subsection at the end of the intervals primer covers the
+  Tritone's many alternate names: **Augmented 4th**, **Diminished
+  5th**, **♭5** / **♯4** (jazz shorthand), and the historical
+  nickname **"Devil's Interval" / diabolus in musica**. The app's
+  in-quiz label stays "Tritone" — testers asked for one clean
+  convention in the quiz UI itself, but learners benefit from
+  knowing all the names exist.
+
+### Added — iOS audio banner explanation
+
+- New subsection in the Quick Start area explains the "Tap any
+  button to start audio" banner that v0.8.1 added. iOS and Safari
+  defer audio context start until a user gesture — the banner is
+  there so users don't press Play and get silence with no idea why.
+  This catches up documentation that v0.8.1 had on its [Unreleased]
+  catch-up list.
+
+### Updated — overview section
+
+- **"The three levels at a glance"** → **"The four levels at a
+  glance"**, with a new bullet describing Level 4.
+
+### Updated — keyboard shortcuts reference
+
+- Level 4 shortcut card added to the consolidated Keyboard shortcuts
+  section. (The in-app shortcut disclosure already shows the right
+  shortcuts on each level — this just brings the manual's reference
+  list up to date.)
+
+### Files touched
+
+- `USER-MANUAL.html` (regenerated)
+- `CHANGELOG.md` (this entry)
+
+### What to test in v0.10.2
+
+This release is documentation-only, so testing is reading + clicking,
+not functional testing. Copy into your tracker.
+
+**Structure**
+- [ ] Open USER-MANUAL.html. Three "A little music theory…" sections
+  appear, one each for intervals, triads, sevenths.
+- [ ] Each theory primer sits immediately before the level it serves
+  (intervals before Level 1; triads before Level 2; sevenths before
+  Level 4).
+- [ ] Table of Contents reflects the new structure and all links jump
+  to the correct sections.
+- [ ] No more "Level 4 not yet documented" disclaimer at the top.
+
+**Sevenths primer**
+- [ ] All five 7th-chord qualities are documented: Major 7, Minor 7,
+  Dominant 7, Half-Diminished, Fully Diminished.
+- [ ] Each uses the same Sound / Formula / Why structure with an emoji.
+- [ ] The alternate-notation footnote is present.
+- [ ] The 7th-chord inversions subsection is present (root, 1st, 2nd,
+  3rd).
+
+**Level 4 section**
+- [ ] All standard subsections present: What it teaches, Layout, The
+  loop, modes, direction, Quiz Choices, Reference panel, shortcuts.
+- [ ] Mentions the Voicing axis (tight vs. open / drop-2).
+- [ ] Reveal Answer described in The loop.
+
+**Tritone and iOS banner**
+- [ ] Tritone trivia (Aug 4, Dim 5, ♭5, ♯4, Devil's Interval) appears
+  in the intervals primer.
+- [ ] "Tap any button to start audio" banner explanation is in Quick
+  Start area.
+
+**Quick spot-check**
+- [ ] Print preview still hides the topbar and credits (existing print
+  styles should still work; verify nothing visually broke).
+- [ ] Hard-refresh the live site after pushing; the manual link still
+  works from the in-app top-right corner.
+
+---
+
+## [0.10.1] — abandoned, not released
+
+Echo-the-pick was prototyped on 2026-05-10 (echoing the user's chosen
+interval/chord after each answer click). After local testing, the
+author rolled it back without committing or pushing — the audio
+choreography felt cluttered and slowed session pace too much,
+particularly on Level 4 arpeggiated mode where the echo could add
+2-3 seconds per question. The implementation is preserved in chat
+history; the local changes were `git restore`-d back to v0.10.0
+state. No tag was ever created.
+
+The pedagogical idea (let users hear their wrong pick paired with the
+red highlight) may resurface in a future version with tighter
+choreography — e.g., echo only on wrong answers, with a shorter
+post-echo pause. Not currently planned.
+
+This entry exists so future-you reading the CHANGELOG isn't confused
+by the version-number jump from v0.10.0 to v0.10.2.
 
 ---
 
